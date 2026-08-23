@@ -420,8 +420,9 @@
     renderPanel(
       '<div class="pr-success-head" style="margin-top:0.75rem">' +
         '<div class="pr-success-icon" aria-hidden="true"></div>' +
-        '<div><h2 style="font-size:0.9375rem">Paid.</h2><p>This is the only proof of purchase — save it now.</p></div>' +
+        '<div><h2 style="font-size:0.9375rem">Paid.</h2></div>' +
       '</div>' +
+      '<p style="margin-top:0.625rem;color:var(--fg-strong);font-weight:500">This is the only proof of purchase — save it now.</p>' +
       (url
         ? '<div class="pr-url-row" style="margin-top:0.75rem"><div class="pr-url" id="pr-wallet-url-value">' + esc(url) + '</div><button class="copy-btn" type="button" id="pr-wallet-copy-btn">Copy</button></div>'
         : '<p style="margin-top:0.75rem">' + esc((payload && (payload.note || payload.keep_this_token)) || 'Check the response for your token.') + '</p>')
@@ -554,7 +555,7 @@
                 ' &middot; 10,000 calls' + (isSub ? ', renews automatically' : ' over 30 days') + '</p>' +
             '</div>' +
           '</div>' +
-          '<p class="muted" style="margin-top:1rem">' +
+          '<p style="margin-top:1rem;color:var(--fg-strong);font-weight:500">' +
             esc(r.body.warning || 'This URL is your only proof of purchase — copy it now, there is no account to recover it from later.') +
           '</p>' +
           '<div class="pr-url-row" style="margin-top:0.75rem">' +
