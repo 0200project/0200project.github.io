@@ -157,7 +157,7 @@
           <div class="pr-price">$9<span> one time</span></div>
           <p class="pr-desc">10,000 calls over 30 days. A bearer token, not an account — nothing to cancel, because nothing recurs.</p>
           <p class="pr-url-label">Setup is one URL, pasted into any MCP client:</p>
-          <div class="pr-url">https://base-tx-explain.fly.dev/mcp/btxp_&lt;your token&gt;</div>
+          <div class="pr-url">https://api.0200project.com/mcp/btxp_&lt;your token&gt;</div>
 
           <div class="pr-actions">
             <a class="btn btn-primary btn-sm" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Pay with card — $9</a>
@@ -254,7 +254,7 @@
 (function () {
   'use strict';
 
-  var ENDPOINT = 'https://base-tx-explain.fly.dev/mcp';
+  var ENDPOINT = 'https://api.0200project.com/mcp';
 
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -367,7 +367,7 @@
 
   function renderSuccess(payload) {
     var token = payload && payload.pass_token;
-    var url = (payload && payload.mcp_url) || (token ? 'https://base-tx-explain.fly.dev/mcp/' + token : null);
+    var url = (payload && payload.mcp_url) || (token ? 'https://api.0200project.com/mcp/' + token : null);
     renderPanel(
       '<p>Paid. This is the only proof of purchase — save it now.</p>' +
       (url
@@ -455,14 +455,21 @@
        manual reloads we're telling them to do. A first sighting gets the plain
        "give it a moment" message; past ~45s of real waiting, telling them to
        keep reloading would just be untrue, so the message changes to a real
-       next step instead of a longer wait with no visible end. */
+       next step instead of a longer wait with no visible end.
+
+       THE 45000 BELOW IS SHARED WITH THE SERVER. src/index.ts uses the same
+       number as WAITING_STUCK_AFTER_MS to decide when a waiting buyer becomes a
+       loud log line, so we start listening at the moment this page tells them to
+       shout. They are one invariant in two files and scripts/predeploy.sh gates
+       on them being equal -- change this and the deploy stops until the server
+       matches. Don't retune it here alone. */
     var firstSeenKey = 'btx-pending-' + sessionId;
     var firstSeen = Number(sessionStorage.getItem(firstSeenKey));
     if (!firstSeen) {
       firstSeen = Date.now();
       try { sessionStorage.setItem(firstSeenKey, String(firstSeen)); } catch (e) { /* private mode, etc. */ }
     }
-    fetch('https://base-tx-explain.fly.dev/paid?session_id=' + encodeURIComponent(sessionId))
+    fetch('https://api.0200project.com/paid?session_id=' + encodeURIComponent(sessionId))
       .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
       .then(function (r) {
         if (r.status === 404) {
