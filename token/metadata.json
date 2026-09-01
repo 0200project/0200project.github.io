@@ -16,6 +16,12 @@
   "description": "0200 is economic infrastructure for autonomous machines.",
   "extendedDescription": "0200 is building open infrastructure for autonomous machine commerce, focused on machine-readable economic state, resolution, and finality across payments and fulfillment.",
   "explorer": "https://basescan.org/token/0xC626A027A0Fa57A9424Df1173b51d80d26B44FA6",
+  "officialPool": {
+    "protocol": "Uniswap V2",
+    "pair": "0x98d0bE8540a898eE5d946325D9535a12814a8978",
+    "quoteToken": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "url": "https://app.uniswap.org/swap?chain=base&inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0xC626A027A0Fa57A9424Df1173b51d80d26B44FA6"
+  },
   "sourceVerification": "https://repo.sourcify.dev/8453/0xC626A027A0Fa57A9424Df1173b51d80d26B44FA6",
   "deploymentTransaction": "0xdf138fa2f961637dcb04870b80fb17cef7a14cf86fd26c0a1c0e3e3a35f1c586",
   "runtimeBytecodeHash": "0xc788bf1411246729903073d1c13475ebac81f613a1d3565ab54a7e91b36bbd47",
