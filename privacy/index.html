@@ -81,11 +81,16 @@
       </ul>
 
       <h2>Third parties</h2>
-      <p>A few external systems are involved in serving you, and it is fair that you know about them:</p>
+      <p>These are the external systems your browser or your payment touches, found by enumerating the requests our pages make, checked 2026-09-06.</p>
       <ul>
         <li><strong>Google Fonts.</strong> This website loads the Geist and Geist Mono typefaces from Google Fonts, so your browser makes a request to Google's servers when a page loads.</li>
-        <li><strong>Fly.io.</strong> Tool requests are served from infrastructure hosted on Fly.io.</li>
+        <li><strong>Cloudflare cdnjs.</strong> This website loads its animation library from cdnjs.cloudflare.com, so your browser makes a request to Cloudflare's servers when a page loads.</li>
+        <li><strong>jsDelivr.</strong> This website loads its smooth-scrolling library from cdn.jsdelivr.net, so your browser makes a request to jsDelivr's servers when a page loads.</li>
+        <li><strong>Base RPC providers.</strong> The token page reads balances directly from Base when you scroll to that section, using a public endpoint at mainnet.base.org and falling back to base-rpc.publicnode.com. Your browser contacts whichever answers, and we run neither. We also name that same endpoint if you add Base to your wallet from our pay flow; whether your wallet uses it is your wallet's decision, not ours.</li>
+        <li><strong>The x402 facilitator.</strong> The status page checks whether facilitator.payai.network is reachable when it loads and when you press Re-check, so your browser contacts PayAI's servers on that page. We run neither the facilitator nor its host.</li>
+        <li><strong>Fly.io.</strong> Our own servers run on Fly.io. Every page contacts them when it loads, for the status line in the footer, not only when you use the tool.</li>
         <li><strong>The Base blockchain.</strong> If you pay for calls via x402, the payment settles on Base and is public by the nature of blockchains. A payment links your wallet address to a tool call. If that linkage matters to you, use a wallet accordingly.</li>
+        <li><strong>Stripe.</strong> Card payments for passes and subscriptions are handled by Stripe on their own pages at buy.stripe.com and billing.stripe.com. We never see or store your card details; Stripe does.</li>
       </ul>
 
       <h2>Data retention</h2>
