@@ -152,16 +152,28 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   color: #000000;
   border-color: #ffffff;
 }
-.btn-primary:hover, .btn-primary:active { background: #000000; color: #ffffff; border-color: #ffffff; }
 
 .btn-ghost {
   background: #000000;
   color: #ffffff;
   border-color: #ffffff;
 }
-.btn-ghost:hover, .btn-ghost:active { background: #ffffff; color: #000000; border-color: #ffffff; }
 
 .btn-sm { height: 2.125rem; padding-inline: 0.875rem; font-size: 0.8125rem; }
+
+
+/* Hover only where a pointer can hover. A touch screen keeps :hover after a tap, so the
+   black-and-white inversion would stick to the button you just pressed. Taps get :active. */
+.btn-primary:active { background: #000000; color: #ffffff; border-color: #ffffff; }
+.btn-ghost:active { background: #ffffff; color: #000000; border-color: #ffffff; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: #000000; color: #ffffff; border-color: #ffffff; }
+  .btn-ghost:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
+  .nav-links a:not(.btn):hover { color: var(--fg-strong); }
+  .copy-btn:hover { color: #000000; background: #ffffff; border-color: #ffffff; }
+  a.pill:hover { border-color: var(--border-hover); color: var(--fg-strong); }
+  .nav-toggle:hover { border-color: var(--fg); }
+}
 
 /* ---------- Navbar ---------- */
 
@@ -212,7 +224,6 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   color: var(--fg-muted);
   transition: color 0.15s ease;
 }
-.nav-links a:not(.btn):hover { color: var(--fg-strong); }
 .nav-links a:not(.btn)[aria-current="page"] { color: var(--fg-strong); }
 
 .nav-cta { margin-left: auto; }
@@ -234,6 +245,7 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
 
 @media (max-width: 47.9em) {
   .nav-toggle { display: inline-flex; }
+  .nav { background: #000000; -webkit-backdrop-filter: none; backdrop-filter: none; }
   /* The menu is a solid sheet in its own layer: nothing behind it, canvas included, may show
      through. It drops in, and its rows follow it by a few milliseconds each. */
   .nav-links {
@@ -250,6 +262,8 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
     padding: 0.75rem clamp(1.25rem, 4vw, 2rem) 1rem;
     background: #000000;
     border-bottom: 1px solid var(--border);
+    min-height: calc(100svh - 100%);   /* a full sheet: the viewport minus the bar's real height, so nothing of the page shows beneath it */
+    overflow-y: auto;
     visibility: hidden;
     opacity: 0;
     transform: translateY(-10px);
@@ -377,7 +391,6 @@ a.card:hover, .card-link:hover { border-color: var(--border-strong); background:
   cursor: pointer;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
-.copy-btn:hover { color: #000000; background: #ffffff; border-color: #ffffff; }
 
 code.inline {
   font-size: 0.85em;
@@ -433,12 +446,10 @@ a.pill {
   gap: 0.5rem;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
-a.pill:hover { border-color: var(--border-hover); color: var(--fg-strong); }
 .pill-arrow {
   color: var(--fg-faint);
   transition: transform 0.15s ease, color 0.15s ease;
 }
-a.pill:hover .pill-arrow { transform: translateX(2px); color: var(--fg); }
 
 .dot {
   width: 0.4375rem;
