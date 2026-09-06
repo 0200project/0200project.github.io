@@ -19,9 +19,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/gsap.min.js?v=3.12.5" defer></script>
+<script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
+<script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
 <link rel="stylesheet" href="/assets/style.css?v=816c79a2">
 <style>
@@ -84,8 +84,6 @@
       <p>These are the external systems your browser or your payment touches, found by enumerating the requests our pages make, checked 2026-09-06.</p>
       <ul>
         <li><strong>Google Fonts.</strong> This website loads the Geist and Geist Mono typefaces from Google Fonts, so your browser makes a request to Google's servers when a page loads.</li>
-        <li><strong>Cloudflare cdnjs.</strong> This website loads its animation library from cdnjs.cloudflare.com, so your browser makes a request to Cloudflare's servers when a page loads.</li>
-        <li><strong>jsDelivr.</strong> This website loads its smooth-scrolling library from cdn.jsdelivr.net, so your browser makes a request to jsDelivr's servers when a page loads.</li>
         <li><strong>Base RPC providers.</strong> The token page reads balances directly from Base when you scroll to that section, using a public endpoint at mainnet.base.org and falling back to base-rpc.publicnode.com. Your browser contacts whichever answers, and we run neither. We also name that same endpoint if you add Base to your wallet from our pay flow; whether your wallet uses it is your wallet's decision, not ours.</li>
         <li><strong>The x402 facilitator.</strong> The status page checks whether facilitator.payai.network is reachable when it loads and when you press Re-check, so your browser contacts PayAI's servers on that page. We run neither the facilitator nor its host.</li>
         <li><strong>Fly.io.</strong> Our own servers run on Fly.io. Every page contacts them when it loads, for the status line in the footer, not only when you use the tool.</li>
