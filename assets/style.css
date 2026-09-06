@@ -283,6 +283,7 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   .nav-links.open li:nth-child(8) { transition-delay: 0.24s; }
   .nav-links a { padding: 0.625rem 0.75rem; }
   .nav-cta { margin: 0.5rem 0 0; }
+  .nav-cta + .nav-cta { margin-left: 0; }
 }
 
 /* The burger becomes a cross: the outer lines meet in the middle and turn, the middle line leaves. */
