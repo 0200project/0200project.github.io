@@ -262,7 +262,7 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
     padding: 0.75rem clamp(1.25rem, 4vw, 2rem) 1rem;
     background: #000000;
     border-bottom: 1px solid var(--border);
-    min-height: calc(100svh - 100%);   /* a full sheet: the viewport minus the bar's real height, so nothing of the page shows beneath it */
+    min-height: calc(100vh - 100%);   /* a full sheet: the viewport minus the bar's real height; vh so it can only overshoot the bottom, never fall short of it */
     overflow-y: auto;
     visibility: hidden;
     opacity: 0;
