@@ -18,8 +18,12 @@
 <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="180x180">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=5030cc0f">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/motion.js?v=a6fef4d5" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=816c79a2">
 <style>
 </style>
 </head>
@@ -52,12 +56,12 @@
 
   <section class="page-hero page-hero-statement">
     <div class="container hero-mark-grid">
-      <div class="reveal">
+      <div class="">
         <span class="eyebrow">About 0200project</span>
         <h1 class="statement">We build tools agents can trust.</h1>
         <p class="lead">Autonomous software needs to call something, get an answer, and act on it, with no human reading the output first. That only works if the tool behaves identically every time, costs a knowable amount, and says what it could not determine.</p>
       </div>
-      <div class="hero-mark reveal" aria-hidden="true">
+      <div class="hero-mark" aria-hidden="true">
         <img src="/assets/logo-hero.png" width="240" height="240" alt="">
       </div>
     </div>
@@ -65,11 +69,11 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">How we build</span>
         <h2 class="h-section">Three properties, chosen for how an agent fails.</h2>
       </div>
-      <div class="grid-3 reveal">
+      <div class="grid-3">
         <div class="card"><span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10h4l2-5 2 10 2-5h4"/></svg></span><h3 class="h-card">Deterministic</h3>
           <p class="muted">No model in the response path. The same transaction always produces the same JSON, nothing to hallucinate, nothing to drift.</p>
           <div class="card-mini" aria-hidden="true">decode 0x0c84&hellip;4c8c <span class="lit">&rarr;</span> swap<br>decode 0x0c84&hellip;4c8c <span class="lit">&rarr;</span> swap <span class="lit">= identical</span></div>
@@ -88,12 +92,12 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">What runs today</span>
         <h2 class="h-section">One product, and the two fields that make it different.</h2>
         <p class="lead"><strong>base-transaction-decoder</strong> explains any Base mainnet transaction as strict JSON, plain English, a typed action, every asset moved with amounts already scaled, counterparties labelled, gas in dollars, risk flags with evidence.</p>
       </div>
-      <div class="led reveal">
+      <div class="led">
         <div class="panel-head"><span>in every response</span><span>base mainnet</span></div>
         <div class="led-row"><span class="led-lbl">checks</span><span class="led-val">Whether each safety check actually ran<small>Source unreachable &rarr; no flag emitted, check marked unavailable</small></span><span class="led-amt q"><span class="led-pill ran"><i></i>ran</span> <span class="led-pill na"><i></i>unavailable</span></span></div>
         <div class="led-row"><span class="led-lbl">provenance</span><span class="led-val">Which strings the transaction&rsquo;s author controls<small>Token symbols, contract names, and the summary derived from them</small></span><span class="led-amt q">treat as data</span></div>
@@ -105,12 +109,12 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">How we decide what to publish</span>
         <h2 class="h-section">Practices, not principles.</h2>
         <p class="lead">A practice can be checked. A principle cannot.</p>
       </div>
-      <ul class="checks reveal" style="max-width:46rem">
+      <ul class="checks" style="max-width:46rem">
         <li><strong>Claims carry the date they were verified.</strong> A fact true last week is reported as a fact about last week.</li>
         <li><strong>Pages are never overwritten.</strong> Corrections are dated and the original stays visible.</li>
         <li><strong>Examples are executed before publication.</strong> Every command shown here is run against production.</li>
@@ -122,12 +126,12 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">How it is built</span>
         <h2 class="h-section">One person, and gates that fail loudly.</h2>
         <p class="lead">0200project is operated by one person, with AI systems doing the majority of the engineering, review and analysis. Every claim is checked against a source before it ships, and the checks are automated wherever they can be.</p>
       </div>
-      <div class="led reveal">
+      <div class="led">
         <div class="panel-head"><span>the site build fails if</span><span>on every deploy</span></div>
         <div class="led-row"><span class="led-lbl">tier</span><span class="led-val">A page states a free-tier number the server does not report</span><span class="led-amt q">blocked</span></div>
         <div class="led-row"><span class="led-lbl">registry</span><span class="led-val">A page names a registry entry that does not resolve</span><span class="led-amt q">blocked</span></div>
@@ -141,12 +145,12 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">Live</span>
         <h2 class="h-section">Read from production, right now.</h2>
         <p class="lead">These numbers are fetched from our own health endpoint when this page loads. They are not written into the page and we cannot edit them without changing what the server reports.</p>
       </div>
-      <div class="led reveal" id="live-panel">
+      <div class="led" id="live-panel">
         <div class="panel-head"><span>api.0200project.com/healthz</span><span id="live-when">fetching&hellip;</span></div>
         <div class="led-row"><span class="led-lbl">version</span><span class="led-val">Running in production</span><span class="led-amt" id="lv-ver">&mdash;</span></div>
         <div class="led-row"><span class="led-lbl">calls</span><span class="led-val">Lifetime, including our own<small><span id="lv-free">&mdash;</span> served on the free tier</small></span><span class="led-amt" id="lv-calls">&mdash;</span></div>
@@ -161,7 +165,7 @@
 
   <section class="section">
     <div class="container">
-      <div class="section-head reveal" style="max-width:40rem">
+      <div class="section-head" style="max-width:40rem">
         <span class="eyebrow">Contact</span>
         <h2 class="h-section">Talk to us.</h2>
         <p class="lead">General enquiries and corrections: <a href="mailto:contact@0200project.com">contact@0200project.com</a>. Bugs and feature requests go to <a href="https://github.com/0200project/base-tx-explain/issues">GitHub Issues</a>. Security reports have <a href="/security/">their own page</a>.</p>
@@ -227,7 +231,7 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.1.4 &middot; Base mainnet</span></span>
-      <a class="pill footer-status" href="/status/"><span class="dot"></span><span id="ft-status">Checking status&hellip;</span></a>
+      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
     </div>
   </div>
 </footer>
@@ -255,12 +259,22 @@
       el('live-when').textContent = 'read ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + 'Z';
       var ch = (d.check_health && d.check_health.checks) || {}, names = Object.keys(ch);
       if (names.length) {
-        var dark = names.filter(function(k){ return (ch[k].unavailable_rate || 0) > 0; });
+        /* A missing unavailable_rate is UNKNOWN, not zero. Folding it to 0 would drop the
+           check out of `dark` and print "None reported an unavailable period" off absent
+           data -- a clean bill of health manufactured from silence, two lines above this
+           panel's own sentence that not-raised means not checked, not clean. */
+        var known = names.filter(function(k){ return typeof ch[k].unavailable_rate === 'number'; });
+        var unknown = names.length - known.length;
+        var oh = (typeof d.check_health.observed_hours === 'number') ? d.check_health.observed_hours : null;
+        var dark = known.filter(function(k){ return ch[k].unavailable_rate > 0; });
         el('lv-checks').innerHTML = '<b>' + names.length + ' risk checks tracked over the last '
-          + (d.check_health.observed_hours || 0) + 'h.</b> '
+          + (oh === null ? '\u2014' : oh) + 'h.</b> '
           + (dark.length
               ? dark.length + ' had periods where a source was unavailable: <code class="inline">' + dark.join('</code>, <code class="inline">') + '</code>. A flag not raised during those periods means not checked, not clean.'
-              : 'None reported an unavailable period in that window.');
+              : (known.length ? 'None reported an unavailable period in that window.'
+                              : 'Availability was not reported for these checks, so this panel cannot say whether any were dark.'))
+          + (unknown ? ' ' + unknown + ' of them did not report availability, so the line above cannot speak for '
+                       + (unknown === 1 ? 'it' : 'them') + '.' : '');
       } else {
         el('lv-checks').textContent = 'Per-check health not reported by this build.';
       }

@@ -18,8 +18,12 @@
 <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="180x180">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=5030cc0f">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/motion.js?v=a6fef4d5" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=816c79a2">
 <style>
   .pr-grid {
     display: grid;
@@ -158,7 +162,7 @@
   <section class="section" style="padding-bottom:0">
     <div class="container">
 
-      <div class="grid-3 reveal">
+      <div class="grid-3">
         <div class="card">
           <h3 class="h-card">Settlement forensics</h3>
           <p class="muted">What a transaction or a set of them actually moved, which fields were controlled by the transaction&rsquo;s author, and which checks could not be completed against it.</p>
@@ -173,7 +177,7 @@
         </div>
       </div>
 
-      <div class="led reveal" style="margin-top:1.5rem">
+      <div class="led" style="margin-top:1.5rem">
         <div class="panel-head"><span>terms</span><span>agreed before work starts</span></div>
         <div class="led-row"><span class="led-lbl">price</span><span class="led-val">Per engagement<small>Scope agreed in writing before anything begins</small></span><span class="led-amt">$5,000</span></div>
         <div class="led-row"><span class="led-lbl">delivery</span><span class="led-val">Written finding, evidence attached<small>Reproducible by you, without taking our word for any step</small></span><span class="led-amt">3&ndash;5 days</span></div>
@@ -183,12 +187,12 @@
 
       <p class="term-note" style="max-width:44rem;margin-top:1rem">Also available: <a href="/services/">our written record of a settlement failure we hit ourselves</a>, a fixed document rather than an engagement on your data.</p>
 
-      <div class="card reveal" style="border-left:2px solid var(--border-strong);margin-top:1.25rem">
+      <div class="card" style="border-left:2px solid var(--border-strong);margin-top:1.25rem">
         <p class="small" style="font-family:var(--mono);font-size:0.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint);margin:0 0 .5rem">What this is not</p>
         <p style="margin:0">You receive JSON and a written artifact. <strong>Not a signed attestation, and not an opinion you can hand to a regulator.</strong> It is our reading of public chain data with the evidence attached so you can check every step of it yourself, which is the part that makes it worth having, and also the limit of what it is.</p>
       </div>
 
-      <div class="hero-actions reveal" style="margin-top:1.75rem">
+      <div class="hero-actions" style="margin-top:1.75rem">
         <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Engagement%20enquiry">Start a conversation</a>
         <a class="btn btn-ghost" href="/playground/">See the tool first</a>
       </div>
@@ -200,7 +204,7 @@
   <section class="section">
     <div class="container">
 
-      <div class="section-head reveal">
+      <div class="section-head">
         <span class="eyebrow">Or call it yourself</span>
         <h2 class="h-section">The API, priced per call.</h2>
         <p class="lead">Unchanged, and still the fastest way to find out whether any of this is worth a conversation. No account on our side in any of these.</p>
@@ -211,7 +215,7 @@
         <div id="pr-success-body" style="padding:1.25rem"></div>
       </div>
 
-      <div class="pr-grid reveal">
+      <div class="pr-grid">
 
         <div class="card pr-card">
           <span class="pr-tag">Free</span>
@@ -261,12 +265,12 @@
 
       </div>
 
-      <div class="panel pr-callout reveal">
+      <div class="panel pr-callout">
         <p><strong>Have a card and no wallet at all?</strong> The Apify Store listing bills $20 / 1,000 calls, the same $0.02 per call, directly through Apify. It's a working card path today, no wallet required.</p>
         <a class="btn btn-ghost btn-sm" href="https://apify.com/0200project/base-tx-explain" rel="noopener">Open the Apify listing</a>
       </div>
 
-      <div class="pr-faq reveal">
+      <div class="pr-faq">
         <h3>Why do the Pass and Developer plan cost the same?</h3>
         <p>Deliberately. The usage is identical: 10,000 calls, 30 days. The Pass is bought by hand and expires; Developer renews itself and adds a managed URL. Pick whichever matches how you want to think about it, a top-up, or a subscription.</p>
       </div>
@@ -328,7 +332,7 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.1.4 &middot; Base mainnet</span></span>
-      <a class="pill footer-status" href="/status/"><span class="dot"></span><span id="ft-status">Checking status&hellip;</span></a>
+      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
     </div>
   </div>
 </footer>

@@ -11,8 +11,12 @@
 <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="180x180">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=5030cc0f">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/motion.js?v=a6fef4d5" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=816c79a2">
 <style>
   .nf {
     min-height: calc(100vh - var(--nav-h) - 22rem);
@@ -24,6 +28,7 @@
   .nf .panel { margin-top: 2rem; }
   .nf .panel pre { padding: 1rem 1.125rem; font-size: 0.8125rem; line-height: 1.7; overflow-x: auto; }
   .nf-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.nf > .container { min-width: 0; width: 100%; }
 </style>
 </head>
 <body>
@@ -81,7 +86,7 @@
           0200project
         </a>
         <p>Machine-native tools for autonomous AI agents.</p>
-        <a class="pill footer-status" href="/status/"><span class="dot"></span><span id="ft-status">Checking status&hellip;</span></a>
+        <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
       </div>
       <nav aria-label="Product">
         <h4>Product</h4>

@@ -18,8 +18,12 @@
 <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="180x180">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=5030cc0f">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/motion.js?v=a6fef4d5" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=816c79a2">
 <style>
   .status-col { max-width: 46rem; }
   .status-body { padding-bottom: clamp(4rem, 9vw, 6.5rem); }
@@ -206,7 +210,7 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.1.4 &middot; Base mainnet</span></span>
-      <a class="pill footer-status" href="/status/"><span class="dot"></span><span id="ft-status">Checking status&hellip;</span></a>
+      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
     </div>
   </div>
 </footer>
@@ -297,21 +301,80 @@
 
                The free/total split was misleading on its own too: a free-out-of-
                total figure invites the reader to assume the remainder were paid.
-               They were mostly paywall responses. So every component is now named.
+
+               TWO CLAIMS THAT USED TO SIT HERE WERE WRONG, corrected 2026-09-06
+               against a live /healthz read of 1,415 / 786 free / 98 wall hits:
+
+                 "They were mostly paywall responses." Wall hits are 98 of the 629
+                 non-free calls -- 15.6%, not most of them.
+
+                 "So every component is now named." It names two of six.
+
+               THE DECOMPOSITION, answered 2026-09-05 by whoever owns the ledger
+               semantics, after this comment first recorded it as an open
+               question. usage.ts:290-325 is an if/else-if chain, so the six
+               buckets are mutually exclusive and exhaustive BY CONSTRUCTION:
+
+                 internal_calls  pass_calls  degraded_calls
+                 paid_calls      wall_hits   free            == calls, exactly
+
+               This line names `free` and `wall_hits`. The rest is not a residue
+               and not a mystery -- it is three named buckets the page omits, and
+               at a 2026-09-05 read INTERNAL_CALLS WAS 84% OF IT. OUR OWN TRAFFIC.
+               In the same read `paid_calls` was 12. So a reader who subtracts and
+               concludes the remainder was paid is wrong by a factor of about 46.
+
+               DO NOT ADD `unmarked_calls` TO THESE. It is not a bucket. It is an
+               overlay counted at :289 over rows that then fall through into one
+               of the six, so adding it double-counts -- and nothing in the
+               payload says so. That is exactly what made the arithmetic here
+               look unreconcilable when it never was.
+
+               THE REMAINING PROBLEM IS THE TOTAL, NOT THE MISSING CLAUSES.
+               `calls` is what invites the subtraction: a total published beside a
+               partial decomposition is a trap, because CORRECT arithmetic on
+               HONEST numbers yields a wrong third number. Naming the rest is not
+               freely available -- `internal_calls` is already public here, but
+               `paid_calls` and `pass_calls` are deliberately withheld, which is
+               the same boundary that produced the "0 payments settled" bug above.
+               Publishing the full partition, or publishing no total, are the two
+               leak-free options. BOTH ARE DISCLOSURE DECISIONS, NOT ENGINEERING
+               ONES, and they are the founder's -- open on his page, not here.
 
                Figures deliberately not quoted here: this file is public, and
                commercial state belongs on the token-gated stats surface. */
-          var freeN = typeof lt.free === 'number' ? lt.free : 0;
-          var walledN = typeof lt.wall_hits === 'number' ? lt.wall_hits : 0;
-          var settledN = typeof lt.settlements === 'number' ? lt.settlements : 0;
-          var line = lt.calls.toLocaleString() + ' tool calls all-time \u00b7 ' +
-            freeN.toLocaleString() + ' served free \u00b7 ' +
-            walledN.toLocaleString() + ' returned a payment challenge \u00b7 ' +
-            settledN.toLocaleString() + ' payment' + (settledN === 1 ? '' : 's') + ' settled';
-          /* "3 payments settled" still reads as "3 customers paid" unless we say
-             otherwise, and every settlement so far has been our own testing.
-             Derived from the live figure rather than hardcoded, so it disappears
-             by itself the day a real customer pays. */
+          /* OMIT AN ABSENT COMPONENT, NEVER ZERO IT. This block used to do
+             `typeof lt.free === 'number' ? lt.free : 0` for both, which is the
+             same construction that published "0 payments settled" -- it just
+             happened to be aimed at two fields the server does publish, so it
+             was latent rather than live. site/assets/site.js is the reference
+             implementation and it omits; this now matches it. A missing figure
+             disappears from the line instead of asserting none. */
+          var parts = [lt.calls.toLocaleString() + ' tool calls all-time'];
+          if (typeof lt.free === 'number') {
+            parts.push(lt.free.toLocaleString() + ' served free');
+          }
+          if (typeof lt.wall_hits === 'number') {
+            parts.push(lt.wall_hits.toLocaleString() + ' returned a payment challenge');
+          }
+          var line = parts.join(' \u00b7 ');
+          /* NO SETTLEMENT COUNT HERE, for two independent reasons.
+
+             (1) /healthz does not publish `settlements` — that is commercial
+             state and belongs on the token-gated surface, exactly as the comment
+             above already says. This page read the field anyway and rendered the
+             ABSENCE as the number zero, publishing "0 payments settled" while
+             five had settled, one of them a real customer payment on 2026-08-29
+             (0x325557e1..., $0.02). An instrument with no spelling for "I cannot
+             tell you" answers with a number instead. A false figure about our own
+             record is worst on this page of all, because this page tells the
+             reader the checks run live against production and invites them to
+             verify — and our own outreach cites that payment by hash.
+
+             (2) Even holding the field, a bare count may not be rendered here:
+             "5 payments settled" reads as "5 customers paid", and the split is
+             one customer to four of our own. A count may not imply a population
+             we do not have. If this clause ever returns it carries its split. */
           lifetimeLine.textContent = line;
         }
       } else if (health.ok) {
