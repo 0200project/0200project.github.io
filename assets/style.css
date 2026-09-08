@@ -175,6 +175,47 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   .nav-toggle:hover { border-color: var(--fg); }
 }
 
+/* A small circle cursor, mouse-and-precision-pointer only. mix-blend-mode: difference
+   keeps it visible on both black and white ground without a second colour to maintain.
+   Real text-entry fields keep their own I-beam -- the dot only replaces the arrow. */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 0 solid #ffffff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.15s ease, width 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+    height 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.2s ease, border-width 0.2s ease;
+  will-change: transform;
+}
+.cursor-dot.is-visible { opacity: 1; }
+/* Over a link or button the dot opens into a thin ring -- a single, minimal
+   signal that the thing underneath is clickable, no colour, no glow. */
+.cursor-dot.is-hover {
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  border-width: 1.5px;
+}
+@media (hover: hover) and (pointer: fine) {
+  body:not(.cursor-off) { cursor: none; }
+  body:not(.cursor-off) a,
+  body:not(.cursor-off) button,
+  body:not(.cursor-off) .btn,
+  body:not(.cursor-off) [role="button"] { cursor: none; }
+  body:not(.cursor-off) input,
+  body:not(.cursor-off) textarea,
+  body:not(.cursor-off) select { cursor: auto; }
+}
+
 /* ---------- Navbar ---------- */
 
 .nav {

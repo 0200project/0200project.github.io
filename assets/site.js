@@ -243,3 +243,59 @@
     el.addEventListener('click', openPalette);
   });
 })();
+
+/* A minimal circle cursor: mouse-and-precision-pointer only, skipped on touch and
+   whenever the OS asks for reduced motion. A tiny bit of easing reads as considered
+   rather than another decorative trail -- there is no glow, no scale, no colour shift. */
+(function () {
+  'use strict';
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dot = document.createElement('div');
+  dot.className = 'cursor-dot';
+  dot.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(dot);
+
+  var tx = 0, ty = 0, cx = 0, cy = 0, shown = false;
+
+  function place(x, y, scale) {
+    dot.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%) scale(' + (scale || 1) + ')';
+  }
+
+  function loop() {
+    var dx = tx - cx, dy = ty - cy;
+    cx += dx * 0.35;
+    cy += dy * 0.35;
+    /* The dot swells a touch with speed and eases straight back to 1 at rest --
+       a breath, not a stretch or a trail. */
+    var speed = Math.sqrt(dx * dx + dy * dy);
+    var scale = 1 + Math.min(speed / 70, 0.35);
+    place(cx, cy, scale.toFixed(3));
+    requestAnimationFrame(loop);
+  }
+
+  var HOVER_SEL = 'a, button, .btn, [role="button"]';
+
+  window.addEventListener('mousemove', function (e) {
+    tx = e.clientX;
+    ty = e.clientY;
+    if (!shown) {
+      shown = true;
+      cx = tx;
+      cy = ty;
+      place(cx, cy);
+      dot.classList.add('is-visible');
+    }
+    if (reduced) place(tx, ty);
+    var over = e.target && e.target.closest ? e.target.closest(HOVER_SEL) : null;
+    dot.classList.toggle('is-hover', !!over);
+  }, { passive: true });
+
+  window.addEventListener('mouseleave', function () {
+    dot.classList.remove('is-visible');
+    shown = false;
+  });
+
+  if (!reduced) requestAnimationFrame(loop);
+})();
