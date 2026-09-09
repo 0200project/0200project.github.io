@@ -430,7 +430,12 @@
     // All or nothing: a partial CDN load must leave the page at rest, not half-choreographed.
     if (!window.gsap || !window.ScrollTrigger) return;
     gsap.registerPlugin(ScrollTrigger);
-    if (reduce || document.hidden) return;   // a tab nobody can see gets the page at rest
+    if (reduce) return;
+    // No document.hidden check: a page that loads hidden (a background tab, a restored
+    // session, an OS link preview) must not disable its scroll feel PERMANENTLY -- nothing
+    // here ever re-checked visibility, so it never recovered on its own. The browser already
+    // throttles a hidden tab's animation frames; motion.js on every other page relies on
+    // exactly that and never needed this gate.
     // Smooth scroll, and the scroll-linked motion below reads its position from it.
     if (window.Lenis) {
       const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
