@@ -74,6 +74,34 @@
     <section aria-label="Release history">
 
       <article class="log-entry">
+        <div class="log-date"><time datetime="2026-09-09">September 9, 2026</time></div>
+        <div class="log-body">
+          <h2>The impersonation check now says how far it reaches</h2>
+          <p>A risk flag warns you when a token wears a known token&rsquo;s ticker from the wrong address. It was checking against a list of 19 tokens and the page describing it never said so &mdash; which meant a token outside that list came back with no flag, and no flag reads like innocence.</p>
+          <ul>
+            <li><strong>The list is now 116 tokens</strong>, our own 19 plus the Base entries of the published Uniswap token list.</li>
+            <li><strong>It is a union, not a swap, and that was the whole decision.</strong> Moving wholesale to the published list would have added 97 tokens and quietly dropped 9 that only we carried: USDS, sUSDS, GHO, wstETH, weETH, rETH, ezETH, tBTC and LBTC. Two of those are Bitcoin wrappers, which is the exact category the problem was found in. That would have been a regression wearing the shape of an upgrade.</li>
+            <li><strong>Each list keeps its own date.</strong> When the flag fires it names which list matched and when that list was read &mdash; the published one on September 9, ours verified on August 19. Averaging two dates into one would be a freshness claim we cannot support.</li>
+            <li><strong>The bound is now written on the page.</strong> A token whose symbol is not on the list is not checked, and the absence of this flag is not a statement that a token is genuine. That sentence is the actual change; the extra 97 tokens are the smaller half.</li>
+          </ul>
+          <p>Found while measuring how many tokens the check covered. A coverage number cannot be computed without naming what it is coverage <em>of</em>, and the missing disclosure fell out of the arithmetic.</p>
+        </div>
+      </article>
+
+      <article class="log-entry">
+        <div class="log-date"><time datetime="2026-09-08">September 8, 2026</time></div>
+        <div class="log-body">
+          <h2>The health check now reports whether our safety feeds are current</h2>
+          <p>Our drainer-address check merges two public blocklists. The health endpoint reported both as healthy because both answered when asked &mdash; and one of them had not changed since November 2020.</p>
+          <ul>
+            <li><strong>Reachable and current are different properties</strong>, and only the first was being measured. A frozen file returns HTTP 200 exactly like a maintained one.</li>
+            <li><strong>Each feed now reports its own last change</strong> on <code class="inline">/healthz</code>, as current, stale or unknown, with the commit it was read at so anyone can check the same bytes.</li>
+            <li><strong>Unknown is its own answer.</strong> If we cannot read a feed&rsquo;s date, it does not quietly count as fresh.</li>
+            <li><strong>One stale feed makes the set stale</strong>, because a current feed does not supply the addresses a frozen one is missing.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="log-entry">
         <div class="log-date"><time datetime="2026-08-26">August 26, 2026</time></div>
         <div class="log-body">
           <h2>base-tx-explain is now base-transaction-decoder</h2>

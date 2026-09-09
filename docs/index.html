@@ -459,7 +459,7 @@ npm run dev</code></pre>
             <tr><td><code class="inline">approval_for_all</code></td><td>The transaction granted an operator approval over an entire collection.</td></tr>
             <tr><td><code class="inline">unlimited_approval</code></td><td>The transaction granted an effectively unlimited token approval.</td></tr>
             <tr><td><code class="inline">known_drainer</code></td><td>An involved address appears on the ScamSniffer or MyEtherWallet public blocklists.</td></tr>
-            <tr><td><code class="inline">impersonated_token</code></td><td>A token reports the symbol of a known token but is not that token&rsquo;s canonical contract; its address is shown instead.</td></tr>
+            <tr><td><code class="inline">impersonated_token</code></td><td>A token reports the symbol of a token on our known-token list but is not the address that list records for it; its address is shown instead. <strong>This check is bounded by that list: 116 tokens (our own 19, verified 2026-08-19, plus the Base entries of tokens.uniswap.org, read 2026-09-09).</strong> A token whose symbol is not on the list is not checked, and the absence of this flag is not a statement that a token is genuine.</td></tr>
             <tr><td><code class="inline">nonstandard_token_symbol</code></td><td>A token&rsquo;s self-reported symbol failed a standard-ticker check; its contract address is shown in place of the name.</td></tr>
             <tr><td><code class="inline">transaction_reverted</code></td><td>The transaction reverted onchain.</td></tr>
           </tbody>
