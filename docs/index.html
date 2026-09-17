@@ -447,7 +447,7 @@ npm run dev</code></pre>
       </ul>
 
       <h3><code>risk_flags</code> values</h3>
-      <p>A flag always means evidence was found, a failed lookup never produces a flag, which is why <a href="#checks"><code class="inline">checks</code></a> below tells you whether the lookup happened. Sources: Sourcify and Basescan verification status, the ScamSniffer and MyEtherWallet public blocklists (consumed at runtime, refreshed twice daily), and approval semantics.</p>
+      <p>A flag always means evidence was found, a failed lookup never produces a flag, which is why <a href="#checks"><code class="inline">checks</code></a> below tells you whether the lookup happened. Sources: Sourcify and Basescan verification status, the ScamSniffer and MyEtherWallet public blocklists (consumed read-only at runtime; each feed&rsquo;s own last-change date and current/stale state are published live on <code class="inline">/healthz</code>), and approval semantics.</p>
       <div class="table-wrap">
         <table>
           <thead>
