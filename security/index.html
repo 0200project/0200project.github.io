@@ -82,7 +82,7 @@
 
       <h2>Infrastructure</h2>
       <p>The service is stateless: a fresh MCP server is created per request, and there are no sessions to hijack. All traffic is served over TLS.</p>
-      <p>Risk-flag blocklists are consumed read-only from public sources (ScamSniffer and MyEtherWallet). The service never writes to them. Reachable and current are different properties: each feed&rsquo;s own last-change date, and whether it currently counts as current or stale, is published live on <code class="inline">/healthz</code>.</p>
+      <p>Risk-flag blocklists are consumed read-only from public sources (ScamSniffer and MyEtherWallet). The service never writes to them. Reachable and fresh are different properties, and only the first used to be measured: each feed&rsquo;s own last-change date, and whether it has gone stale by our stated threshold, is published on <code class="inline">/healthz</code>.</p>
 
       <h2>Honest limits</h2>
       <p>Risk flags report evidence that was found; a failed lookup never produces a flag. By the same token, the absence of a <code class="inline">known_drainer</code> flag is not a safety guarantee, a bad actor may simply not be on any public blocklist yet.</p>
