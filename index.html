@@ -23,7 +23,7 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -149,6 +149,14 @@
 
 
 </style>
+<style>
+  .x-wrap { max-width: 64rem; margin-inline: auto; }
+  .x-sec { padding-block: clamp(5rem, 12vw, 10rem) 0; }
+  .x-sec:last-of-type { padding-bottom: clamp(6rem, 14vw, 11rem); }
+  .x-h { font-size: clamp(2.25rem, 5.4vw, 4.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; color: var(--fg-strong); margin: 0; max-width: 16ch; text-wrap: balance; }
+  .x-p { font-size: clamp(1.0625rem, 1.2vw + .6rem, 1.3125rem); color: var(--fg-muted); max-width: 36rem; margin: 1.5rem 0 0; line-height: 1.5; }
+  .x-acts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
+</style>
 </head>
 <body data-motion="own">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -169,7 +177,7 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -185,7 +193,7 @@
     <div class="container hero-stage">
       <div class="hero-main">
         <h1 class="display" data-words>Tools for autonomous AI&nbsp;agents.</h1>
-        <p class="hero-lead">Machine-native infrastructure for autonomous AI agents: deterministic APIs, MCP-native, pay per call via x402.</p>
+        <p class="hero-lead">Machine-native infrastructure for autonomous AI agents: deterministic APIs, MCP-native.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/playground/">Try it free</a>
           <a class="btn btn-ghost" href="/docs/">Read the docs</a>
@@ -194,156 +202,27 @@
     </div>
   </section>
 
-  <section class="section receipt-band" id="decode">
-    <div class="container">
-      <p class="decode-intro">Decoders dump the transaction. We explain it, and we tell your agent which fields an attacker controls, and when a safety check didn&rsquo;t actually run. Built for agents reading Base.</p>
-      <div class="receipt-frame" data-receipt>
-        <div class="led">
-        <div class="panel-head"><span>tx 0x0c84&hellip;4c8c</span><span>base mainnet &middot; block 50,204,356</span></div>
-        <p class="led-sum"><b>0x401d&hellip;f2c5</b> swapped 0.03 ETH for 12,899,422 WNL via Uniswap V4 PoolManager.</p>
-        <div class="led-row"><span class="led-lbl">Out</span><span class="led-val">ETH</span><span class="led-amt">0.030000</span></div>
-        <div class="led-row"><span class="led-lbl">In</span><span class="led-val">WNL<small>0xb200&hellip;b9a01</small></span><span class="led-amt">12,899,422.144135</span></div>
-        <div class="led-row"><span class="led-lbl">Risk</span><span class="led-val">Unverified contract<small>evidence in <code class="inline">detail</code></small></span><span class="led-amt q"><span class="led-pill na"><i></i>flagged</span></span></div>
-        <div class="led-row"><span class="led-lbl">Checks</span><span class="led-val">Contract verification<small>First interaction, source unreachable</small></span><span class="led-amt q"><span class="led-pill ran"><i></i>ran</span> <span class="led-pill na"><i></i>unavailable</span></span></div>
-        <div class="led-foot"><b>Two of five checks did not run on this call.</b> No flag was emitted for them, which is not the same as clean, and the response says so in its own fields.</div>
-        </div>
-                <p class="term-note">A free call, replayed, no wallet needed. Real output from a <a href="https://basescan.org/tx/0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">live Base transaction</a>.</p>
-              </div>
-      <form class="hero-try" action="/playground/" method="get">
-      <input class="hero-try-input" type="text" name="tx" placeholder="Paste a Base tx hash&#8230;" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Base transaction hash">
-      <button class="btn btn-ghost btn-sm" type="submit">Explain it</button>
-      </form>
-      <p class="small faint" style="margin-top:.75rem">No key, no signup. 50 free calls each day per IPv4 address or IPv6 /64, shared by everyone behind it; then $0.02 per call in USDC on Base.</p>
-          </div>
+  <section class="x-sec" id="agents">
+    <div class="container"><div class="x-wrap">
+      <h2 class="x-h">A decoder for AI agents.</h2>
+      <p class="x-p">Send a transaction hash. Get back what happened, in plain English and strict JSON. 50 free calls every 24 hours per IPv4 address or IPv6 /64, no account.</p>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="/playground/">Try it free</a>
+        <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls for $9</a>
+      </div>
+    </div></div>
   </section>
 
-
-  <section class="section" id="about">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">What is 0200project?</span>
-        <h2 class="h-section">Machine-native infrastructure for autonomous agents.</h2>
-        <p class="lead">AI agents need reliable tools to understand data, interact with systems, and complete tasks without a human in the loop. 0200project builds those tools.</p>
+  <section class="x-sec" id="teams">
+    <div class="container"><div class="x-wrap">
+      <h2 class="x-h">Reviews for finance teams.</h2>
+      <p class="x-p">Send the addresses and dates. We confirm the price and scope in writing. You pay after delivery: no deposit, no card on file, nothing recurs. It is evidence for your team, not a signed attestation.</p>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Addresses%3A%0ADate%20range%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
+        <a class="btn btn-ghost" href="/pricing/">How it works</a>
       </div>
-      <div class="props">
-        <div class="prop">
-          <h3 class="h-card">Deterministic by design</h3>
-          <p class="muted">Same input, same output. No model in the response path, nothing to hallucinate, nothing to drift.</p>
-        </div>
-        <div class="prop">
-          <h3 class="h-card">No accounts. No API keys.</h3>
-          <p class="muted">Tools are paid per call in USDC via the x402 protocol. An agent can discover, pay, and retry entirely on its own.</p>
-        </div>
-        <div class="prop">
-          <h3 class="h-card">Stable contracts</h3>
-          <p class="muted">Strict JSON schemas, versioned and documented. Output is designed to be parsed blind by software, not skimmed by humans.</p>
-        </div>
-      </div>
-    </div>
+    </div></div>
   </section>
-
-  <section class="section" id="tool">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">First tool</span>
-        <h2 class="h-section">base-transaction-decoder</h2>
-        <p class="lead">Blockchain transaction intelligence for AI agents. Raw onchain data is hostile to language models, logs, topics, calldata. base-transaction-decoder converts it into structured information an agent can act on.</p>
-      </div>
-
-      <div class="demo-grid">
-        <div class="demo-side">
-          <div class="panel">
-            <div class="panel-head"><span>POST api.0200project.com/explain</span><span>tx_hash</span></div>
-            <pre style="padding:1rem 1.125rem; font-size:0.8125rem; overflow-x:auto"><code>0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c</code></pre>
-          </div>
-          <ul class="checks" style="padding:0.25rem 0.25rem 0">
-            <li>What happened, in plain English</li>
-            <li>Every asset that moved</li>
-            <li>Counterparties, labeled where known</li>
-            <li>Risk signals with evidence</li>
-          </ul>
-          <div class="codeblock" style="margin-top:0.75rem">
-            <div class="panel-head"><span>terminal</span><button class="copy-btn" type="button" data-copy="#home-curl">Copy</button></div>
-            <pre><code id="home-curl">curl -s -X POST https://api.0200project.com/explain \
-  -H 'Content-Type: application/json' \
-  -d '{"tx_hash":"0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c"}'</code></pre>
-          </div>
-          <p class="small faint" style="margin-top:0.625rem">No key, no signup. 50 free calls each day per IPv4 address or IPv6 /64, shared by everyone behind it; then $0.02 per call in USDC on Base.</p>
-          <div class="hero-actions" style="margin-top:0.5rem">
-            <a class="btn btn-primary" href="/playground/">Open playground</a>
-            <a class="btn btn-ghost" href="/docs/">Read the docs</a>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head"><span>output</span><span>tool result · strict JSON</span></div>
-          <pre style="padding:1.125rem 1.25rem; overflow-x:auto; font-size:0.78125rem; line-height:1.7"><code><span class="tok-punc">{</span>
-  <span class="tok-key">"summary"</span><span class="tok-punc">:</span> <span class="tok-str">"0x401d…f2c5 swapped 0.03 ETH for
-    12,899,422 WNL via Uniswap V4 PoolManager."</span><span class="tok-punc">,</span>
-  <span class="tok-key">"action_type"</span><span class="tok-punc">:</span> <span class="tok-str">"swap"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"status"</span><span class="tok-punc">:</span> <span class="tok-str">"success"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"assets_moved"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"ETH"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"0.03"</span> <span class="tok-punc">},</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"WNL"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"12899422.14…"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
-  <span class="tok-key">"counterparties"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"label"</span><span class="tok-punc">:</span> <span class="tok-str">"Uniswap V4 PoolManager"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
-  <span class="tok-key">"risk_flags"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"flag"</span><span class="tok-punc">:</span> <span class="tok-flag">"unverified_contract"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
-  <span class="tok-key">"gas_paid_usd"</span><span class="tok-punc">:</span> <span class="tok-num">0.020562</span>
-<span class="tok-punc">}</span></code></pre>
-        </div>
-      </div>
-      <p class="demo-note" style="margin-top:1rem">Actual output for a <a href="https://basescan.org/tx/0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">live Base transaction</a>, trimmed for width. Decoded deterministically from the receipt, byte-for-byte reproducible, no LLM in the response path.</p>
-    </div>
-  </section>
-
-  <section class="section" id="payments">
-    <div class="container">
-      <div class="grid-2" style="gap:3rem; align-items:start">
-        <div class="section-head" style="margin-bottom:0">
-          <span class="eyebrow">Payments</span>
-          <h2 class="h-section">Priced for machines, not seats.</h2>
-          <p class="lead">Every tool is metered per call and settled in USDC on Base through the x402 protocol. The payment challenge is part of the response, a capable agent handles it without a signup form ever existing.</p>
-          <p class="muted" style="margin-top:1rem; font-size:0.9375rem">Non-custodial by construction: the facilitator verifies and settles but cannot move or redirect funds, and the server never touches a wallet or asks for a key.</p>
-        </div>
-        <div class="">
-          <ol class="pay-steps">
-            <li><div><strong>Call the tool</strong><span>First 50 calls each day are free, counted per IPv4 address or IPv6 /64. No registration.</span></div></li>
-            <li><div><strong>Receive a 402 challenge</strong><span>The response carries exact price, asset, and recipient, everything needed to pay.</span></div></li>
-            <li><div><strong>Pay and retry</strong><span>$0.02 per call in USDC. The agent attaches proof of payment and retries autonomously.</span></div></li>
-          </ol>
-          <p class="muted" style="margin-top:1rem; font-size:0.875rem">Calling often? The <a href="/docs/#pass">$9 pass</a> covers 10,000 calls over 30 days, one payment instead of one per call.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-<section class="section" id="work">
-  <div class="container">
-    <div class="section-head" style="max-width:44rem">
-      <span class="eyebrow">Work with us</span>
-      <h2 class="h-section">Or have us check your own transactions, and tell you what we couldn&rsquo;t.</h2>
-      <p class="lead">A written finding about your own on-chain activity, raw evidence attached, in a form you can reproduce without taking our word for a single step. $5,000 per engagement, delivered in 3&ndash;5 business days, and <strong>you pay after delivery</strong>.</p>
-    </div>
-    <div class="props two">
-      <div class="prop"><h3 class="h-card">Settlement forensics</h3><p class="muted">What a transaction actually moved, which fields its author controlled, and which checks could not be completed against it.</p></div>
-      <div class="prop"><h3 class="h-card">Attribution audit</h3><p class="muted">For a set of addresses, what the chain establishes and what it does not. The second list is the one usually missing.</p></div>
-      <div class="prop"><h3 class="h-card">Reconciliation</h3><p class="muted">Your record against the chain&rsquo;s, with every difference itemised and evidenced.</p></div>
-    </div>
-    <p class="term-note" style="margin-top:1.25rem"><strong>A clean result is a result.</strong> You are paying for the check, not for the finding, payment is due whether we find a problem or nothing at all. You receive JSON and a written artifact, not a signed attestation.</p>
-    <div class="hero-actions" style="margin-top:1.5rem">
-      <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Engagement%20enquiry">Start a conversation</a>
-      <a class="btn btn-ghost" href="/pricing/">What it costs</a>
-    </div>
-    <p class="small faint" style="margin-top:.75rem"><a href="/pay/">How paying works</a>, you get the work first; no deposit, no card on file, nothing recurs.</p>
-  </div>
-</section>
-
-
-
 
 </main>
 
@@ -364,8 +243,7 @@
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -386,7 +264,7 @@
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">
@@ -453,35 +331,9 @@
     // the reader leaves it, the receipt rises to meet them, each row settles into place.
     gsap.to('.field-stage', { yPercent: 22, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero-field', start: 'top top', end: 'bottom top', scrub: true } });
     gsap.to('.hero-main', { y: -90, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero-field', start: 'top top', end: '75% top', scrub: true } });
-    gsap.from('.receipt-band .container', { y: 56, ease: 'none', scrollTrigger: { trigger: '.receipt-band', start: 'top 95%', end: 'top 45%', scrub: true } });
-    gsap.utils.toArray('.props .prop, .demo-grid > *, .pay-steps > li').forEach(el => {
-      if (el.getBoundingClientRect().top < innerHeight) return;   // on the first screen already: at rest
-      gsap.from(el, { y: 28, opacity: 0, ease: 'none', scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 72%', scrub: true } });
-    });
     // Layout shifts after webfonts land; recompute trigger positions once they have.
     document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-    // The receipt build-in is triggered by IntersectionObserver, not ScrollTrigger, because
-    // IO fires for EVERY way of arriving — wheel, anchor link, keyboard, find-in-page, back
-    // button — and a scroll-driven trigger does not. Then a safety net, same contract as
-    // site.js: nothing on this page may sit invisible waiting for an event that never comes.
-    const rows = gsap.utils.toArray('[data-receipt] .led-row');
-    const risk = rows.find(r => /risk/i.test(r.textContent)); const rest = rows.filter(r => r !== risk);
-    const tl = gsap.timeline({ paused: true })
-      .from('[data-receipt] .panel-head, [data-receipt] .led-sum, .decode-intro', { y: 14, opacity: 0, duration: .5, ease: 'power2.out', stagger: .08 })
-      .from(rest, { x: -14, opacity: 0, duration: .45, ease: 'power2.out', stagger: .1 }, '-=.1');
-    if (risk) {
-      tl.from(risk, { x: -14, opacity: 0, duration: .5, ease: 'power2.out' }, '+=.05');
-      const flag = risk.querySelector('.pill, .led-amt'); if (flag) tl.from(flag, { scale: .6, opacity: 0, duration: .45, ease: 'back.out(2)' }, '-=.15');
-    }
-    tl.from('[data-receipt] .led-foot, [data-receipt] .term-note', { y: 10, opacity: 0, duration: .5, stagger: .1 }, '-=.1');
-    const receipt = document.querySelector('[data-receipt]');
-    let played = false; const play = () => { if (!played) { played = true; tl.play(); } };
-    // Keyboard focus must never land on something the build-in is still hiding.
-    receipt.addEventListener('focusin', () => { played = true; tl.progress(1); }, { once: true });
-    new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { play(); io.disconnect(); } }, { rootMargin: '0px 0px -12% 0px' }).observe(receipt);
-    setTimeout(() => { if (!played) { const r = receipt.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) play(); } }, 2500);
-    setTimeout(() => { if (!played) tl.progress(1); }, 3000);   // whatever happened, it is visible by now
   });
 </script>
 </body>

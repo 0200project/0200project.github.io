@@ -5,10 +5,10 @@
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security, 0200project</title>
-<meta name="description" content="The security posture of 0200project services: no private keys, non-custodial payments, no accounts, no database, deterministic and open source.">
+<meta name="description" content="The security posture of 0200project services: no private keys, non-custodial payments, no accounts, deterministic answers.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="Security, 0200project">
-<meta property="og:description" content="No private keys, non-custodial payments, no accounts, no database, deterministic and open source.">
+<meta property="og:description" content="No private keys, non-custodial payments, no accounts, deterministic answers.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0200project">
 <meta property="og:image" content="https://0200project.com/assets/og.png">
@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <style>
   .prose h2:first-of-type { margin-top: 0; }
 </style>
@@ -47,7 +47,7 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -55,45 +55,21 @@
 
 <main id="main">
 
-  <div class="container">
-
-    <div class="page-hero">
-      <span class="eyebrow">Security</span>
-      <h1 class="h-section">Security principles</h1>
-      <p class="lead">The security posture of 0200project services, stated plainly. The short version: there is very little to attack, because the services hold very little.</p>
-    </div>
-
-    <div class="prose">
-
-      <h2>No private keys, ever</h2>
-      <p>The service never asks for, receives, or stores private keys or seed phrases. There is no request field where one could be supplied, and no account to attach one to.</p>
-      <p>Payments are made from the agent's own wallet, under the agent's own control. The server only checks that a payment settled, it never touches the wallet that made it.</p>
-
-      <h2>Non-custodial architecture</h2>
-      <p>Paid calls settle in USDC on Base through the x402 protocol. Settlement is verified by a facilitator that can confirm a payment but cannot move or redirect funds. The server never holds user assets at any point.</p>
-      <p>The payment challenge is carried in the open, inside the tool response: exact amount, asset contract, and recipient address. A paying agent can inspect all of it before deciding to pay.</p>
-
-      <h2>Minimal data collection</h2>
-      <p>There are no accounts, no cookies, and no analytics. Client IPs are held transiently in memory, only for rate limiting and free-tier metering, and there is no database, nowhere for data to accumulate, nothing to breach retroactively.</p>
-
-      <h2>Deterministic processing</h2>
-      <p>There is no model in the response path. Every response is produced by deterministic decode of public chain data, so the same input always yields the same output and any response can be independently reproduced and audited.</p>
-      <p>The full source is public at <a href="https://github.com/0200project/base-tx-explain">github.com/0200project/base-tx-explain</a> and self-hostable. You can run your own instance and compare its output against ours.</p>
-
-      <h2>Infrastructure</h2>
-      <p>The service is stateless: a fresh MCP server is created per request, and there are no sessions to hijack. All traffic is served over TLS.</p>
-      <p>Risk-flag blocklists are consumed read-only from public sources (ScamSniffer and MyEtherWallet). The service never writes to them. Reachable and fresh are different properties, and only the first used to be measured: each feed&rsquo;s own last-change date, and whether it has gone stale by our stated threshold, is published on <code class="inline">/healthz</code>.</p>
-
-      <h2>Honest limits</h2>
-      <p>Risk flags report evidence that was found; a failed lookup never produces a flag. By the same token, the absence of a <code class="inline">known_drainer</code> flag is not a safety guarantee, a bad actor may simply not be on any public blocklist yet.</p>
-      <p>The tool reports what a transaction did, not whether it was a good idea. It is not financial advice.</p>
-
-      <h2>Reporting a vulnerability</h2>
-      <p>If you believe you have found a security issue in any 0200project service, open a <a href="https://github.com/0200project/base-tx-explain/security/advisories/new">private security advisory on GitHub</a> with the details, what you found, where, and how to reproduce it. Advisories stay private between you and the maintainers until a fix is out. We read every report and will acknowledge yours promptly.</p>
-
-    </div>
-
-  </div>
+  <section class="x-top">
+    <div class="container"><div class="x-wrap">
+      <h1 class="x-h1">Very little to attack.</h1>
+      <p class="x-p">No private keys and no accounts. The service holds very little, by design.</p>
+      <div class="x-cols">
+        <div><h3>No private keys</h3><p>The service never asks for, receives or stores keys or seed phrases.</p></div>
+        <div><h3>No accounts</h3><p>No accounts, no cookies, no analytics.</p></div>
+        <div><h3>Payments</h3><p>USDC payments settle on Base through x402, verified by a facilitator that can confirm a payment but cannot move or redirect funds. Card payments run on Stripe&rsquo;s hosted checkout, so card numbers never reach us.</p></div>
+        <div><h3>No model in the answer</h3><p>Every response is a deterministic decode of public chain data.</p></div>
+        <div><h3>Read-only blocklists</h3><p>The ScamSniffer and MyEtherWallet lists are read, never written. How fresh each one is is published on <a href="https://api.0200project.com/healthz">/healthz</a>.</p></div>
+        <div><h3>Honest limits</h3><p>A flag means evidence was found. A missing flag is not a safety guarantee, and nothing here is financial advice.</p></div>
+      </div>
+      <p class="x-fine">Found a security issue? Email <a href="mailto:security@0200project.com">security@0200project.com</a>.</p>
+    </div></div>
+  </section>
 
 </main>
 
@@ -114,8 +90,7 @@
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -136,7 +111,7 @@
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">

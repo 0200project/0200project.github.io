@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About 0200project, what we build, what we run, and what we retired | 0200project</title>
-<meta name="description" content="0200project builds machine-native tools for autonomous agents. One product runs, one token was deployed and retired within a day, and the record of both is published in full.">
+<title>About 0200project, what we build and what runs today | 0200project</title>
+<meta name="description" content="0200project builds machine-native tools for autonomous agents. What we build, what runs today, and four numbers read live from the server.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="About 0200project">
-<meta property="og:description" content="What we build, what runs today, what we retired, and how we decide what to publish.">
+<meta property="og:description" content="What we build, what runs today, and four numbers read live from the server.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0200project">
 <meta property="og:image" content="https://0200project.com/assets/og.png">
@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <style>
 </style>
 </head>
@@ -40,13 +40,13 @@
       <svg class="burger" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path class="b1" d="M2 4h12"/><path class="b2" d="M2 8h12"/><path class="b3" d="M2 12h12"/></svg>
     </button>
     <nav aria-label="Main" style="display:contents"><ul class="nav-links" id="site-menu">
-      <li><a href="/about/">About</a></li>
+      <li><a href="/about/" aria-current="page">About</a></li>
       <li><a href="/tools/">Tools</a></li>
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -54,127 +54,34 @@
 
 <main id="main">
 
-  <section class="page-hero page-hero-statement">
-    <div class="container hero-mark-grid">
-      <div class="">
-        <span class="eyebrow">About 0200project</span>
-        <h1 class="statement">We build tools agents can trust.</h1>
-        <p class="lead">Autonomous software needs to call something, get an answer, and act on it, with no human reading the output first. That only works if the tool behaves identically every time, costs a knowable amount, and says what it could not determine.</p>
+  <section class="x-top">
+    <div class="container"><div class="x-wrap">
+      <h1 class="x-h1">We build tools agents can trust.</h1>
+      <p class="x-p">An agent that acts on an answer needs the same answer every time, a known price, and a plain note of what could not be checked.</p>
+      <div class="x-cols">
+        <div><h3>Deterministic</h3><p>No model in the response path.</p></div>
+        <div><h3>Unreachable is not clean</h3><p>A source that cannot be checked is reported as unknown.</p></div>
+        <div><h3>Free to start</h3><p>50 free calls every 24 hours per IPv4 address or IPv6 /64.</p></div>
       </div>
-      <div class="hero-mark" aria-hidden="true">
-        <img src="/assets/logo-hero.png" width="240" height="240" alt="">
-      </div>
-    </div>
+    </div></div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">How we build</span>
-        <h2 class="h-section">Three properties, chosen for how an agent fails.</h2>
+  <section class="x-sec">
+    <div class="container"><div class="x-wrap">
+      <h2 class="x-h">Live numbers.</h2>
+      <p class="x-p">Read from our health endpoint when this page loads, not written into it.</p>
+      <div class="x-nums" id="live-panel">
+        <div><b id="lv-calls">&hellip;</b><span>Calls served. Lifetime, including our own.</span></div>
+        <div><b id="lv-wall">&hellip;</b><span>Times the free tier ran out. A count of responses, not of people.</span></div>
+        <div><b id="lv-deg">&hellip;</b><span>Answered while a check was unavailable. Reported rather than hidden.</span></div>
+        <div><b id="lv-ver">&hellip;</b><span>Version in production.</span></div>
       </div>
-      <div class="grid-3">
-        <div class="card"><span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10h4l2-5 2 10 2-5h4"/></svg></span><h3 class="h-card">Deterministic</h3>
-          <p class="muted">No model in the response path. The same transaction always produces the same JSON, nothing to hallucinate, nothing to drift.</p>
-          <div class="card-mini" aria-hidden="true">decode 0x0c84&hellip;4c8c <span class="lit">&rarr;</span> swap<br>decode 0x0c84&hellip;4c8c <span class="lit">&rarr;</span> swap <span class="lit">= identical</span></div>
-        </div>
-        <div class="card"><span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="12" height="8" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/></svg></span><h3 class="h-card">No accounts, no keys</h3>
-          <p class="muted">Paid per call in USDC over x402. An agent can discover, pay and retry entirely on its own.</p>
-          <div class="card-mini" aria-hidden="true"><span class="lit">402</span> &rarr; pay $0.02 USDC &rarr; <span class="lit">200 ok</span></div>
-        </div>
-        <div class="card"><span class="card-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 10S4.5 4.5 10 4.5 18.5 10 18.5 10 15.5 15.5 10 15.5 1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg></span><h3 class="h-card">Honest about gaps</h3>
-          <p class="muted">Every response says which checks ran and which could not. An empty result is never mistaken for a clean one.</p>
-          <div class="card-mini" aria-hidden="true">2 ran <span class="lit">&middot;</span> 3 unavailable <span class="lit">&middot;</span> stated</div>
-        </div>
+      <p class="x-fine" id="lv-note">Read <span id="live-when">when this page loads</span>.</p>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="mailto:contact@0200project.com">Contact us</a>
+        <a class="btn btn-ghost" href="/playground/">Try the tool</a>
       </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">What runs today</span>
-        <h2 class="h-section">One product, and the two fields that make it different.</h2>
-        <p class="lead"><strong>base-transaction-decoder</strong> explains any Base mainnet transaction as strict JSON, plain English, a typed action, every asset moved with amounts already scaled, counterparties labelled, gas in dollars, risk flags with evidence.</p>
-      </div>
-      <div class="led">
-        <div class="panel-head"><span>in every response</span><span>base mainnet</span></div>
-        <div class="led-row"><span class="led-lbl">checks</span><span class="led-val">Whether each safety check actually ran<small>Source unreachable &rarr; no flag emitted, check marked unavailable</small></span><span class="led-amt q"><span class="led-pill ran"><i></i>ran</span> <span class="led-pill na"><i></i>unavailable</span></span></div>
-        <div class="led-row"><span class="led-lbl">provenance</span><span class="led-val">Which strings the transaction&rsquo;s author controls<small>Token symbols, contract names, and the summary derived from them</small></span><span class="led-amt q">treat as data</span></div>
-        <div class="led-foot">A token that names itself with instruction-like text is a live injection route into any agent reading a decoder&rsquo;s output. <b>That is what <code class="inline">provenance</code> closes.</b></div>
-      </div>
-      <p class="term-note">$0.02 per call in USDC &middot; 50 free calls per day per IPv4 address or IPv6 /64 &middot; no account, no signup, no API key</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">How we decide what to publish</span>
-        <h2 class="h-section">Practices, not principles.</h2>
-        <p class="lead">A practice can be checked. A principle cannot.</p>
-      </div>
-      <ul class="checks" style="max-width:46rem">
-        <li><strong>Claims carry the date they were verified.</strong> A fact true last week is reported as a fact about last week.</li>
-        <li><strong>Pages are never overwritten.</strong> Corrections are dated and the original stays visible.</li>
-        <li><strong>Examples are executed before publication.</strong> Every command shown here is run against production.</li>
-        <li><strong>Unreachable is not clean.</strong> A source that cannot be checked is reported as unknown, never as an absence of problems.</li>
-        <li><strong>What could not be determined is stated alongside what was.</strong> The same rule the decoder follows in its own output.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">How it is built</span>
-        <h2 class="h-section">One person, and gates that fail loudly.</h2>
-        <p class="lead">0200project is operated by one person, with AI systems doing the majority of the engineering, review and analysis. Every claim is checked against a source before it ships, and the checks are automated wherever they can be.</p>
-      </div>
-      <div class="led">
-        <div class="panel-head"><span>the site build fails if</span><span>on every deploy</span></div>
-        <div class="led-row"><span class="led-lbl">tier</span><span class="led-val">A page states a free-tier number the server does not report</span><span class="led-amt q">blocked</span></div>
-        <div class="led-row"><span class="led-lbl">registry</span><span class="led-val">A page names a registry entry that does not resolve</span><span class="led-amt q">blocked</span></div>
-        <div class="led-row"><span class="led-lbl">samples</span><span class="led-val">A published example does not execute against production</span><span class="led-amt q">blocked</span></div>
-        <div class="led-row"><span class="led-lbl">links</span><span class="led-val">A link to one of our own properties returns an error</span><span class="led-amt q">blocked</span></div>
-        <div class="led-foot">The company is small and the record is short. <b>We would rather it be short and accurate.</b></div>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Live</span>
-        <h2 class="h-section">Read from production, right now.</h2>
-        <p class="lead">These numbers are fetched from our own health endpoint when this page loads. They are not written into the page and we cannot edit them without changing what the server reports.</p>
-      </div>
-      <div class="led" id="live-panel">
-        <div class="panel-head"><span>api.0200project.com/healthz</span><span id="live-when">fetching&hellip;</span></div>
-        <div class="led-row"><span class="led-lbl">version</span><span class="led-val">Running in production</span><span class="led-amt" id="lv-ver">&mdash;</span></div>
-        <div class="led-row"><span class="led-lbl">calls</span><span class="led-val">Lifetime, including our own<small><span id="lv-free">&mdash;</span> served on the free tier</small></span><span class="led-amt" id="lv-calls">&mdash;</span></div>
-        <div class="led-row"><span class="led-lbl">of which ours</span><span class="led-val">Calls we marked as ours<small>A floor, not a measurement: an unmarked call of ours counts as external, never the reverse. <span id="lv-unmarked">&mdash;</span> more we cannot attribute either way.</small></span><span class="led-amt" id="lv-internal">&mdash;</span></div>
-        <div class="led-row"><span class="led-lbl">wall hits</span><span class="led-val">Times the free tier ran out<small>A count of responses, not of people, the same caller can appear many times</small></span><span class="led-amt" id="lv-wall">&mdash;</span></div>
-        <div class="led-row"><span class="led-lbl">degraded</span><span class="led-val">Calls answered while a check was unavailable<small>Reported rather than hidden, this is the number most services do not publish</small></span><span class="led-amt" id="lv-deg">&mdash;</span></div>
-        <div class="led-foot" id="lv-checks">Loading per-check health&hellip;</div>
-      </div>
-      <p class="term-note">If this panel fails to load it will say so rather than showing nothing, an empty panel and a broken one look identical, and only one of them is honest.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head" style="max-width:40rem">
-        <span class="eyebrow">Contact</span>
-        <h2 class="h-section">Talk to us.</h2>
-        <p class="lead">General enquiries and corrections: <a href="mailto:contact@0200project.com">contact@0200project.com</a>. Bugs and feature requests go to <a href="https://github.com/0200project/base-tx-explain/issues">GitHub Issues</a>. Security reports have <a href="/security/">their own page</a>.</p>
-        <div class="hero-actions" style="margin-top:1.75rem">
-          <a class="btn btn-primary" href="mailto:contact@0200project.com">contact@0200project.com</a>
-          <a class="btn btn-ghost" href="/playground/">Try the tool</a>
-        </div>
-      </div>
-    </div>
+    </div></div>
   </section>
 
 </main>
@@ -196,8 +103,7 @@
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -218,7 +124,7 @@
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">
@@ -238,48 +144,20 @@
 
 
 <script>
-(function(){
-  var el = function(id){ return document.getElementById(id); };
-  var fail = function(msg){
-    var w = el('live-when'); if (w) w.textContent = 'unreachable';
-    var f = el('lv-checks');
-    if (f) f.innerHTML = '<b>Could not reach the server.</b> That is what this panel shows when it cannot read production, not a blank space. ' + msg;
-  };
+(function () {
+  function set(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
+  function n(v) { return v == null ? 'n/a' : Number(v).toLocaleString('en-US'); }
   fetch('https://api.0200project.com/healthz', { cache: 'no-store' })
-    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(d){
-      var lt = d.lifetime || {}, n = function(v){ return (v == null) ? '\u2014' : Number(v).toLocaleString('en-US'); };
-      el('lv-ver').textContent   = d.version || '\u2014';
-      el('lv-calls').textContent = n(lt.calls);
-      el('lv-free').textContent  = n(lt.free);
-      el('lv-wall').textContent  = n(lt.wall_hits);
-      el('lv-deg').textContent   = n(lt.degraded_calls);
-      el('lv-internal').textContent = n(lt.internal_calls);
-      el('lv-unmarked').textContent = n(lt.unmarked_calls);
-      el('live-when').textContent = 'read ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + 'Z';
-      var ch = (d.check_health && d.check_health.checks) || {}, names = Object.keys(ch);
-      if (names.length) {
-        /* A missing unavailable_rate is UNKNOWN, not zero. Folding it to 0 would drop the
-           check out of `dark` and print "None reported an unavailable period" off absent
-           data -- a clean bill of health manufactured from silence, two lines above this
-           panel's own sentence that not-raised means not checked, not clean. */
-        var known = names.filter(function(k){ return typeof ch[k].unavailable_rate === 'number'; });
-        var unknown = names.length - known.length;
-        var oh = (typeof d.check_health.observed_hours === 'number') ? d.check_health.observed_hours : null;
-        var dark = known.filter(function(k){ return ch[k].unavailable_rate > 0; });
-        el('lv-checks').innerHTML = '<b>' + names.length + ' risk checks tracked over the last '
-          + (oh === null ? '\u2014' : oh) + 'h.</b> '
-          + (dark.length
-              ? dark.length + ' had periods where a source was unavailable: <code class="inline">' + dark.join('</code>, <code class="inline">') + '</code>. A flag not raised during those periods means not checked, not clean.'
-              : (known.length ? 'None reported an unavailable period in that window.'
-                              : 'Availability was not reported for these checks, so this panel cannot say whether any were dark.'))
-          + (unknown ? ' ' + unknown + ' of them did not report availability, so the line above cannot speak for '
-                       + (unknown === 1 ? 'it' : 'them') + '.' : '');
-      } else {
-        el('lv-checks').textContent = 'Per-check health not reported by this build.';
-      }
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      var lt = d.lifetime || {};
+      set('lv-calls', n(lt.calls)); set('lv-wall', n(lt.wall_hits)); set('lv-deg', n(lt.degraded_calls)); set('lv-ver', d.version || 'n/a');
+      set('live-when', 'from our health endpoint at ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC');
     })
-    .catch(function(e){ fail(String(e.message || e)); });
+    .catch(function () {
+      ['lv-calls', 'lv-wall', 'lv-deg', 'lv-ver'].forEach(function (id) { set(id, 'n/a'); });
+      set('lv-note', 'Our health endpoint did not answer, so these numbers are unknown right now, not zero.');
+    });
 })();
 </script>
 

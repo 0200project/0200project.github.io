@@ -105,7 +105,7 @@
         ft.classList.add('ft-ok');
         var calls = h.lifetime && typeof h.lifetime.calls === 'number' ? h.lifetime.calls : null;
         ftTxt.textContent = calls !== null
-          ? 'Operational · ' + calls.toLocaleString() + ' calls served'
+          ? 'Operational · ' + calls.toLocaleString() + ' calls served, ours included'
           : 'Operational';
       })
       .catch(function () { clearTimeout(to); probeOpaque(); });

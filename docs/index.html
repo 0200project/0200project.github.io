@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <style>
 
   .docs-content .enum-list {
@@ -91,7 +91,7 @@
       <li><a href="/docs/" aria-current="page">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -314,7 +314,7 @@ await client.close();</code></pre>
       </div>
 
       <p>Whichever path you take, the tool result carries the explanation twice: as <code class="inline">structuredContent</code>, and stringified in <code class="inline">content[0].text</code>. Parse whichever your client prefers.</p>
-      <p><strong>The free tier is metered per client, one IPv4 address, or one IPv6 /64.</strong> The first 50 calls in any 24 hours are free with no signup, counted per IP address (IPv6 collapses to the /64), machines behind one NAT or a shared CI egress draw from a single counter, which is why the paywall can appear before 50 of your own calls. The window is rolling: a shared address that runs out recovers the next day rather than staying walled. After that, each call is $0.02 via <a href="#x402-payments">x402</a>.</p>
+      <p><strong>The free tier is metered per client, one IPv4 address, or one IPv6 /64.</strong> 50 calls every 24 hours are free with no signup, counted per IP address (IPv6 collapses to the /64), machines behind one NAT or a shared CI egress draw from a single counter, which is why the paywall can appear before 50 of your own calls. A window starts at the first call and ends 24 hours later, and the next call after that starts a new one, so a shared address that runs out is not walled for long. After that, each call is $0.02 via <a href="#x402-payments">x402</a>.</p>
 
       <h2 id="installation">Installation</h2>
       <h3>Hosted endpoint</h3>
@@ -589,9 +589,9 @@ npm run dev</code></pre>
 
       <h2 id="usage">Usage</h2>
       <ul>
-        <li><strong>Free tier</strong>, the first 50 calls in any 24 hours are free, with no signup. Metering is per client, one IPv4 address, or one IPv6 /64: machines behind the same NAT or a shared CI egress draw from one counter, so shared networks can hit the paywall early, and the counter resets a day later. After that, each call is paid via x402.</li>
+        <li><strong>Free tier</strong>, 50 calls every 24 hours are free, with no signup. Metering is per client, one IPv4 address, or one IPv6 /64: machines behind the same NAT or a shared CI egress draw from one counter, so shared networks can hit the paywall early, and each window ends 24 hours after the call that started it. After that, each call is paid via x402.</li>
         <li><strong>Rate limit</strong> — 60 requests per minute per client. Exceeding it returns JSON-RPC error <code class="inline">-32000</code> with HTTP 429.</li>
-        <li><strong>Per-request isolation</strong>, no sessions, and a fresh MCP server is created per request, so concurrent calls do not corrupt each other&rsquo;s state. That is not the same as free, and not the same as identical. <strong>Retries cost:</strong> every call draws on the free tier or is paid, and a lookup that comes back <code>not_found</code> is charged rather than refunded, so retrying an empty result costs each time. <strong>Parallel calls contend:</strong> the rate limit above is 60 a minute, and under concurrency the ETH price behind <code>gas_paid_usd</code> can fall back to the latest feed reading instead of the price at the transaction&rsquo;s block, <code>gas_price_basis</code> says which one was used. <strong>The decode is deterministic; the response around it is not.</strong></li>
+        <li><strong>Per-request isolation</strong>, no sessions, and a fresh MCP server is created per request, so concurrent calls do not corrupt each other&rsquo;s state. That is not the same as free, and not the same as identical. <strong>Retries cost:</strong> every call draws on the free tier or is paid. A lookup that comes back <code>not_found</code> gives the free call or pass call back, and a paid call that errors is not settled. <strong>Parallel calls contend:</strong> the rate limit above is 60 a minute, and under concurrency the ETH price behind <code>gas_paid_usd</code> can fall back to the latest feed reading instead of the price at the transaction&rsquo;s block, <code>gas_price_basis</code> says which one was used. <strong>The decode is deterministic; the response around it is not.</strong></li>
       </ul>
 
       <h2 id="pricing">Pricing</h2>
@@ -633,8 +633,7 @@ npm run dev</code></pre>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -655,7 +654,7 @@ npm run dev</code></pre>
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">

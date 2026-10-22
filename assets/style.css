@@ -1070,3 +1070,56 @@ html.lenis, html.lenis body { height: auto; }
   .nav-toggle { min-width: 44px; min-height: 44px; }
   .hero-try-input, input[type="text"] { min-height: 44px; }
 }
+
+
+/* ---------- Minimal pass, 2026-10-22: no thin grey lines anywhere ----------
+   Dividers and outlines all drew with --border / --border-strong. Making those
+   transparent removes every hairline at once, including the ones in page-level
+   <style> blocks. Anything that still has to read as a container gets a quiet
+   raised background instead of a line. */
+:root { --border: transparent; --border-strong: transparent; --bg-raised: #0b0b0c; --bg-panel: #0b0b0c; }
+.card, .panel, .codeblock, .table-wrap, .status-banner, .cmdk-panel, .copy-btn, .card-icon, .led { background: #0b0b0c; }
+.pill, code.inline { background: #141416; }
+tbody tr:nth-child(odd) td { background: #0a0a0b; }
+.pg-field { background: #0d0d0f; }
+.f-min { border-top: 0; }
+.f-min .f-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; padding-block: 2.5rem 3.5rem; }
+.f-min nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .875rem; }
+.f-min nav a { color: var(--fg-faint); text-decoration: none; }
+.f-min nav a:hover { color: var(--fg-strong); }
+.f-min .footer-status { margin-left: auto; font-size: .8125rem; color: var(--fg-faint); }
+@media (max-width: 40em) { .f-min .footer-status { margin-left: 0; } }
+
+/* ---------- Minimal page kit (2026-10-22) ----------
+   One pattern, varied by layout rather than by more words: a large headline,
+   one muted sentence, buttons. Columns and number rows break the rhythm so a
+   page is not the same block four times. */
+.x-wrap { max-width: 64rem; margin-inline: auto; }
+.x-sec { padding-block: clamp(4.5rem, 11vw, 9rem) 0; }
+.x-sec:last-of-type { padding-bottom: clamp(5.5rem, 13vw, 10rem); }
+.x-h { font-size: clamp(2.25rem, 5.4vw, 4.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; color: var(--fg-strong); margin: 0; max-width: 16ch; text-wrap: balance; }
+.x-h1 { font-size: clamp(2.75rem, 7vw, 5.75rem); font-weight: 400; letter-spacing: -.055em; line-height: .98; color: var(--fg-strong); margin: 0; max-width: 14ch; text-wrap: balance; }
+.x-p { font-size: clamp(1.0625rem, 1.2vw + .6rem, 1.3125rem); color: var(--fg-muted); max-width: 36rem; margin: 1.5rem 0 0; line-height: 1.5; }
+.x-acts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
+.x-top { padding-block: clamp(7rem, 16vw, 12rem) 0; }
+main > section:last-of-type { padding-bottom: clamp(6rem, 14vw, 11rem); }
+.x-cols { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: clamp(2rem, 4vw, 3.5rem); margin-top: clamp(3rem, 6vw, 4.5rem); }
+.x-cols h3 { margin: 0; font-size: clamp(1.25rem, 1.6vw + .5rem, 1.625rem); font-weight: 400; letter-spacing: -.03em; line-height: 1.15; color: var(--fg-strong); }
+.x-cols p { margin: .75rem 0 0; color: var(--fg-muted); font-size: 1rem; line-height: 1.55; }
+.x-cols .btn { margin-top: 1.25rem; }
+.x-nums { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 2rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+.x-nums b { display: block; font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 400; letter-spacing: -.045em; line-height: 1; color: var(--fg-strong); font-variant-numeric: tabular-nums; }
+.x-nums span { display: block; margin-top: .625rem; font-size: .9375rem; color: var(--fg-faint); }
+.x-terms { display: grid; gap: 1.25rem; margin-top: 2.5rem; max-width: 44rem; }
+.x-terms div { display: grid; grid-template-columns: 8rem 1fr; gap: 1.5rem; }
+.x-terms dt { color: var(--fg-faint); font-size: .9375rem; }
+.x-terms dd { margin: 0; color: var(--fg); font-size: 1rem; }
+.x-fine { margin-top: 2rem; font-size: .875rem; color: var(--fg-faint); max-width: 40rem; }
+.x-fine a, .x-p a, .x-cols p a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+@media (max-width: 52em) {
+  .x-cols, .x-nums { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 36em) {
+  .x-cols { grid-template-columns: 1fr; }
+  .x-terms div { grid-template-columns: 1fr; gap: .25rem; }
+}

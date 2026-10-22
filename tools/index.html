@@ -5,7 +5,7 @@
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>base-transaction-decoder, Base Transaction Decoder API with Risk Flags</title>
-<meta name="description" content="Decode any Base mainnet transaction into plain English and strict JSON. MCP server; 50 free calls a day per IPv4 address or IPv6 /64, then $0.02 via x402.">
+<meta name="description" content="Decode any Base mainnet transaction into plain English and strict JSON. MCP server; 50 free calls every 24 hours per IPv4 address or IPv6 /64, then $0.02 via x402.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="base-transaction-decoder, Base Transaction Decoder API">
 <meta property="og:description" content="Decode any Base transaction into plain English and strict JSON, action types, assets moved, risk flags. MCP + x402, no API key.">
@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -34,7 +34,7 @@
   "url": "https://0200project.com/tools/",
   "description": "Deterministic Base mainnet transaction decoding for AI agents over MCP. One tool, explain_transaction(tx_hash), returns strict JSON.",
   "author": { "@type": "Organization", "name": "0200project", "url": "https://0200project.com/" },
-  "offers": { "@type": "Offer", "price": "0.02", "priceCurrency": "USD", "description": "50 free calls per day, counted per IPv4 address or IPv6 /64, then $0.02 per call in USDC on Base via x402. No account, no API key." },
+  "offers": { "@type": "Offer", "price": "0.02", "priceCurrency": "USD", "description": "50 free calls every 24 hours, counted per IPv4 address or IPv6 /64, then $0.02 per call in USDC on Base via x402. No account, no API key." },
   "softwareVersion": "0.1.1",
   "featureList": [
     "Plain-English summary of any Base mainnet transaction",
@@ -126,83 +126,31 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
 </header>
 
 <main id="main">
-  <div class="container">
 
-    <header class="page-hero">
-      <span class="eyebrow">Tools</span>
-      <h1 class="h-section">Machine-native tools.</h1>
-      <p class="lead">Amounts come back scaled and symbolised, counterparties labelled where known, and every field whose text is controlled by the transaction&rsquo;s author is named in <code class="inline">provenance</code> so an agent never treats it as an instruction. Strict JSON in and out, priced per call, built to be called by agents rather than browsed by humans.</p>
-    </header>
+  <section class="x-top">
+    <div class="container"><div class="x-wrap">
+      <h1 class="x-h1">base-transaction-decoder</h1>
+      <p class="x-p">Any Base mainnet transaction, back as plain English and strict JSON. When a transaction can&rsquo;t be fully decoded, the output says so.</p>
+      <div class="x-nums" style="--cols:3">
+        <div><b>30</b><span>Action types</span></div>
+        <div><b>8</b><span>Risk flags, each raised only on evidence</span></div>
+        <div><b>50</b><span>Free calls every 24 hours per IPv4 address or IPv6 /64</span></div>
+      </div>
+      <p class="x-fine">Swaps, transfers, NFT sales, bridges, lending, staking, account abstraction, attestations, Basenames and contract deployments. More tools are in development.</p>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="/playground/">Try it free</a>
+        <a class="btn btn-ghost" href="/docs/">Read the docs</a>
+      </div>
+    </div></div>
+  </section>
 
-    <div class="directory">
-
-      <article class="card tool-featured" aria-labelledby="tool-btx">
-        <div>
-          <div class="tool-head">
-            <h2 class="tool-name" id="tool-btx">base-transaction-decoder</h2>
-            <span class="pill"><span class="dot dot-live"></span>live</span>
-          </div>
-          <p class="tool-desc">Deterministic blockchain transaction decoding for autonomous AI agents.</p>
-          <ul class="checks">
-            <li>Structured JSON output</li>
-            <li>No LLM in the response path</li>
-            <li>What happened: action, assets, counterparties</li>
-            <li>Risk analysis with evidence</li>
-            <li>Agent-ready responses (MCP + x402)</li>
-          </ul>
-          <div class="tool-meta">
-            <span class="pill">v0.2.0</span>
-            <span class="pill">Base mainnet</span>
-            <span class="pill">$0.02 per call</span>
-            <span class="pill">50 free calls a day per IP (IPv6: /64)</span>
-          </div>
-          <p class="small faint" style="margin-top:1.25rem">Validated on 100 random live Base transactions before launch, 95 decoded to a specific action type, the rest to an honest partial, zero crashes.</p>
-          <div class="tool-actions">
-            <a class="btn btn-primary" href="/playground/">Open playground</a>
-            <a class="btn btn-ghost" href="/docs/">Documentation</a>
-            <a class="btn btn-ghost" href="https://github.com/0200project/base-tx-explain">GitHub</a>
-          </div>
-        </div>
-
-        <div class="tool-sample">
-          <div class="panel">
-            <div class="panel-head"><span>explain_transaction</span><span>excerpt</span></div>
-            <pre><code><span class="tok-punc">{</span>
-  <span class="tok-key">"summary"</span><span class="tok-punc">:</span> <span class="tok-str">"0x401d…f2c5 swapped 0.03 ETH
-    for 12,899,422 WNL via Uniswap V4
-    PoolManager."</span><span class="tok-punc">,</span>
-  <span class="tok-key">"action_type"</span><span class="tok-punc">:</span> <span class="tok-str">"swap"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"status"</span><span class="tok-punc">:</span> <span class="tok-str">"success"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"counterparties"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"label"</span><span class="tok-punc">:</span> <span class="tok-str">"Uniswap V4 PoolManager"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
-  <span class="tok-key">"risk_flags"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"flag"</span><span class="tok-punc">:</span> <span class="tok-flag">"unverified_contract"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
-  <span class="tok-key">"gas_paid_usd"</span><span class="tok-punc">:</span> <span class="tok-num">0.020562</span>
-<span class="tok-punc">}</span></code></pre>
-          </div>
-          <p class="tool-sample-note small faint">Excerpt of an actual response for a <a href="https://basescan.org/tx/0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">live Base transaction</a>, trimmed for width. Full schema in the <a href="/docs/">docs</a>.</p>
-        </div>
-      </article>
-
-      <section class="decode-scope" aria-labelledby="scope-h">
-        <h2 id="scope-h">What it decodes</h2>
-        <p class="muted">Swaps on Uniswap V2, V3, and V4 and Aerodrome; ERC-20, ERC-721, and ERC-1155 token transfers; NFT mints, transfers, and Seaport sales; OP-stack bridge deposits and withdrawals; Aave V3 and Compound V3 lending; staking, wrapping, and claims; ERC-4337 account-abstraction bundles; EAS attestations; Basename registrations; and contract deployments, 30 action types from roughly 40 builtin event formats, with app-specific events named via verified ABIs on Sourcify. When a transaction can&rsquo;t be fully decoded, the output says so instead of guessing. Full enum in the <a href="/docs/#response-schema">response schema</a>, common questions in the <a href="/faq/">FAQ</a>.</p>
-      </section>
-
-      <p class="more-note">More tools are in development. New releases are announced on the <a href="/changelog/">changelog</a> and on <a href="https://github.com/0200project">GitHub</a>.</p>
-
-    </div>
-
-  </div>
 </main>
 
 <footer class="footer">
@@ -222,8 +170,7 @@
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -244,7 +191,7 @@
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">

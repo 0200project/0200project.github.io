@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <style>
   .pg-section { padding-bottom: clamp(4.5rem, 10vw, 7.5rem); }
   .pg-wrap { max-width: 48rem; }
@@ -140,7 +140,7 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -148,67 +148,34 @@
 
 <main id="main">
 
-  <section class="page-hero">
-    <div class="container">
-      <span class="eyebrow">Playground</span>
-      <h1 class="h-section">Explain a Base transaction.</h1>
-      <p class="lead">Paste any Base transaction hash and it is decoded live by the production endpoint, right from your browser. Five stored samples replay instantly without a network call.</p>
-    </div>
-  </section>
-
-  <section class="pg-section">
-    <div class="container">
-      <div class="pg-wrap">
-
-        <div class="panel">
-          <div class="panel-head"><span>input</span><span>tx_hash · base (8453)</span></div>
-          <div class="pg-input-body">
-            <div class="pg-row">
-              <input id="pg-hash" class="pg-field" type="text" placeholder="0x…" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Transaction hash">
-              <button id="pg-run" class="btn btn-primary" type="button">Explain</button>
-            </div>
-            <div class="pg-chips" role="group" aria-label="Sample transactions">
-              <span class="pg-chips-label">stored samples</span>
-              <button class="chip" type="button" aria-pressed="false" data-hash="0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">Swap</button>
-              <button class="chip" type="button" aria-pressed="false" data-hash="0x8b246d458fd8b982455cdc172613272a090d1f84da559feb3392c152a09721c8">Reverted swap</button>
-              <button class="chip" type="button" aria-pressed="false" data-hash="0x8f1e67833a72c7d2d82ff57731fefaf96fa17bdecb9da7f9ac3f4c6b5679fa12">Add liquidity</button>
-              <button class="chip" type="button" aria-pressed="false" data-hash="0x08d78d805d54d3bface91a2f8d081d79429279bdd5a2f8c10da2b833dd3e0100">USDC transfer</button>
-              <button class="chip" type="button" aria-pressed="false" data-hash="0x3002b2c60d153e11e69986103b42d4887da30f8e02890f834d6de16e0c358be3">ETH transfer</button>
-            </div>
-          </div>
+  <section class="x-top">
+    <div class="container"><div class="x-wrap">
+      <h1 class="x-h1">Try it on a real transaction.</h1>
+      <p class="x-p">Paste a Base transaction hash and get back what happened, in plain English and strict JSON. 50 free calls every 24 hours per IPv4 address or IPv6 /64, no account.</p>
+      <div class="pg-wrap" style="margin-top:2.5rem">
+        <div class="pg-row">
+          <input id="pg-hash" class="pg-field" type="text" placeholder="Paste a Base transaction hash" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Transaction hash">
+          <button id="pg-run" class="btn btn-primary" type="button">Explain</button>
         </div>
-
-        <p class="pg-note">The sample chips replay stored output, real Base transactions decoded earlier by the production pipeline, shown instantly with no network call. The Explain button is live: it sends your hash to the production MCP endpoint from your browser, and each live call counts against your own free tier (50 calls per day per IPv4 address or IPv6 /64, shared behind it, then $0.02 per call via x402). Paste anything. A hash we cannot find, an Ethereum one, or a Base transaction not yet mined, costs you nothing. What uses a call is a decode we actually hand back. Full billing rules are in the <a href="/docs/#pass">docs</a>.</p>
-
-        <div class="panel pg-out">
-          <div class="panel-head"><span>output</span><span id="pg-meta" aria-live="polite">explain_transaction</span></div>
+        <div class="pg-chips" role="group" aria-label="Sample transactions" style="margin-top:1rem">
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">Swap</button>
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x8b246d458fd8b982455cdc172613272a090d1f84da559feb3392c152a09721c8">Reverted swap</button>
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x8f1e67833a72c7d2d82ff57731fefaf96fa17bdecb9da7f9ac3f4c6b5679fa12">Add liquidity</button>
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x08d78d805d54d3bface91a2f8d081d79429279bdd5a2f8c10da2b833dd3e0100">USDC transfer</button>
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x3002b2c60d153e11e69986103b42d4887da30f8e02890f834d6de16e0c358be3">ETH transfer</button>
+        </div>
+        <div class="panel pg-out" style="margin-top:2rem">
+          <div class="panel-head"><span>response</span><span id="pg-meta" aria-live="polite">explain_transaction</span></div>
           <div id="pg-body" role="region" aria-label="Tool output">
-            <div class="pg-state"><p class="pg-hint">Click a sample chip to replay stored output instantly, or paste a hash and hit Explain to decode it live against the production endpoint.</p></div>
+            <div class="pg-state"><p class="pg-hint">You get back a plain-English summary, the action type, the assets moved, the counterparties, gas in USD, and any risk flags with the checks behind them. No flag does not mean safe.<br>Pick a sample above to see one, saved on 20 August 2026.</p></div>
           </div>
         </div>
-
-        <p class="pg-note">The full response schema, all 30 action types and 8 risk flags, is in the <a href="/docs/">docs</a>. If your free tier runs out here, the response is the same x402 payment challenge an agent pays through; this page renders it so you can see what agents see.</p>
-
-        <p class="pg-note"><code class="inline">risk_flags</code> lists only flags backed by evidence, it is never a safety verdict, and no flags does not mean clean. The <code class="inline">checks</code> field alongside it says which underlying lookups actually ran (<code class="inline">ok</code>, <code class="inline">partial</code>, <code class="inline">unavailable</code>, <code class="inline">inconclusive</code>, or <code class="inline">not_applicable</code>), with a plain-language <code class="inline">note</code> whenever one didn&rsquo;t, so an empty flag list can be read correctly instead of mistaken for clearance. A stored sample&rsquo;s <code class="inline">checks</code> reflect the moment it was captured; decoding the same hash live right now can show different values if an upstream source is temporarily degraded, that is the tool working honestly, not a bug.</p>
-
       </div>
-    </div>
-  </section>
-
-
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <div class="card" style="border-left:2px solid var(--accent)">
-        <span class="eyebrow">Work with us</span>
-        <h2 class="h-card" style="margin:.4rem 0 .5rem">That was one transaction. We do the same thing to yours, in writing.</h2>
-        <p class="muted" style="margin:0 0 1rem">A written finding about your own on-chain activity with the raw evidence attached, reproducible by you. $5,000 per engagement, 3&ndash;5 business days, and you pay after delivery. <strong>A clean result is a result</strong>, you are paying for the check, not for the finding.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Engagement%20enquiry">Start a conversation</a>
-          <a class="btn btn-ghost" href="/pricing/">What it costs</a>
-        </div>
-        <p class="small faint" style="margin-top:.75rem"><a href="/pay/">How paying works</a>, you get the work first.</p>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls for $9</a>
+        <a class="btn btn-ghost" href="/docs/">Read the docs</a>
       </div>
-    </div>
+    </div></div>
   </section>
 
 </main>
@@ -230,8 +197,7 @@
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -252,7 +218,7 @@
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">
@@ -691,7 +657,7 @@
       return;
     }
     el.innerHTML =
-      '<p>If you&rsquo;re the one calling this, not an agent:</p>' +
+      '<p>If you&rsquo;re the one calling this, not an agent: if your wallet shows a warning when you sign, stop. The <a href="/pricing/">$9 card pass</a> works instead.</p>' +
       '<button class="btn btn-primary btn-sm" type="button" data-pay-step="check">Continue, ' + esc(priceDisplay) + '</button>';
     el.querySelector('[data-pay-step="check"]').addEventListener('click', function () {
       el.innerHTML = '<p>Checking your wallet&hellip;</p>';
@@ -878,7 +844,7 @@
           '<p>The signature went through, but the server answered with another payment challenge, so the call was not delivered. ' +
           (challenge && challenge.error ? 'It said: <code class="inline">' + esc(String(challenge.error)) + '</code>. ' : '') +
           'If USDC left your wallet, <a href="mailto:security@0200project.com">contact us</a> with the wallet address you paid from and roughly when, rather than signing a second time.</p>'
-        : '<p class="pg-pay-title">Payment required, this browser’s free calls are used up.</p>' +
+        : '<p class="pg-pay-title">Payment required, the free calls for this network are used up.</p>' +
           '<p>This is the paywall working, not an error. The response below is an x402 challenge: an agent reads it, attaches a signed USDC payment at <code class="inline">_meta["x402/payment"]</code>, and retries the same call, the same thing you can do below, by hand. <a href="/docs/#x402-payments">How agents pay →</a></p>') +
       '<div id="pay-panel"></div>' +
       (rows ? '<dl class="pg-kv">' + rows + '</dl>' : '') +

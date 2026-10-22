@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=e565843f">
+<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
 <style>
   .pr-grid {
     display: grid;
@@ -209,6 +209,32 @@
   .panel-head span,.chain-head span{white-space:normal}
 }
 </style>
+<style>
+  .hero-field { position: relative; min-height: 100svh; display: grid; align-items: center; text-align: center; overflow: hidden; isolation: isolate; }
+  .field-stage { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .field-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .field-fallback { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 88%; width: auto; filter: grayscale(1); opacity: .3; }
+  .hero-stage { position: relative; z-index: 1; padding-block: clamp(2.5rem, 8vh, 7rem); pointer-events: none; }
+  @media (max-height: 44rem) { .hero-lead { margin-top: 1rem; } .hero-field .hero-actions { margin-top: 1.5rem; } }
+  .hero-stage > * { pointer-events: auto; }
+  .hero-main { max-width: 60rem; margin-inline: auto; }
+  .hero-field .display { font-size: min(clamp(3.25rem, 9.5vw, 10.5rem), 14vh); font-weight: 400; line-height: 0.98; letter-spacing: -.06em; color: #ffffff; margin: 0 auto; max-width: 13ch; text-wrap: balance; }
+  .hero-field .display .w { display: inline-block; will-change: transform; }
+  .hero-lead { margin: 1.5rem auto 0; max-width: 38rem; font-size: clamp(1rem, 1.05vw + .6rem, 1.375rem); line-height: 1.5; color: var(--fg-muted); text-wrap: balance; }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 2rem; }
+  @media (prefers-reduced-motion: reduce) { .hero-field .display .w { transform: none !important; opacity: 1 !important; } }
+  .hero-try:focus-within { border-bottom-color: var(--accent); }
+  .hero-try-input:focus-visible { outline-color: var(--accent); }
+  .hero-try { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; max-width: 46rem; border-bottom: 1px solid var(--border-strong); padding-bottom: .5rem; }
+  .hero-try-input { flex: 1 1 16rem; min-width: 0; height: 2.75rem; padding: 0; background: transparent; border: 0; color: var(--fg); font-family: var(--mono); font-size: .875rem; }
+  .hero-try-input::placeholder { color: var(--fg-faint); }
+  .hero-try-input:focus-visible { outline: 2px solid var(--fg-strong); outline-offset: 4px; border-radius: 2px; }
+  .hero-try:focus-within { border-bottom-color: var(--fg-strong); }
+  .hero-try .btn { flex: none; }
+
+
+  .hero-field .display .cash { color: #0350fd; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -227,9 +253,9 @@
       <li><a href="/tools/">Tools</a></li>
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
-      <li><a href="/pricing/" aria-current="page">Pricing</a></li>
-      <li><a href="/xo2/">$XO2</a></li>
-          <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
+      <li><a href="/pricing/">Pricing</a></li>
+      <li><a href="/xo2/" aria-current="page">$XO2</a></li>
+      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -237,171 +263,53 @@
 
 <main id="main">
 
-  <section class="tok-hero">
-    <div class="container">
-      <div class="tok-wrap">
-        <div class="field-stage" aria-hidden="true"><canvas id="field" class="field-canvas"></canvas></div>
-        <div class="tok-coinwrap" hidden><img id="field-fallback" class="tok-coin" src="/assets/xo2-512.png" width="168" height="168" alt="" loading="lazy" decoding="async"></div>
-        <div class="tok-id">
-          <div class="tok-ticker">
-            <h1 class="tok-sym"><span class="tok-cash">$</span>XO2</h1>
-            <span class="tok-name">0200&nbsp;Protocol</span>
-          </div>
-          <div class="tok-badges">
-            <span class="tok-badge on">Base mainnet</span>
-            <span class="tok-badge">ERC&#8209;20</span>
-            <span class="tok-badge">chainId 8453</span>
-            <span class="tok-badge">18 decimals</span>
-            <span class="tok-badge">no utility today</span>
-          </div>
+  <section class="hero hero-field" id="top">
+    <div class="field-stage" aria-hidden="true">
+      <canvas id="field" class="field-canvas"></canvas>
+      <img id="field-fallback" class="field-fallback" src="/assets/xo2-512.png" width="512" height="512" alt="" hidden>
+    </div>
+    <div class="container hero-stage">
+      <div class="hero-main">
+        <h1 class="display"><span class="cash">$</span>XO2</h1>
+        <p class="hero-lead">0200 Protocol on Base. A fixed supply of 100,000,000.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://basescan.org/token/0xdE906C748E56fD6F648eb8564532673257Ac414b">View the contract</a>
+          <a class="btn btn-ghost" href="#facts">Read the facts</a>
         </div>
       </div>
-
-      <dl class="tok-stats">
-        <div class="tok-stat"><dt>ticker</dt><dd><span class="tok-cash">$</span>XO2</dd></div>
-        <div class="tok-stat"><dt>total supply</dt><dd>100,000,000</dd></div>
-        <div class="tok-stat"><dt>deployed</dt><dd>2026&#8209;09&#8209;03</dd></div>
-        <div class="tok-stat"><dt>contract</dt><dd class="mono">0xdE906C748E56fD6F648eb8564532673257Ac414b</dd></div>
-      </dl>
-      <p class="tok-note">Every figure above is read from the chain by the panel below, in your own browser. Nothing here is a price, a market, or an offer, there is none of any of those.</p>
-
-      <p class="lead">Deployed 2026&#8209;09&#8209;03. Every figure on this page was read from the chain, and every one of them tells you how to read it yourself. Where we cannot prove something, the page says so instead of rounding it off.</p>
     </div>
   </section>
 
-  <section class="section" style="padding-top:3rem">
-    <div class="container">
-
-      <div class="card" style="border-left:2px solid var(--warn,#d29922);margin-bottom:1.5rem">
-        <p class="small" style="font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint);margin:0 0 .5rem">Read this first</p>
-        <p style="margin:0 0 .6rem"><strong style="font-size:1.1rem">XO2 has no utility today.</strong></p>
-        <p class="small" style="margin:0 0 .5rem">It does no work in our product. It captures no fee, carries no governance right, entitles you to no revenue and is not required to call anything we run. <strong>base&#8209;transaction&#8209;decoder takes USDC and has never taken XO2.</strong></p>
-        <p class="small" style="margin:0">Nothing on this page is an offer to sell, a solicitation, or a claim about future value. There is no public sale, no liquidity pool and no market. If that changes, this page changes with it and says when.</p>
+  <section class="x-sec" id="facts">
+    <div class="container"><div class="x-wrap">
+      <h2 class="x-h">XO2 has no utility today.</h2>
+      <p class="x-p">It captures no fee, carries no governance right, entitles you to no revenue and is not required to call anything we run. There is no sale, no liquidity pool and no market.</p>
+      <div class="x-nums">
+        <div><b>100M</b><span>Fixed supply</span></div>
+        <div><b>5</b><span>Release locks hold all of it</span></div>
+        <div><b>2.506%</b><span>Most that can unlock in 30 days</span></div>
+        <div><b>None</b><span>Mint, pause or upgrade functions</span></div>
       </div>
+    </div></div>
+  </section>
 
-
-      <div class="chain" id="chain" data-state="idle">
-        <div class="chain-head">
-          <span><span id="chain-status">not read yet</span></span>
-          <button class="chain-btn" id="chain-go" type="button">read the chain</button>
+  <section class="x-sec">
+    <div class="container"><div class="x-wrap">
+      <div class="x-cols" style="--cols:2;margin-top:0">
+        <div>
+          <h3>One beneficiary</h3>
+          <p>Every lock releases to 0xf4211E30&hellip;9807, the address that deployed the contracts. That wallet is ours, and so is 0x3129b6&hellip;1783, which deployed an earlier token, $0200, and retired it after 31 hours.</p>
         </div>
-        <div class="chain-body">
-          <div class="chain-supply">
-            <span class="chain-num" id="chain-supply">&mdash;</span>
-            <span class="chain-unit">XO2 total supply</span>
-          </div>
-          <div id="chain-locks">
-            <div class="lock"><span class="lock-name">founder/team</span><div class="lock-bar"><div class="lock-fill" data-i="0"></div></div><span class="lock-amt" data-amt="0">&mdash;</span></div>
-            <div class="lock"><span class="lock-name">treasury</span><div class="lock-bar"><div class="lock-fill" data-i="1"></div></div><span class="lock-amt" data-amt="1">&mdash;</span></div>
-            <div class="lock"><span class="lock-name">ecosystem</span><div class="lock-bar"><div class="lock-fill" data-i="2"></div></div><span class="lock-amt" data-amt="2">&mdash;</span></div>
-            <div class="lock"><span class="lock-name">contributors</span><div class="lock-bar"><div class="lock-fill" data-i="3"></div></div><span class="lock-amt" data-amt="3">&mdash;</span></div>
-            <div class="lock"><span class="lock-name">undesignated</span><div class="lock-bar"><div class="lock-fill" data-i="4"></div></div><span class="lock-amt" data-amt="4">&mdash;</span></div>
-          </div>
+        <div>
+          <h3>No admin keys</h3>
+          <p>Nobody can mint, pause, upgrade or seize it. Those functions do not exist on the deployed token, and calling any of them reverts.</p>
         </div>
-        <div class="chain-foot" id="chain-foot">This panel calls <code class="inline">totalSupply()</code> and five <code class="inline">balanceOf()</code> reads against a public Base RPC endpoint, from your browser. Nothing here is served by us. If a read fails it says so rather than showing a number.</div>
       </div>
-      <div class="led" style="margin-bottom:2rem">
-        <div class="panel-head"><span>the contract</span><span>values below are static, the live panel above reads them</span></div>
-        <div class="led-row"><span class="led-lbl">address</span><span class="led-val"><code class="inline">0xdE906C748E56fD6F648eb8564532673257Ac414b</code><small>Base mainnet, chain 8453</small></span><span class="led-amt">&mdash;</span></div>
-        <div class="led-row"><span class="led-lbl">name</span><span class="led-val"><code class="inline">name()</code></span><span class="led-amt">0200 Protocol</span></div>
-        <div class="led-row"><span class="led-lbl">symbol</span><span class="led-val"><code class="inline">symbol()</code></span><span class="led-amt">XO2</span></div>
-        <div class="led-row"><span class="led-lbl">decimals</span><span class="led-val"><code class="inline">decimals()</code></span><span class="led-amt">18</span></div>
-        <div class="led-row"><span class="led-lbl">supply</span><span class="led-val"><code class="inline">totalSupply()</code><small>Fixed. There is no mint function to raise it</small></span><span class="led-amt">100,000,000</span></div>
-        <div class="led-foot">Seven contracts were deployed from one address in <b>eleven transactions</b>. Both halves are readable: each of the seven addresses below returns code from <code class="inline">eth_getCode</code>, and the deploying address moved from nonce&nbsp;2 to nonce&nbsp;13.</div>
+      <div class="x-acts" style="margin-top:3rem">
+        <a class="btn btn-primary" href="https://basescan.org/token/0xdE906C748E56fD6F648eb8564532673257Ac414b">View the contract</a>
+        <a class="btn btn-ghost" href="https://basescan.org/token/0xdE906C748E56fD6F648eb8564532673257Ac414b#balances">See the holders</a>
       </div>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">Two of the deployments failed, and that is the point.</h2>
-      <p class="lead" style="margin-bottom:1.25rem">The eleven transactions were not eleven successes. <strong>Nine succeeded and two reverted</strong>, and of the nine that were deploy calls, <strong>seven succeeded and two reverted</strong>. Those are two different sentences answering two different questions, and collapsing them into one number is how the count was first got wrong.</p>
-
-      <div class="led">
-        <div class="panel-head"><span>the two failures</span><span>read from receipts</span></div>
-        <div class="led-row"><span class="led-lbl">nonce 8</span><span class="led-val">Duplicate distributor, sent after nonce 7 had already deployed it<small><a class="mono" href="https://basescan.org/tx/0x5b88e0d0391e0e779bffafccd8c5a000d91c0bf1a6b114f1fa5e49134ddd1f71" rel="noopener" title="0x5b88e0d0391e0e779bffafccd8c5a000d91c0bf1a6b114f1fa5e49134ddd1f71">0x5b88e0d0&hellip;1f71</a> &middot; reverted, no logs</small></span><span class="led-amt">16,516,751 gas</span></div>
-        <div class="led-row"><span class="led-lbl">nonce 10</span><span class="led-val">Duplicate token, sent after nonce 9 had already deployed it<small><a class="mono" href="https://basescan.org/tx/0xe6e193c85042359c721a42c938edeafd6fad0b938a681d81ad25d1ed82bc8675" rel="noopener" title="0xe6e193c85042359c721a42c938edeafd6fad0b938a681d81ad25d1ed82bc8675">0xe6e193c8&hellip;8675</a> &middot; reverted, no logs</small></span><span class="led-amt">16,517,772 gas</span></div>
-        <div class="led-foot" style="word-break:break-all"><b>The two hashes in full, so you can paste them anywhere:</b><br>
-        <span class="mono small">0x5b88e0d0391e0e779bffafccd8c5a000d91c0bf1a6b114f1fa5e49134ddd1f71</span><br>
-        <span class="mono small">0xe6e193c85042359c721a42c938edeafd6fad0b938a681d81ad25d1ed82bc8675</span></div>
-        <div class="led-foot">A wallet popup vanished mid-signature and the transaction was re-sent. <b>It happened twice.</b> Both re-sends were deployments to an address that was already occupied, and because every contract here was deployed with <code class="inline">CREATE2</code>, where the address is fixed by the salt rather than by the sender&rsquo;s nonce, <b>the duplicate reverted instead of deploying a second copy</b>. With nonce-based <code class="inline">CREATE</code> each re-send would have landed at a fresh address and produced a real duplicate contract holding real supply.</div>
-      </div>
-      <p class="term-note" style="margin-top:.75rem">Total cost of both mistakes: <strong>33,034,523 gas</strong>, which is about <strong>$0.50</strong> at the gas price our own decoder reports for the block that carried the token deployment. We are publishing the failures because they are the only evidence we have that the design choice was worth making, and evidence about ourselves is the kind nobody volunteers.</p>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">No wallet holds the supply.</h2>
-      <p class="lead" style="margin-bottom:1.25rem">All 100,000,000 sit in five release contracts. The address that deployed them holds none, the distributor that filled them holds none, and there is no owner who can move them.</p>
-
-      <div class="led">
-        <div class="panel-head"><span>five locks &middot; one beneficiary</span><span>holding &amp; per-30-day ceiling</span></div>
-        <div class="led-row"><span class="led-lbl">founder/team</span><span class="led-val"><a class="mono" href="https://basescan.org/address/0x78e0DA1821C214534523262EFaC2Df561c00408F" rel="noopener" title="0x78e0DA1821C214534523262EFaC2Df561c00408F">0x78e0DA18&hellip;408F</a><small>ceiling 417,000 per 30 days</small></span><span class="led-amt">20,000,000</span></div>
-        <div class="led-row"><span class="led-lbl">treasury</span><span class="led-val"><a class="mono" href="https://basescan.org/address/0x9F0Ddc559d1071c135b6265c2DBB2fB8407bA818" rel="noopener" title="0x9F0Ddc559d1071c135b6265c2DBB2fB8407bA818">0x9F0Ddc55&hellip;A818</a><small>ceiling 630,000 per 30 days</small></span><span class="led-amt">15,000,000</span></div>
-        <div class="led-row"><span class="led-lbl">ecosystem</span><span class="led-val"><a class="mono" href="https://basescan.org/address/0x98aa8D4F6EAB6EF780800b1C3183897703E7B6CE" rel="noopener" title="0x98aa8D4F6EAB6EF780800b1C3183897703E7B6CE">0x98aa8D4F&hellip;B6CE</a><small>ceiling 520,000 per 30 days</small></span><span class="led-amt">25,000,000</span></div>
-        <div class="led-row"><span class="led-lbl">contributors</span><span class="led-val"><a class="mono" href="https://basescan.org/address/0x6594662D521eb4e66F94B44149F92cc1928FCeDa" rel="noopener" title="0x6594662D521eb4e66F94B44149F92cc1928FCeDa">0x6594662D&hellip;CeDa</a><small>ceiling 210,000 per 30 days</small></span><span class="led-amt">5,000,000</span></div>
-        <div class="led-row"><span class="led-lbl">undesignated</span><span class="led-val"><a class="mono" href="https://basescan.org/address/0x3f4Fb350Ccdf0a604E5a32e4032e150d7e539Cd1" rel="noopener" title="0x3f4Fb350Ccdf0a604E5a32e4032e150d7e539Cd1">0x3f4Fb350&hellip;9Cd1</a><small>ceiling 729,000 per 30 days</small></span><span class="led-amt">35,000,000</span></div>
-        <div class="led-foot" style="word-break:break-all"><b>The five lock addresses in full:</b><br>
-        <span class="mono small">0x78e0DA1821C214534523262EFaC2Df561c00408F</span><br>
-        <span class="mono small">0x9F0Ddc559d1071c135b6265c2DBB2fB8407bA818</span><br>
-        <span class="mono small">0x98aa8D4F6EAB6EF780800b1C3183897703E7B6CE</span><br>
-        <span class="mono small">0x6594662D521eb4e66F94B44149F92cc1928FCeDa</span><br>
-        <span class="mono small">0x3f4Fb350Ccdf0a604E5a32e4032e150d7e539Cd1</span><br>
-        <span class="small faint">distributor 0x2FaBA769283db7d5FF6A71DC930b2dB2521b2d95</span></div>
-        <div class="led-foot">Holdings sum to <b>100,000,000 exactly</b>. Each lock carries its own ceiling and they are never pooled, a lock cannot borrow another's allowance. Every lock enforces a <b>30-day delay</b> before a release completes.</div>
-      </div>
-
-      <div class="card" style="border-left:2px solid var(--border-strong);margin-top:1.25rem">
-        <p class="small" style="font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint);margin:0 0 .6rem">Five schedules, one destination</p>
-        <p style="margin:0 0 .5rem"><strong>All five locks release to the same address.</strong> They differ in <em>when</em>, not in <em>who</em>.</p>
-        <p class="small" style="margin:0">Founder/Team, Treasury, Ecosystem, Contributors and Undesignated are five names for five schedules, not five recipients. Read <code class="inline">beneficiary()</code> on each of the five addresses above: it returns one distinct value, <code class="inline">0xf4211E309d80a074dAc37C616d1Aa7899ed29807</code>. <strong>That is also the address that deployed the contracts.</strong></p>
-      </div>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">Two facts about the rate, and neither is computable from the other.</h2>
-      <div class="led">
-        <div class="panel-head"><span>two separate measurements</span><span>do not divide one by the other</span></div>
-        <div class="led-row"><span class="led-lbl">ceiling</span><span class="led-val">Most that can become movable in any rolling 30-day window<small>The five per-lock ceilings summed, while every lock still holds a balance</small></span><span class="led-amt">2.506%</span></div>
-        <div class="led-row"><span class="led-lbl">exhaustion</span><span class="led-val">Earliest point at which every lock could be empty<small>Governed by the slowest bucket, Ecosystem, at 48.08 windows</small></span><span class="led-amt">~3.95 yr</span></div>
-        <div class="led-foot"><b>These are two measurements, not one number expressed twice.</b> Dividing supply by the ceiling gives 3.28 years, which is <b>eight months short</b>, because the locks drain independently against their own holdings rather than from a shared pool, two of them empty at 23.81 windows, after which the maximum rate falls to 1.666% per window. That division is how this figure was got wrong twice before it was got right.</div>
-      </div>
-      <p class="term-note" style="margin-top:.75rem">No annualised rate is published. The 30-day window is the mechanism; a year is a convenience, and converting to one produced two of the four errors made arriving at these two numbers.</p>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">Nobody can mint, pause, upgrade or seize it.</h2>
-      <p class="lead" style="margin-bottom:1rem">We checked by calling the privileged functions rather than by reading our own source. Each of these reverts on the deployed token, because the function does not exist:</p>
-      <div class="codeblock">
-        <div class="panel-head"><span>absent on <a class="mono" href="https://basescan.org/address/0xdE906C748E56fD6F648eb8564532673257Ac414b" rel="noopener" title="0xdE906C748E56fD6F648eb8564532673257Ac414b">0xdE906C74&hellip;414b</a></span><span>every call reverts</span></div>
-        <pre><code>owner()            getOwner()          admin()
-pendingOwner()     transferOwnership() renounceOwnership()
-mint()             burn()              burnFrom()
-pause()            unpause()           blacklist()
-upgradeTo()        implementation()    setName()</code></pre>
-      </div>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">Where we are verified, and where we are not.</h2>
-      <div class="card">
-        <p style="margin:0 0 .6rem"><strong>On Basescan:</strong> the token, the distributor and <strong>one</strong> of the five locks are exact-match verified. The other four locks are <strong>byte-for-byte identical to that verified lock apart from their release ceiling</strong>, which appears three times in each lock's runtime bytecode as a PUSH32 constant and agrees with <code class="inline">ceiling()</code> called on that lock.</p>
-        <p style="margin:0 0 .6rem"><strong>On Sourcify: not verified.</strong> Sourcify is a separate registry and we have not submitted to it. <strong>Our own decoder therefore flags our own distributor</strong> with <code class="inline">unverified_contract</code>, and that flag is correct. We would rather tell you than have you find it.</p>
-        <p class="small faint" style="margin:0">If it ever reads &ldquo;all contracts verified&rdquo; on this page, that is erosion and it is wrong.</p>
-      </div>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">Check all of it yourself.</h2>
-      <p class="lead" style="margin-bottom:1rem">Nothing here needs our cooperation. These are actions, not coordinates, byte offsets go stale, calls do not.</p>
-      <div class="codeblock">
-        <div class="panel-head"><span>reproduction</span><span>any Base RPC</span></div>
-        <pre><code># the five ceilings, read from the locks themselves
-ceiling()      on each of the five lock addresses
-beneficiary()  on each, one distinct value, or our claim is wrong
-balanceOf()    on the token, for each lock, sums to totalSupply()
-
-# the four locks Basescan marks "similar match"
-eth_getCode    on each, diffed against the verified lock:
-               identical apart from the ceiling constant
-
-# nothing is held by a person
-balanceOf()    for 0xf4211E30…9807 and 0x3129b6…1783, both zero</code></pre>
-      </div>
-
-      <h2 class="h-section" style="margin:2.5rem 0 .75rem">There was an earlier token, and it is not this one.</h2>
-      <div class="card" style="border-left:2px solid var(--border-strong)">
-        <p style="margin:0 0 .6rem">A different wallet, <a class="mono" href="https://basescan.org/address/0x3129b6525dBe86a0c61d3C8ad162A333a5EF1783" rel="noopener" title="0x3129b6525dBe86a0c61d3C8ad162A333a5EF1783">0x3129b6&hellip;1783</a>, deployed a token called <strong>$0200</strong> on 2026&#8209;09&#8209;01 at 17:21&nbsp;UTC. It was retired <strong>31 hours later</strong>: the pool was withdrawn and the entire supply sent to an address it cannot leave. That wallet holds none of it, and holds no XO2 either.</p>
-        <p style="margin:0 0 .6rem">Both tokens are permanently on Base and both are visible from those addresses. <strong>XO2 was not deployed by that wallet</strong>, it was deployed by <a class="mono" href="https://basescan.org/address/0xf4211E309d80a074dAc37C616d1Aa7899ed29807" rel="noopener" title="0xf4211E309d80a074dAc37C616d1Aa7899ed29807">0xf4211E30&hellip;9807</a>, the same address that receives every release above.</p>
-        <p style="margin:0"><strong>One thing here you cannot check and are taking from us: both wallets are ours.</strong> No chain query establishes that, we are telling you, in our own voice, because a page arguing that you should check everything cannot quietly mix in something you can't.</p>
-      </div>
-
-    </div>
+    </div></div>
   </section>
 
 </main>
@@ -423,8 +331,7 @@ balanceOf()    for 0xf4211E30…9807 and 0x3129b6…1783, both zero</code></pre>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
-          <li><a href="/about/">About</a></li>
-          
+          <li><a href="/services/">Services</a></li>
           <li><a href="/changelog/">Changelog</a></li>
           <li><a href="/faq/">FAQ</a></li>
         </ul>
@@ -445,7 +352,7 @@ balanceOf()    for 0xf4211E30…9807 and 0x3129b6…1783, both zero</code></pre>
           <li><a href="/about/">About</a></li>
           <li><a href="/security/">Security</a></li>
           <li><a href="mailto:contact@0200project.com">Contact</a></li>
-          <li><a href="https://github.com/0200project/base-tx-explain/issues">Support</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
         </ul>
       </nav>
       <nav aria-label="Legal">
@@ -463,455 +370,24 @@ balanceOf()    for 0xf4211E30…9807 and 0x3129b6…1783, both zero</code></pre>
   </div>
 </footer>
 
-<script src="/assets/pay.js"></script>
-<script>
-(function () {
-  'use strict';
-
-  var ENDPOINT = 'https://api.0200project.com/mcp';
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  /* Shared by both success renders (card redirect-back and wallet inline).
-     site.js only binds [data-copy] buttons present at load, so anything
-     injected later, like these, needs its own listener. */
-  function wireCopyButton(btnId, valueId) {
-    var btn = document.getElementById(btnId);
-    var val = document.getElementById(valueId);
-    if (!btn || !val) return;
-    btn.addEventListener('click', function () {
-      var text = val.textContent.trim();
-      var prev = btn.textContent;
-      var doCopy = window.__copyText || function (t) {
-        return (navigator.clipboard && window.isSecureContext) ? navigator.clipboard.writeText(t) : Promise.reject(new Error('clipboard unavailable'));
-      };
-      doCopy(text).then(
-        function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = prev; }, 1600); },
-        function () { btn.textContent = 'Copy failed'; setTimeout(function () { btn.textContent = prev; }, 1600); }
-      );
-    });
-  }
-
-  /* ---- Buy the pass with a wallet: same shape as the playground's
-     continue-and-pay, calling buy_pass instead of explain_transaction.
-     Uses whichever pay.js is already deployed -- no picker, no redeploy,
-     matching the hold on that surface until Coinbase Wallet is tested. ---- */
-
-  function rpcBody(name, payment) {
-    var params = { name: name, arguments: {} };
-    if (payment) params._meta = { 'x402/payment': payment };
-    return JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: params });
-  }
-
-  function parseEnvelope(text) {
-    var t = String(text || '').trim();
-    if (!t) return null;
-    if (t.charAt(0) === '{' || t.charAt(0) === '[') {
-      try { return JSON.parse(t); } catch (e) { return null; }
-    }
-    var lines = t.split(/\r?\n/).filter(function (l) { return l.indexOf('data:') === 0; });
-    if (!lines.length) return null;
-    try { return JSON.parse(lines[lines.length - 1].slice(5).trim()); } catch (e) { return null; }
-  }
-
-  function payloadFrom(result) {
-    if (result && result.structuredContent) return result.structuredContent;
-    if (result && result.content && result.content.length) {
-      var c0 = result.content[0];
-      if (c0 && typeof c0.text === 'string') {
-        try { return JSON.parse(c0.text); } catch (e) { return { text: c0.text }; }
-      }
-    }
-    return null;
-  }
-
-  function isX402(payload) {
-    return !!(payload && payload.x402Version !== undefined && payload.accepts);
-  }
-
-  function callBuyPass(payment) {
-    return fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream' },
-      body: rpcBody('buy_pass', payment)
-    }).then(function (res) {
-      return res.text().then(function (text) { return { status: res.status, text: text }; });
-    }).then(function (r) {
-      var env = parseEnvelope(r.text);
-      if (!env || env.error) throw new Error('The server did not return a usable response.');
-      var result = env.result || {};
-      var payload = payloadFrom(result);
-      return { result: result, payload: payload };
-    });
-  }
-
-  var panel = document.getElementById('pass-wallet-panel');
-  var buyBtn = document.getElementById('pass-buy-btn');
-  var priceDisplay = null;
-
-  function payAmountDisplay(challenge) {
-    var a = (challenge.accepts && challenge.accepts[0]) || {};
-    var amt = (a.maxAmountRequired != null) ? a.maxAmountRequired : a.amount;
-    if (amt == null || !window.x402Pay) return null;
-    var n = Number(amt) / 1e6;
-    return '$' + (n === Math.round(n * 100) / 100 ? n.toFixed(2) : String(n));
-  }
-
-  function shortAddr(a) {
-    return (a && a.length > 10) ? a.slice(0, 6) + '…' + a.slice(-4) : a;
-  }
-
-  function renderPanel(html) { panel.innerHTML = html; }
-
-  function renderInsufficient(info) {
-    renderPanel('<p>This wallet (' + esc(shortAddr(info.account)) + ') holds ' + esc(info.heldDisplay) + ' USDC on Base; the pass needs ' + esc(info.requiredDisplay) + '.</p>');
-  }
-
-  function renderConfirm(challenge, info) {
-    renderPanel(
-      '<p>Wallet ' + esc(shortAddr(info.account)) + ' holds ' + esc(info.heldDisplay) + ' USDC on Base, enough to pay ' + esc(info.requiredDisplay) + '.</p>' +
-      '<button class="btn btn-primary btn-sm" type="button" id="pass-sign-btn">Sign &amp; pay ' + esc(info.requiredDisplay) + ' USDC</button>'
-    );
-    document.getElementById('pass-sign-btn').addEventListener('click', function () {
-      runPurchase(challenge);
-    });
-  }
-
-  var STATE_LABEL = {
-    connecting: 'Connecting wallet…',
-    network: 'Checking network…',
-    balance: 'Checking balance…',
-    signing: 'Waiting for your signature…',
-    signed: 'Submitting payment…'
-  };
-
-  function renderError(challenge, err) {
-    var code = err && err.code;
-    var msg;
-    if (code === 'INSUFFICIENT_FUNDS' && err.detail && window.x402Pay) {
-      msg = 'This wallet holds ' + window.x402Pay.formatUnits(err.detail.held, 6) + ' USDC on Base; the pass needs ' + window.x402Pay.formatUnits(err.detail.required, 6) + '.';
-    } else {
-      msg = (err && err.message) || 'The payment could not be completed.';
-    }
-    renderPanel('<p>' + esc(msg) + '</p><button class="btn btn-ghost btn-sm" type="button" id="pass-retry-btn">Try again</button>');
-    document.getElementById('pass-retry-btn').addEventListener('click', function () { startBuy(); });
-  }
-
-  function renderSuccess(payload) {
-    var token = payload && payload.pass_token;
-    var url = (payload && payload.mcp_url) || (token ? 'https://api.0200project.com/mcp/' + token : null);
-    renderPanel(
-      '<div class="pr-success-head" style="margin-top:0.75rem">' +
-        '<div class="pr-success-icon" aria-hidden="true"></div>' +
-        '<div><h2 style="font-size:0.9375rem">Paid.</h2></div>' +
-      '</div>' +
-      '<p style="margin-top:0.625rem;color:var(--fg-strong);font-weight:500">This is the only proof of purchase, save it now.</p>' +
-      (url
-        ? '<div class="pr-url-row" style="margin-top:0.75rem"><div class="pr-url" id="pr-wallet-url-value">' + esc(url) + '</div><button class="copy-btn" type="button" id="pr-wallet-copy-btn">Copy</button></div>'
-        : '<p style="margin-top:0.75rem">' + esc((payload && (payload.note || payload.keep_this_token)) || 'Check the response for your token.') + '</p>')
-    );
-    wireCopyButton('pr-wallet-copy-btn', 'pr-wallet-url-value');
-    buyBtn.textContent = 'Paid';
-    buyBtn.disabled = true;
-  }
-
-  /* ONE SIGNATURE AT A TIME.
-     Every payChallenge mints a FRESH random nonce (assets/pay.js randomNonce),
-     so two signatures are two independent EIP-3009 authorisations and BOTH
-     settle. Nothing stopped a second wallet prompt opening while the first was
-     still up: two clicks on a slow wallet buys one pass for $18. At $9 that is
-     450x the stake of the playground's $0.02 path.
-
-     What is guarded is SIGNATURE ACQUISITION, never the relay. Gating the relay
-     would recreate the bug just fixed on the playground -- discarding an
-     authorisation the user has already given. Once signed, it is always sent.
-
-     The timeout matters. A wallet promise that never settles (extension closed,
-     user walks away) would otherwise latch this forever and lock the payer out
-     of paying at all. Failing open after three minutes is the safe direction:
-     the worst case is the behaviour we have today. */
-  var signingInFlight = false;
-  var signingTimer = null;
-
-  function beginSigning() {
-    if (signingInFlight) return false;
-    signingInFlight = true;
-    signingTimer = setTimeout(function () { signingInFlight = false; signingTimer = null; }, 180000);
-    return true;
-  }
-  function endSigning() {
-    signingInFlight = false;
-    if (signingTimer) { clearTimeout(signingTimer); signingTimer = null; }
-  }
-
-  function runPurchase(challenge) {
-    if (!beginSigning()) return;
-    renderPanel('<p id="pass-status">Connecting wallet…</p>');
-    window.x402Pay.payChallenge(challenge, {
-      onState: function (state) {
-        var s = document.getElementById('pass-status');
-        if (s && STATE_LABEL[state]) s.textContent = STATE_LABEL[state];
-      }
-    }).then(function (signed) {
-      renderPanel('<p>Payment signed, completing your purchase…</p>');
-      return callBuyPass(signed.payment);
-    }).then(function (res) {
-      if (isX402(res.payload)) {
-        renderPanel('<p>The signature went through, but the purchase did not settle. Nothing should have been charged. <button class="btn btn-ghost btn-sm" type="button" id="pass-retry-btn2">Try again</button></p>');
-        var retry = document.getElementById('pass-retry-btn2');
-        if (retry) retry.addEventListener('click', function () { startBuy(); });
-        return;
-      }
-      renderSuccess(res.payload);
-    }).catch(function (err) {
-      renderError(challenge, err);
-    }).then(endSigning, endSigning);
-  }
-
-  function startBuy() {
-    if (!window.x402Pay || !window.x402Pay.available()) {
-      renderPanel('<p>No browser wallet detected. Install one (MetaMask, Coinbase Wallet, or similar) to pay this way, or use an x402-capable agent with the <code class="inline">buy_pass</code> tool.</p>');
-      return;
-    }
-    buyBtn.disabled = true;
-    buyBtn.textContent = 'Checking…';
-    renderPanel('<p>Reading the current price…</p>');
-    callBuyPass(null).then(function (res) {
-      var challenge = res.payload;
-      if (!isX402(challenge)) {
-        // Free tier or already-passed clients would land here; buy_pass has
-        // no free tier, so anything other than a challenge is unexpected.
-        renderPanel('<p>Unexpected response from the server. Try again in a moment.</p>');
-        buyBtn.disabled = false;
-        buyBtn.textContent = 'Buy the pass, $9';
-        return;
-      }
-      priceDisplay = payAmountDisplay(challenge);
-      buyBtn.disabled = false;
-      buyBtn.textContent = 'Buy the pass' + (priceDisplay ? ', ' + priceDisplay : ', $9');
-      renderPanel('<p>Checking your wallet…</p>');
-      window.x402Pay.inspect(challenge).then(function (info) {
-        if (info.canPay) renderConfirm(challenge, info);
-        else renderInsufficient(info);
-      }).catch(function (err) {
-        renderError(challenge, err);
-      });
-    }).catch(function () {
-      renderPanel('<p>Could not reach the server to read the price. Try again in a moment.</p>');
-      buyBtn.disabled = false;
-      buyBtn.textContent = 'Buy the pass, $9';
-    });
-  }
-
-  if (buyBtn) buyBtn.addEventListener('click', startBuy); // no pass button on this page; the script was carried over from /pricing/
-
-  /* ---- Stripe redirect-back: /pricing/?session_id=... after a card payment.
-     Live: both Payment Links redirect here on success, and GET /paid carries
-     CORS, so this can actually be fetched from the browser now. ---- */
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var sessionId = params.get('session_id');
-    if (!sessionId) return;
-    var box = document.getElementById('pr-success');
-    var meta = document.getElementById('pr-success-meta');
-    var body = document.getElementById('pr-success-body');
-    box.className = 'panel show';
-    meta.textContent = 'checking…';
-    body.innerHTML = '<p class="pg-hint">Confirming your payment…</p>';
-    /* How long this exact payment has been stuck in "not ready", survives the
-       manual reloads we're telling them to do. A first sighting gets the plain
-       "give it a moment" message; past ~45s of real waiting, telling them to
-       keep reloading would just be untrue, so the message changes to a real
-       next step instead of a longer wait with no visible end.
-
-       THE 45000 BELOW IS SHARED WITH THE SERVER. src/waitingBuyers.ts uses the
-       same number as STUCK_AFTER_MS to decide when a waiting buyer becomes a
-       loud log line, so we start listening at the moment this page tells them to
-       shout. They are one invariant in two files and scripts/predeploy.sh gates
-       on them being equal -- change this and the deploy stops until the server
-       matches. Don't retune it here alone. */
-    var firstSeenKey = 'btx-pending-' + sessionId;
-    var firstSeen = Number(sessionStorage.getItem(firstSeenKey));
-    if (!firstSeen) {
-      firstSeen = Date.now();
-      try { sessionStorage.setItem(firstSeenKey, String(firstSeen)); } catch (e) { /* private mode, etc. */ }
-    }
-    fetch('https://api.0200project.com/paid?session_id=' + encodeURIComponent(sessionId))
-      .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
-      .then(function (r) {
-        if (r.status === 404) {
-          var waitedMs = Date.now() - firstSeen;
-          meta.textContent = 'not ready yet';
-          if (waitedMs > 45000) {
-            body.innerHTML =
-              '<p>This is taking longer than it should. If your card was charged, ' +
-              'email <a href="mailto:security@0200project.com">security@0200project.com</a> with this page\'s URL ' +
-              'and we\'ll sort it out directly, don\'t assume reloading again will fix it at this point.</p>';
-          } else {
-            body.innerHTML = '<p>' + esc(r.body.error || 'Your payment is still processing. Reload this page in a few seconds.') + '</p>';
-          }
-          return;
-        }
-        if (!r.body || !r.body.mcp_url) {
-          meta.textContent = 'error';
-          body.innerHTML = '<p>Something unexpected came back. If you were charged, contact <a href="mailto:security@0200project.com">security@0200project.com</a> with this page\'s URL.</p>';
-          return;
-        }
-        var isSub = r.body.kind === 'subscription';
-        meta.textContent = 'confirmed';
-        body.innerHTML =
-          '<div class="pr-success-head">' +
-            '<div class="pr-success-icon" aria-hidden="true"></div>' +
-            '<div>' +
-              '<h2>Payment received.</h2>' +
-              '<p>' + (isSub ? '$9 / month' : '$9') + ' &middot; ' + (isSub ? '0200 Developer' : '0200 Pass') +
-                ' &middot; 10,000 calls' + (isSub ? ', renews automatically' : ' over 30 days') + '</p>' +
-            '</div>' +
-          '</div>' +
-          '<p style="margin-top:1rem;color:var(--fg-strong);font-weight:500">' +
-            esc(r.body.warning || 'This URL is your only proof of purchase, copy it now, there is no account to recover it from later.') +
-          '</p>' +
-          '<div class="pr-url-row" style="margin-top:0.75rem">' +
-            '<div class="pr-url" id="pr-url-value">' + esc(r.body.mcp_url) + '</div>' +
-            '<button class="copy-btn" type="button" id="pr-copy-btn">Copy</button>' +
-          '</div>' +
-          '<p class="pr-success-next">Paste this into any MCP client’s server-URL field to start calling it, no separate credential to configure. <a href="/docs/#quickstart">Quickstart</a></p>';
-        wireCopyButton('pr-copy-btn', 'pr-url-value');
-      })
-      .catch(function () {
-        meta.textContent = 'error';
-        body.innerHTML = '<p>Could not reach the server to confirm your payment. Reload this page in a few seconds.</p>';
-      });
-  })();
-})();
-</script>
-<script>
-/* Live chain read. The page claims every figure is readable from the chain;
-   this makes the reader able to do it without leaving the page. Two rules:
-   it never renders a number it did not read, and a failure says WHY. */
-(function(){
-  var TOKEN='0xdE906C748E56fD6F648eb8564532673257Ac414b';
-  var LOCKS=['0x78e0DA1821C214534523262EFaC2Df561c00408F',
-             '0x9F0Ddc559d1071c135b6265c2DBB2fB8407bA818',
-             '0x98aa8D4F6EAB6EF780800b1C3183897703E7B6CE',
-             '0x6594662D521eb4e66F94B44149F92cc1928FCeDa',
-             '0x3f4Fb350Ccdf0a604E5a32e4032e150d7e539Cd1'];
-  var RPCS=['https://mainnet.base.org','https://base-rpc.publicnode.com'];
-  var el=document.getElementById('chain'); if(!el) return;
-  var btn=document.getElementById('chain-go'), status=document.getElementById('chain-status'),
-      supplyEl=document.getElementById('chain-supply'), foot=document.getElementById('chain-foot');
-
-  function pad(a){ return '000000000000000000000000'+a.replace(/^0x/,''); }
-  function fmt(wei){
-    var whole=wei/1000000000000000000n;
-    return whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  }
-  function call(rpc,to,data){
-    return fetch(rpc,{method:'POST',headers:{'content-type':'application/json'},
-      body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:to,data:data},'latest']})})
-      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-      .then(function(j){ if(j.error) throw new Error(j.error.message||'rpc error');
-                         if(!j.result||j.result==='0x') throw new Error('empty result'); return BigInt(j.result); });
-  }
-  function withFallback(to,data,i){
-    i=i||0; if(i>=RPCS.length) return Promise.reject(new Error('all endpoints failed'));
-    return call(RPCS[i],to,data).catch(function(e){ if(i+1<RPCS.length) return withFallback(to,data,i+1); throw e; });
-  }
-  function countUp(node,target){
-    var t=String(target), dur=650, t0=null;
-    function step(ts){ if(!t0)t0=ts; var k=Math.min(1,(ts-t0)/dur);
-      var digits=t.replace(/,/g,''); var cur=Math.floor(Number(digits)*(k*k*(3-2*k)));
-      node.textContent=String(cur).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-      if(k<1) requestAnimationFrame(step); else node.textContent=t; }
-    /* A hidden tab pauses requestAnimationFrame, so an animated-only write
-       leaves the number blank on a panel that actually SUCCEEDED -- a false
-       failure, which is worse than no animation. Write the value first, then
-       animate over it, and keep a timer that lands on the value regardless. */
-    node.textContent=t;
-    var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(reduce||document.hidden) return;
-    setTimeout(function(){ node.textContent=t; }, dur+250);
-    requestAnimationFrame(step);
-  }
-
-  function run(){
-    el.setAttribute('data-state','loading');
-    status.textContent='reading base mainnet\u2026'; btn.disabled=true;
-    var jobs=[withFallback(TOKEN,'0x18160ddd')].concat(LOCKS.map(function(a){
-      return withFallback(TOKEN,'0x70a08231'+pad(a)); }));
-    Promise.all(jobs).then(function(r){
-      var supply=r[0], balances=r.slice(1);
-      countUp(supplyEl,fmt(supply));
-      var sum=0n;
-      balances.forEach(function(b,i){
-        sum+=b;
-        var pct = supply>0n ? Number(b*10000n/supply)/100 : 0;
-        var fill=el.querySelector('.lock-fill[data-i="'+i+'"]');
-        var amt=el.querySelector('.lock-amt[data-amt="'+i+'"]');
-        if(fill) setTimeout(function(){ fill.style.width=pct+'%'; }, 60*i);
-        if(amt) amt.textContent=fmt(b)+'  '+pct.toFixed(2)+'%';
-      });
-      el.setAttribute('data-state','ok');
-      var d=new Date();
-      status.textContent='read '+d.toISOString().slice(0,16).replace('T',' ')+'Z';
-      var exact = (sum===supply);
-      foot.innerHTML = exact
-        ? '<b>The five locks hold the entire supply.</b> Their balances sum to <code class="inline">'+fmt(sum)+'</code>, which is <code class="inline">totalSupply()</code> exactly \u2014 checked in your browser just now, against a public Base endpoint we do not run. No wallet outside these five holds any.'
-        : '<b>The five locks hold '+fmt(sum)+' of '+fmt(supply)+'.</b> They do not sum to the full supply, which means some has moved out of the locks. That is a real reading, not an error \u2014 compare it against the schedule below.';
-    }).catch(function(e){
-      el.setAttribute('data-state','fail');
-      status.textContent='could not read';
-      supplyEl.textContent='\u2014';
-      foot.innerHTML='<b>The chain read failed, so no number is shown.</b> Reason: <code class="inline">'+String(e.message||e).replace(/[<>&]/g,'')+'</code>. Public endpoints rate-limit and browsers block some of them; this is the panel refusing to invent a figure. Every address here is linked to Basescan \u2014 check it there instead.';
-    }).then(function(){ btn.disabled=false; });
-  }
-  btn.addEventListener('click',run);
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){ es.forEach(function(en){
-      if(en.isIntersecting){ io.disconnect(); run(); } }); },{rootMargin:'80px'});
-    io.observe(el);
-  } else { run(); }
-
-  /* click any address to copy it */
-  document.querySelectorAll('.mono, code.inline').forEach(function(n){
-    var t=(n.textContent||'').trim();
-    if(!/^0x[a-fA-F0-9]{40}$/.test(t)) return;
-    n.classList.add('copyable'); n.setAttribute('role','button'); n.setAttribute('tabindex','0');
-    n.title='click to copy';
-    function copy(){ if(!navigator.clipboard) return;
-      navigator.clipboard.writeText(t).then(function(){
-        var old=n.textContent; n.classList.add('copied'); n.textContent='copied';
-        setTimeout(function(){ n.textContent=old; n.classList.remove('copied'); },900); }); }
-    n.addEventListener('click',copy);
-    n.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();copy();} });
-  });
-})();
-</script>
 <script src="/assets/site.js" defer></script>
 <script type="module">
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const small = matchMedia('(max-width: 40rem)').matches || navigator.maxTouchPoints > 0;
+  const small = matchMedia('(max-width: 63.9em)').matches || navigator.maxTouchPoints > 0;
   const canvas = document.getElementById('field'), fb = document.getElementById('field-fallback');
-  const showFallback = () => { fb.parentElement.hidden = false; fb.hidden = false; canvas.hidden = true; };
-  // Dynamic import, so a CDN or importmap failure lands in this catch instead of aborting the
-  // module before any catch exists. The wrapper carries `hidden`, so the wrapper is the fallback.
+  const showFallback = () => { fb.hidden = false; canvas.hidden = true; };
   (async () => {
     try {
       const [{ mountField }, points] = await Promise.all([
         import('/assets/field.js?v=84079f42'),
         fetch('/assets/xo2-points.json?v=2').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }),
       ]);
-      mountField(canvas, { points, host: canvas.closest('section'), reducedMotion: reduce, fallback: fb.parentElement, size: small ? 3.2 : 3.6, alpha: 0.95, accent: '#0350fd', margin: 0.03, cursor: false, idle: 2.2 });
+      mountField(canvas, { points, host: canvas.closest('section'), reducedMotion: reduce, fallback: fb, size: small ? 4.2 : 5.4, alpha: small ? 0.3 : 0.4, accent: '#0350fd', margin: 0.04, cursor: false, idle: 1.4 });
     } catch (e) { showFallback(); }
   })();
-
   addEventListener('DOMContentLoaded', () => {
-    if (!window.gsap || reduce || document.hidden) return;
-    gsap.from('.tok-sym, .tok-name', { y: 26, opacity: 0, duration: .9, ease: 'power3.out', stagger: .08, delay: .15, clearProps: 'transform,opacity' });
-    gsap.from('.tok-badge', { y: 10, opacity: 0, duration: .6, ease: 'power3.out', stagger: .05, delay: .5, clearProps: 'transform,opacity' });
-    gsap.from('.tok-stat', { y: 16, opacity: 0, duration: .7, ease: 'power3.out', stagger: .07, delay: .7, clearProps: 'transform,opacity' });
+    if (!window.gsap || reduce) return;
+    gsap.from('.hero-field .display, .hero-field .hero-lead, .hero-field .hero-actions', { y: 18, opacity: 0, duration: .9, ease: 'power3.out', stagger: .1, delay: .15, clearProps: 'transform,opacity' });
   });
 </script>
 </body>
