@@ -363,18 +363,26 @@
              (1) /healthz does not publish `settlements` — that is commercial
              state and belongs on the token-gated surface, exactly as the comment
              above already says. This page read the field anyway and rendered the
-             ABSENCE as the number zero, publishing "0 payments settled" while
-             five had settled, one of them a real customer payment on 2026-08-29
-             (0x325557e1..., $0.02). An instrument with no spelling for "I cannot
-             tell you" answers with a number instead. A false figure about our own
-             record is worst on this page of all, because this page tells the
-             reader the checks run live against production and invites them to
-             verify — and our own outreach cites that payment by hash.
+             ABSENCE as the number zero, publishing a settled count of zero at a
+             time when settlements existed. An instrument with no spelling for
+             "I cannot tell you" answers with a number instead. A false figure
+             about our own record is worst on this page of all, because this page
+             tells the reader the checks run live against production and invites
+             them to verify.
 
-             (2) Even holding the field, a bare count may not be rendered here:
-             "5 payments settled" reads as "5 customers paid", and the split is
-             one customer to four of our own. A count may not imply a population
-             we do not have. If this clause ever returns it carries its split. */
+             (2) Even holding the field, a bare count may not be rendered here: a
+             count of settlements reads as a count of CUSTOMERS, and ours is not
+             one. A count may not imply a population we do not have. If this
+             clause ever returns it carries its split.
+
+             ⛔ AND THE OPERANDS STAY OUT OF THIS COMMENT. It used to state the
+             split, the date, the amount and a transaction hash prefix — and
+             COMMENTS ARE SERVED. View-source published the exact population fact
+             that rule (2) exists to withhold, with no token and no auth, for as
+             long as the page has been up. The reasoning was right and writing the
+             reasoning down was the leak. site-check.sh enforces this rule on
+             rendered copy and could not see it four lines from the code it
+             guards. */
           lifetimeLine.textContent = line;
         }
       } else if (health.ok) {
