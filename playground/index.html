@@ -22,102 +22,159 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
-  .pg-section { padding-bottom: clamp(4.5rem, 10vw, 7.5rem); }
-  .pg-wrap { max-width: 48rem; }
+  /* ---- The playground: the title on the container's left edge, the field under it, and the
+     decoder's response as the product shot: one large dark card across the container, as
+     wide as the homepage's "What you can use today" card. Its empty state is a calm stage;
+     a result fills it at a size you can read. Nothing on the page moves at rest. ---- */
+  .pg { --pg-pad: var(--card-pad); --pg-stage: clamp(18rem, 40svh, 28rem); }
+  /* the title stays on one line where it fits, as the homepage's section headings do */
+  .pg-h1 { max-width: 22ch; }
 
-  .pg-input-body { padding: 1rem; display: grid; gap: 0.875rem; }
-  .pg-row { display: flex; flex-wrap: wrap; gap: 0.625rem; }
+  /* the field and its button, one pill; the samples under it */
+  .pg-wrap { max-width: 48rem; margin-top: clamp(2rem, calc(3 * var(--vw)), 2.75rem); }
+  .pg-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem;
+    background: var(--card-bg);
+    border: 1px solid var(--hair);
+    border-radius: 999px;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pg-row:hover { border-color: rgba(255, 255, 255, 0.22); }
+  }
+  .pg-row:focus-within { border-color: var(--hair-hover); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.07); }
   .pg-field {
-    flex: 1 1 14rem;
+    flex: 1 1 auto;
     min-width: 0;
     height: 2.5rem;
-    padding-inline: 0.875rem;
-    font-family: var(--mono);
-    font-size: 0.8125rem;
-    color: var(--fg);
-    background: var(--bg-inset);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    padding: 0 0.5rem 0 1rem;
+    font-family: var(--sans);
+    font-size: 1rem;
+    letter-spacing: -0.008em;
+    color: var(--fg-strong);
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    outline: none;
   }
   .pg-field::placeholder { color: var(--fg-faint); }
-  .pg-field:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-dim);
-  }
+  .pg-field:focus, .pg-field:focus-visible { outline: none; }
+  .pg-row .btn { flex: none; }
 
-  .pg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
-  .pg-chips-label {
-    font-family: var(--mono);
-    font-size: 0.71875rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-faint);
-    margin-right: 0.25rem;
-  }
+  .pg-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; }
   .chip {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    padding: 0.3rem 0.75rem;
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    font-weight: 400;
+    height: 2.25rem;
+    padding: 0 1rem;
     background: transparent;
     color: var(--fg-muted);
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--hair);
     border-radius: 999px;
     cursor: pointer;
     white-space: nowrap;
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    transition: color 0.4s ease, border-color 0.4s ease;
   }
-  .chip:hover { color: var(--fg-strong); border-color: var(--border-hover); background: var(--bg-hover); }
-  .chip.active { color: var(--fg-strong); border-color: var(--accent); }
+  @media (hover: hover) and (pointer: fine) {
+    .chip:hover { color: var(--fg-strong); border-color: var(--hair-hover); }
+  }
+  .chip.active { color: var(--fg-strong); border-color: rgba(78, 158, 255, 0.7); }
 
-  .pg-note { margin-top: 0.875rem; font-size: 0.8125rem; color: var(--fg-faint); max-width: 44rem; }
-  .pg-note a { color: var(--fg-muted); }
-  .pg-note a:hover { color: var(--fg-strong); }
+  /* the response: the product shot */
+  .pg-out { margin-top: clamp(2rem, calc(3 * var(--vw)), 2.75rem); background: var(--card-ground); }
+  .pg-out > .panel-head { padding: clamp(1.25rem, calc(2 * var(--vw)), 1.75rem) var(--pg-pad) 0; font-size: 0.875rem; }
+  #pg-body { min-height: var(--pg-stage); }
 
-  .pg-out { margin-top: 1.5rem; }
   .pg-state {
-    min-height: 16rem;
+    min-height: var(--pg-stage);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 2rem 1.5rem;
+    padding: 2rem var(--pg-pad) calc(2rem + 1.5rem);
     text-align: center;
   }
-  .pg-hint { color: var(--fg-muted); font-size: 0.875rem; max-width: 26rem; }
-  .pg-json {
-    padding: 1.125rem 1.25rem;
-    overflow-x: auto;
-    font-size: 0.78125rem;
-    line-height: 1.7;
-    color: var(--fg);
+  .pg-hint {
+    max-width: 34rem;
+    font-size: clamp(1.0625rem, calc(0.9 * var(--vw) + .5rem), 1.25rem);
+    line-height: 1.55;
+    letter-spacing: -0.015em;
+    color: var(--fg-muted);
+    text-wrap: balance;
   }
-  .pg-miss { padding: 1.25rem; }
-  .pg-miss p { color: var(--fg-muted); font-size: 0.875rem; margin-bottom: 0.875rem; max-width: 40rem; }
-  .pg-miss .codeblock pre { font-size: 0.78125rem; }
+  .pg-state .logo-loader { width: 2.75rem; height: 2.75rem; }
 
-  .pg-err-note { padding: 1.125rem 1.25rem 0; color: var(--fg-muted); font-size: 0.875rem; max-width: 42rem; }
-  .pg-err-note code { font-size: 0.8125rem; color: var(--fg); }
+  .pg-json {
+    padding: 1.5rem var(--pg-pad) var(--pg-pad);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--fg);
+    /* a long value that wraps continues indented under its own line, never at the card's edge */
+    text-indent: 6ch each-line hanging;
+  }
+  /* the JSON in the homepage's two tones; a risk flag keeps the one blue */
+  .pg-out .tok-key { color: var(--fg-muted); }
+  .pg-out .tok-str, .pg-out .tok-num { color: var(--fg-strong); }
+  .pg-out .tok-punc { color: #6a6a70; }
+  .pg-out .tok-flag { color: var(--accent-strong); }
 
-  .pg-pay { padding: 1.25rem; border-bottom: 1px solid var(--border); }
+  .pg-note { margin: -0.5rem var(--pg-pad) 0; padding-bottom: var(--pg-pad); font-size: 0.8125rem; color: var(--fg-faint); max-width: 44rem; }
+  .pg-note a { color: var(--fg-muted); }
+  .pg-note a:hover { color: var(--fg-strong); }
+
+  .pg-miss { padding: 1.5rem var(--pg-pad) var(--pg-pad); }
+  .pg-miss p { color: var(--fg-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 1.25rem; max-width: 40rem; }
+  .pg-miss .codeblock pre { font-size: 0.8125rem; }
+
+  .pg-err-note { padding: 1.5rem var(--pg-pad) 0; color: var(--fg-muted); font-size: 1rem; line-height: 1.6; max-width: calc(42rem + 2 * var(--pg-pad)); }
+  .pg-err-note code { font-size: 0.875rem; color: var(--fg); }
+  .pg-err-note a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+
+  /* the paywall and the pay panel keep the sizes they had before this round: the $9 card pass
+     link and the Continue button stay in the same proportion to each other */
+  .pg-pay { padding: 1.5rem var(--pg-pad) 0; }
   .pg-pay-title { color: var(--fg-strong); font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.5rem; }
-  .pg-pay p { color: var(--fg-muted); font-size: 0.875rem; max-width: 42rem; }
-  .pg-pay p + p { margin-top: 0.5rem; }
-  .pg-pay .btn { margin-top: 0.5rem; }
+  .pg-pay p { color: var(--fg-muted); font-size: 0.875rem; line-height: 1.6; max-width: 42rem; }
+  .pg-pay p + p { margin-top: 0.625rem; }
+  .pg-pay .btn { margin-top: 0.75rem; }
   .pg-pay a { color: var(--accent); }
   .pg-pay a:hover { color: var(--accent-strong); }
-  .pg-kv { margin-top: 1rem; display: grid; gap: 0.4rem; }
-  .pg-kv-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .pg-kv dt { font-family: var(--mono); font-size: 0.71875rem; letter-spacing: 0.05em; color: var(--fg-faint); min-width: 6rem; padding-top: 0.1rem; }
-  .pg-kv dd { font-family: var(--mono); font-size: 0.78125rem; color: var(--fg); overflow-wrap: anywhere; }
+  #pay-panel { margin-top: 0.625rem; }
+  .pg-kv { margin-top: 1.25rem; display: grid; gap: 0.5rem; }
+  .pg-kv-row { display: flex; gap: 0.25rem 1rem; flex-wrap: wrap; }
+  .pg-kv dt { font-family: var(--sans); font-size: 0.875rem; color: var(--fg-faint); min-width: 6rem; }
+  .pg-kv dd { font-family: var(--mono); font-size: 0.8125rem; line-height: 1.6; color: var(--fg); overflow-wrap: anywhere; min-width: 0; }
 
-  @media (max-width: 47.9em) {
-    .pg-field { font-size: 1rem; }
+  /* a result arrives once, softly; the empty stage does not move */
+  @media (prefers-reduced-motion: no-preference) {
+    #pg-body > :is(.pg-json, .pg-pay, .pg-miss, .pg-err-note) { animation: pg-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    @keyframes pg-in { from { opacity: 0.001; transform: translateY(6px); } }
+  }
+  /* the loader is the page's only loop: it rests while the response is out of sight */
+  #pg-body.is-off .logo-loader .tile { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .chip, .pg-row { transition: none; }
+  }
+
+  @media (max-width: 40em) {
+    .pg { --pg-pad: 1.25rem; --pg-stage: 20rem; }
+    .pg-row { padding: 0.3125rem; }
+    .pg-field { padding-left: 0.875rem; }
+    .chip { height: 2.5rem; }
+    .pg-json { font-size: 0.8125rem; line-height: 1.7; text-indent: 4ch each-line hanging; }
+    .pg-hint { font-size: 1rem; }
+    .pg-kv-row { flex-direction: column; gap: 0.125rem; }
   }
 </style>
 </head>
@@ -140,7 +197,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -148,31 +204,31 @@
 
 <main id="main">
 
-  <section class="x-top">
+  <section class="x-top pg">
     <div class="container"><div class="x-wrap">
-      <h1 class="x-h1">Try it on a real transaction.</h1>
+      <h1 class="x-h1 pg-h1">Try it on a real transaction.</h1>
       <p class="x-p">Paste a Base transaction hash and get back what happened, in plain English and strict JSON. 50 free calls every 24 hours per IPv4 address or IPv6 /64, no account.</p>
-      <div class="pg-wrap" style="margin-top:2.5rem">
+      <div class="pg-wrap">
         <div class="pg-row">
           <input id="pg-hash" class="pg-field" type="text" placeholder="Paste a Base transaction hash" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Transaction hash">
           <button id="pg-run" class="btn btn-primary" type="button">Explain</button>
         </div>
-        <div class="pg-chips" role="group" aria-label="Sample transactions" style="margin-top:1rem">
-          <button class="chip" type="button" aria-pressed="false" data-hash="0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">Swap</button>
+        <div class="pg-chips" role="group" aria-label="Sample transactions">
+          <button class="chip" type="button" aria-pressed="false" data-hash="0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa">Swap</button>
           <button class="chip" type="button" aria-pressed="false" data-hash="0x8b246d458fd8b982455cdc172613272a090d1f84da559feb3392c152a09721c8">Reverted swap</button>
           <button class="chip" type="button" aria-pressed="false" data-hash="0x8f1e67833a72c7d2d82ff57731fefaf96fa17bdecb9da7f9ac3f4c6b5679fa12">Add liquidity</button>
           <button class="chip" type="button" aria-pressed="false" data-hash="0x08d78d805d54d3bface91a2f8d081d79429279bdd5a2f8c10da2b833dd3e0100">USDC transfer</button>
           <button class="chip" type="button" aria-pressed="false" data-hash="0x3002b2c60d153e11e69986103b42d4887da30f8e02890f834d6de16e0c358be3">ETH transfer</button>
         </div>
-        <div class="panel pg-out" style="margin-top:2rem">
-          <div class="panel-head"><span>response</span><span id="pg-meta" aria-live="polite">explain_transaction</span></div>
-          <div id="pg-body" role="region" aria-label="Tool output">
-            <div class="pg-state"><p class="pg-hint">You get back a plain-English summary, the action type, the assets moved, the counterparties, gas in USD, and any risk flags with the checks behind them. No flag does not mean safe.<br>Pick a sample above to see one, saved on 20 August 2026.</p></div>
-          </div>
+      </div>
+      <div class="panel pg-out" id="pg-out">
+        <div class="panel-head"><span>response</span><span id="pg-meta" aria-live="polite">explain_transaction</span></div>
+        <div id="pg-body" role="region" aria-label="Tool output">
+          <div class="pg-state"><p class="pg-hint">You get back a plain-English summary, the action type, the assets moved, the counterparties, gas in USD, and any risk flags with the checks behind them. No flag does not mean safe.<br>Pick a sample above to see one, saved on 20 August 2026.</p></div>
         </div>
       </div>
       <div class="x-acts">
-        <a class="btn btn-primary" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls for $9</a>
+        <a class="btn btn-primary" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls, 30 days, $9</a>
         <a class="btn btn-ghost" href="/docs/">Read the docs</a>
       </div>
     </div></div>
@@ -206,7 +262,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -230,8 +285,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -243,31 +297,31 @@
 
   /* Five real Base transactions, decoded by the production pipeline. */
   var SAMPLES = {
-    "0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c": {
-          "summary": "0x401d...f2c5 swapped 0.03 ETH for 12,899,422 WNL via Uniswap V4 PoolManager.",
+    "0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa": {
+          "summary": "0x5980...3d88 swapped 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager. Not all risk checks returned an answer for this transaction; see checks. Absence of a risk flag here does not mean none exists.",
           "action_type": "swap",
           "status": "success",
           "assets_moved": [
             {
               "token": "ETH",
-              "amount": "0.03",
-              "from": "0x401d224f8fc8f17c452ca478a9bd4ecf5d3ff2c5",
-              "to": "0xd0a40c6526acdebd4f6d87931098ff37a9f8e4bf",
+              "amount": "0.016",
+              "from": "0x5980db49fa877a3482daf4898f88518c97073d88",
+              "to": "0xd6145b2d3f379919e8cdeda7b97e37c4b2ca9c40",
               "token_address": null,
               "standard": "native"
             },
             {
-              "token": "WNL",
-              "amount": "12899422.144134853458613801",
+              "token": "USDC",
+              "amount": "37.502263",
               "from": "0x498581fF718922c3f8e6A244956aF099B2652b2b",
-              "to": "0x401d224F8fc8F17C452Ca478A9Bd4ECf5d3FF2C5",
-              "token_address": "0xb200000000000000000000447fb52a1948fb9a01",
+              "to": "0x5980DB49FA877a3482DAF4898f88518c97073D88",
+              "token_address": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
               "standard": "erc20"
             }
           ],
           "counterparties": [
             {
-              "address": "0xd0a40c6526acdebd4f6d87931098ff37a9f8e4bf",
+              "address": "0xd6145b2d3f379919e8cdeda7b97e37c4b2ca9c40",
               "label": null
             },
             {
@@ -275,24 +329,30 @@
               "label": "Uniswap V4 PoolManager"
             }
           ],
-          "risk_flags": [
-            {
-              "flag": "unverified_contract",
-              "detail": "Target contract 0xd0a4...e4bf has no verified source code on Sourcify."
-            }
-          ],
+          "risk_flags": [],
           "checks": {
             "contract_verification": "ok",
-            "first_interaction": "ok",
+            "first_interaction": "unavailable",
             "drainer_blacklist": "ok",
+            "assessed_for": [
+              "0x5980db49fa877a3482daf4898f88518c97073d88"
+            ],
             "unchecked_addresses": [],
-            "note": null
+            "note": "counterparty history could not be checked. No flag was emitted for those checks, and that absence carries no information: treat it as unknown, not as clean."
           },
-          "gas_paid_usd": 0.020562,
-          "timestamp": "2026-08-20T03:54:19.000Z",
-          "block_number": 50204356,
-          "tx_hash": "0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c",
-          "basescan_url": "https://basescan.org/tx/0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c",
+          "gas_paid_usd": 0.002748,
+          "gas_price_basis": {
+            "source": "at-block",
+            "eth_usd": 2341.81456431,
+            "feed_block": "53223900",
+            "round_id": "55340232221128665367",
+            "note": "ETH/USD read from the Chainlink feed at block 53223900, the ~10-minute anchor for this transaction's block. Reproducible by anyone with archive access to that block."
+          },
+          "timestamp": "2026-10-29T01:28:15.000Z",
+          "decoded_at": "2026-10-29T11:57:26.139Z",
+          "block_number": 53223974,
+          "tx_hash": "0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa",
+          "basescan_url": "https://basescan.org/tx/0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa",
           "partial": false,
           "provenance": {
             "untrusted_fields": [
@@ -653,11 +713,11 @@
     var el = payPanelEl();
     if (!el) return;
     if (!window.x402Pay || !window.x402Pay.available()) {
-      el.innerHTML = '<p>No browser wallet detected. Install one (MetaMask, Coinbase Wallet, or similar) to pay this call yourself, or use an x402-capable agent.</p>';
+      el.innerHTML = '<p>No browser wallet found. On a phone, open this page in your wallet app&rsquo;s browser; on a computer, use a wallet extension (MetaMask, Coinbase Wallet, or similar). Or use an x402-capable agent.</p>';
       return;
     }
     el.innerHTML =
-      '<p>If you&rsquo;re the one calling this, not an agent: if your wallet shows a warning when you sign, stop. The <a href="/pricing/">$9 card pass</a> works instead.</p>' +
+      '<p>If you&rsquo;re the one calling this, not an agent: if your wallet shows a warning when you sign, stop. The <a href="/pricing/#pass">$9 card pass</a> works instead.</p>' +
       '<button class="btn btn-primary btn-sm" type="button" data-pay-step="check">Continue, ' + esc(priceDisplay) + '</button>';
     el.querySelector('[data-pay-step="check"]').addEventListener('click', function () {
       el.innerHTML = '<p>Checking your wallet&hellip;</p>';
@@ -815,7 +875,7 @@
   function appendPassUpsell() {
     var note = document.createElement('p');
     note.className = 'pg-note';
-    note.innerHTML = 'Calling more than a few of these? The <a href="/docs/#pass">$9 pass</a> covers 10,000 calls over 30 days instead of paying per call.';
+    note.innerHTML = 'Calling more than a few of these? The <a href="/pricing/#pass">$9 pass</a> covers 10,000 calls over 30 days instead of paying per call.';
     body.appendChild(note);
   }
 
@@ -1062,6 +1122,15 @@
       explain();
     }
   } catch (e) { /* URLSearchParams unavailable, the form still degrades to an empty page */ }
+})();
+</script>
+<script>
+/* The loader is the only loop on this page. Out of sight it rests (a hidden tab already
+   stops it): the class only pauses its tiles, it never touches the decoder above. */
+(function () {
+  var b = document.getElementById('pg-body');
+  if (!b || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (es) { b.classList.toggle('is-off', !es[es.length - 1].isIntersecting); }).observe(b);
 })();
 </script>
 

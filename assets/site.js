@@ -103,10 +103,7 @@
       .then(function (h) {
         if (!h || h.ok !== true) throw new Error('not ok');
         ft.classList.add('ft-ok');
-        var calls = h.lifetime && typeof h.lifetime.calls === 'number' ? h.lifetime.calls : null;
-        ftTxt.textContent = calls !== null
-          ? 'Operational · ' + calls.toLocaleString() + ' calls served, ours included'
-          : 'Operational';
+        ftTxt.textContent = 'Operational';
       })
       .catch(function () { clearTimeout(to); probeOpaque(); });
   }
@@ -121,7 +118,6 @@
     { g: 'Navigate', t: 'Status', hint: '/status', href: '/status/' },
     { g: 'Navigate', t: 'Changelog', hint: '/changelog', href: '/changelog/' },
     { g: 'Navigate', t: 'Security', hint: '/security', href: '/security/' },
-    { g: 'Resources', t: 'GitHub repository', hint: 'github.com', href: 'https://github.com/0200project/base-tx-explain' },
     { g: 'Resources', t: 'MCP Registry', hint: 'registry', href: 'https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder' },
     { g: 'Actions', t: 'Copy MCP endpoint', hint: 'copy', copy: 'https://api.0200project.com/mcp' },
     { g: 'Actions', t: 'Copy MCP client config', hint: 'copy', copy: '{\n  "mcpServers": {\n    "base-transaction-decoder": {\n      "type": "streamable-http",\n      "url": "https://api.0200project.com/mcp"\n    }\n  }\n}' }
@@ -257,7 +253,7 @@
   dot.setAttribute('aria-hidden', 'true');
   document.body.appendChild(dot);
 
-  var tx = 0, ty = 0, cx = 0, cy = 0, shown = false;
+  var tx = 0, ty = 0, cx = 0, cy = 0, shown = false, running = false;
 
   function place(x, y, scale) {
     dot.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%) scale(' + (scale || 1) + ')';
@@ -270,6 +266,13 @@
     /* The dot swells a touch with speed and eases straight back to 1 at rest --
        a breath, not a stretch or a trail. */
     var speed = Math.sqrt(dx * dx + dy * dy);
+    /* Caught up with a still pointer: settle on it and stop asking for frames.
+       The next mousemove starts the loop again. */
+    if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+      cx = tx; cy = ty; place(cx, cy, 1);
+      running = false;
+      return;
+    }
     var scale = 1 + Math.min(speed / 70, 0.35);
     place(cx, cy, scale.toFixed(3));
     requestAnimationFrame(loop);
@@ -288,6 +291,7 @@
       dot.classList.add('is-visible');
     }
     if (reduced) place(tx, ty);
+    else if (!running) { running = true; requestAnimationFrame(loop); }
     var over = e.target && e.target.closest ? e.target.closest(HOVER_SEL) : null;
     dot.classList.toggle('is-hover', !!over);
   }, { passive: true });
@@ -296,6 +300,4 @@
     dot.classList.remove('is-visible');
     shown = false;
   });
-
-  if (!reduced) requestAnimationFrame(loop);
 })();

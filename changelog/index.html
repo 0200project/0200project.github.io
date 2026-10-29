@@ -22,19 +22,70 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
+  /* The release history is a calm timeline: one hairline runs down beside the entries, and
+     each entry's date sits on it with a small open ring. On a wide screen the date stays in
+     view beside its entry while the entry is read, and gives way to the next date.
+     The line is drawn once, on the track that holds the entries, not once per entry:
+     motion.js moves each entry as it arrives, and a line drawn inside an entry moved with it
+     and opened a gap. Only the rings travel; the line stays still. */
+  .log-list { --tl-x: calc(11rem + 1.25rem); --tl-pad: clamp(2.5rem, calc(4.5 * var(--vw)), 4rem); --ring: 0.5625rem; }
+  .log-track { position: relative; }
+  .log-track::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--tl-pad) + 1.125rem); /* from the first ring */
+    bottom: 0;
+    left: var(--tl-x);
+    width: 1px;
+    background: linear-gradient(var(--hair) calc(100% - 14rem), rgba(255, 255, 255, 0)); /* fading out under the last entry */
+    pointer-events: none;
+  }
+  .log-entry { position: relative; }
+  .log-date {
+    position: sticky;
+    top: calc(var(--nav-h) + 2rem);
+    align-self: start;
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
+  }
+  .log-date::after {
+    content: "";
+    position: absolute;
+    left: calc(var(--tl-x) + 0.5px - var(--ring) / 2);
+    top: calc(1.125rem - var(--ring) / 2);
+    width: var(--ring);
+    height: var(--ring);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    background: var(--bg);
+  }
   .log-body { max-width: 44rem; }
   .log-body ul { margin-top: 1rem; }
+  .log-body a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
   .log-follow {
-    padding-block: 2rem 6rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.875rem;
+    padding: 1rem 0 0 calc(11rem + 2.5rem);
+    font-size: 0.9375rem;
+    line-height: 1.55;
     color: var(--fg-faint);
   }
-  .log-follow a { color: var(--fg-muted); }
-  .log-follow a:hover { color: var(--fg-strong); }
+  .log-follow a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+  @media (hover: hover) and (pointer: fine) {
+    .log-body a:hover, .log-follow a:hover { color: var(--fg-strong); text-decoration-color: var(--fg-muted); }
+  }
+  .log-list { padding-bottom: clamp(5rem, calc(10 * var(--vw)), 9rem); }
+
+  /* one column: the line runs down the left edge, the entries just inside it */
+  @media (max-width: 47.9em) {
+    .log-list { --tl-x: 0.25rem; }
+    .log-entry { padding-left: 1.5rem; }
+    .log-date { position: relative; top: auto; padding-top: 0; }
+    .log-date::after { left: calc(var(--tl-x) - 1.5rem + 0.5px - var(--ring) / 2); top: calc(0.75rem - var(--ring) / 2); }
+    .log-track::before { top: calc(var(--tl-pad) + 0.75rem); }
+    .log-follow { padding-left: 1.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -56,7 +107,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -71,7 +121,8 @@
       <p class="lead">Product updates from 0200project, newest first.</p>
     </section>
 
-    <section aria-label="Release history">
+    <section class="log-list" aria-label="Release history">
+      <div class="log-track">
 
       <article class="log-entry">
         <div class="log-date"><time datetime="2026-09-09">September 9, 2026</time></div>
@@ -110,7 +161,7 @@
             <li><strong>Nothing you have configured breaks.</strong> Clients connect by URL, and the URL is unchanged: <code class="inline">https://api.0200project.com/mcp</code>. The name in your own config is a label you chose; it keeps working exactly as it is.</li>
             <li><strong>Why rename at all</strong>, the MCP registry matches search terms against the server <em>name</em> only, not its description or title. Ours was <code class="inline">base-tx-explain</code>, so the only words that could find us were &ldquo;base&rdquo;, &ldquo;tx&rdquo; and &ldquo;explain&rdquo;. A search for &ldquo;transaction&rdquo; or &ldquo;decoder&rdquo;, what this actually is, returned us nowhere at all.</li>
             <li><strong>The registry entry</strong> is now <code class="inline">io.github.0200project/base-transaction-decoder</code>. The old listing has been retired rather than left to rot.</li>
-            <li><strong>The repository keeps its name</strong> at <a href="https://github.com/0200project/base-tx-explain">github.com/0200project/base-tx-explain</a>, so existing links, clones and forks are untouched.</li>
+            <li><strong>The repository keeps its name</strong> at <code class="inline">github.com/0200project/base-tx-explain</code>, so existing links, clones and forks are untouched.</li>
           </ul>
         </div>
       </article>
@@ -171,7 +222,7 @@
         </div>
       </article>
 
-      <p class="log-follow">Follow <a href="https://github.com/0200project/base-tx-explain">the repository on GitHub</a> for release notifications.</p>
+      </div>
 
     </section>
 
@@ -204,7 +255,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -228,8 +278,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>

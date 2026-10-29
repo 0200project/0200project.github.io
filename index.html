@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');setTimeout(function(){document.documentElement.classList.add('hx-drawn')},3000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="base:app_id" content="6a9ddd446784a20d24d7b615" />
 <title>0200project, Machine-native tools for AI agents</title>
@@ -23,7 +23,7 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -44,118 +44,313 @@
 }
 </script>
 <style>
-  /* ---- Rows, not cards. The receipt's idiom carried down the page: a hairline, a title, a sentence, a proof. ---- */
-  .props { border-top: 1px solid var(--border); }
-  .prop { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 19rem); gap: 1rem 3rem; align-items: baseline; padding: 1.75rem 0; border-bottom: 1px solid var(--border); }
-  .props.two .prop { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); }
-  .prop .h-card { margin: 0; font-size: 1.05rem; font-weight: 500; letter-spacing: -.012em; color: var(--fg-strong); }
-  .prop p { margin: 0; max-width: 36rem; }
-  @media (max-width: 63.9em) {
-    .prop, .props.two .prop { grid-template-columns: minmax(0, 1fr); gap: .5rem; padding: 1.5rem 0; }
+  /* =====================================================================
+     The hero draws the mark in the logo's own lines over a real transaction
+     hash; the decoder shows what that hash says; the cards below show what you
+     can use today, one real moment each. Mono only where it is the material:
+     the hash, the JSON and the tool call.
+     ===================================================================== */
+  body { background: #000; }
+  .nw { white-space: nowrap; }
+  .vh { position: absolute !important; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .v-sec { padding-block: clamp(4.5rem, 10vw, 8.5rem); }
+  .v-h { margin: 0; font-size: clamp(2.125rem, 4vw, 3.5rem); font-weight: 400; line-height: 1.02; letter-spacing: -.05em; color: #fff; text-wrap: balance; }
+
+  /* ---- Hero: one object, centred on the first screen. The mark, drawn in the logo's own
+     lines; under it the headline on one line; under that the two buttons. Behind the mark's
+     right side, the field: the hash and its bits on rails that recede past the mark's right
+     edge into the dark, out of focus except where they pass the mark's plane. Everything
+     around the mark is black.
+     --u is the stage's unit: 1rem wherever the screen is tall enough for the 1440x900
+     composition, and smaller in step with the height where it is not, so the whole stack
+     keeps its proportions and its even margins on a short screen (52.25 is 836px, the
+     hero's height at 1440x900, in rem). ---- */
+  .hx-sec { --u: min(1rem, calc((100svh - var(--nav-h)) / 52.25)); position: relative; isolation: isolate; overflow: hidden; display: grid; align-items: center; min-height: min(calc(100svh - var(--nav-h)), 54rem); background: #000; }
+  .hx-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+  .hx-back { z-index: 0; }
+  /* the mark's box; its lines span .96 of it, so 25u draws the mark 384px wide at 1440,
+     a third of the container, and the one-line headline under it (721px) is not quite twice that */
+  .hx { --mk: calc(25 * var(--u)); position: relative; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; padding-block: calc(3 * var(--u)); }
+  .hx-mark { grid-row: 1; }
+  .hx-copy { grid-row: 2; position: relative; z-index: 3; margin-top: calc(3.5 * var(--u)); }
+  .hx .display { margin: 0; font-size: min(calc(3.5 * var(--u)), 6vw); line-height: 1; letter-spacing: -.055em; color: #fff; text-wrap: balance; }
+  .hx .display .w { display: inline-block; will-change: transform; }
+  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .625rem; margin-top: calc(2.25 * var(--u)); }
+  .hero-actions .btn { height: 2.625rem; padding-inline: 1.375rem; font-size: .9375rem; }
+  .hero-count { margin: 1.125rem 0 0; font-size: .875rem; line-height: 1.4; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+  .hero-count a { color: inherit; text-decoration: none; }
+  .hero-count a:hover { color: var(--fg); text-decoration: underline; text-underline-offset: .2em; }
+  .hx-mark { position: relative; z-index: 1; width: var(--mk); aspect-ratio: 1; }
+  /* a faint cool light where the rails go into the dark: centred on the mark's right side, with
+     the binary, so the left squares stay black */
+  .hx-mark::before { content: ""; position: absolute; inset: -30% -55% -30% -5%; z-index: -1; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(78,158,255,.075), rgba(78,158,255,.02) 55%, rgba(78,158,255,0) 80%); }
+  .hx-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; fill: none; stroke-linecap: butt; stroke-linejoin: round; }
+  /* stroke widths are in the mark's 400-unit space: 2.15 draws about 2.2px at 1440 */
+  .hx-svg .ln { stroke: #e6e6e6; stroke-width: 2.15px; }
+  .hx-svg .bl { stroke: #4e9eff; stroke-width: 2.15px; }
+  .hx-svg .halo path { stroke-width: 7px; }
+  .hx-svg .halo .ln { stroke: rgba(255,255,255,.018); }
+  .hx-svg .halo .bl { stroke: rgba(78,158,255,.34); stroke-width: 9px; }
+  /* the logo stands in when there is no script */
+  /* its #050505 ground goes to black, and lightens over the glow so its edge does not show */
+  .field-fallback { position: absolute; left: -14%; top: -14%; width: 128%; height: auto; max-width: none; filter: contrast(1.05); mix-blend-mode: lighten; }
+  html.js .field-fallback { display: none; }
+  html.js .field-fallback.show { display: block; }
+  html:not(.js) .hx-svg { display: none; }
+  /* drawn on load: each square from its inner corner both ways round to its outer one, then
+     the connector from the bottom-left square up into the blue, then the blue's light. The
+     head script marks the page hx-drawn at 3s whatever happened to the animation clock. */
+  html.js .hx-svg path { stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+  html.js:not(.hx-drawn) .hx-svg path { animation: hx-draw 1.5s cubic-bezier(.65,0,.25,1) both; animation-delay: calc(.25s + var(--d, 0s)); }
+  html.js:not(.hx-drawn) .hx-svg .halo { animation: hx-halo 1.1s ease-out 1.7s both; }
+  .hx-svg [data-q="br"] { --d: .12s; } .hx-svg [data-q="bl"] { --d: .24s; } .hx-svg [data-q="tr"] { --d: .36s; }
+  html.js:not(.hx-drawn) .hx-svg [data-q="ln"] { animation-duration: .7s; animation-timing-function: cubic-bezier(.5,0,.2,1); --d: 1.3s; }
+  /* each square is two halves that meet at two corners, and butt ends there leave a dark
+     hairline across the stroke on a retina screen. So once a line is drawn its ends go round
+     and the halves overlap; the stroke is opaque, so the overlap does not show. The connector
+     keeps square-cut ends, and sits under the blue, which covers its end as in the logo. */
+  .hx-svg .lines path.cap:not([data-q="ln"]), html.hx-drawn .hx-svg .lines path:not([data-q="ln"]) { stroke-linecap: round; }
+  @keyframes hx-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes hx-halo { from { opacity: 0; } to { opacity: 1; } }
+  /* narrower screens keep the same stage: the stack centred in the first screen, the mark
+     sized by the width (and by the height on a phone held sideways), the headline no larger
+     than at 1440, so it sets on one line at tablet width and three short ones on a phone */
+  @media (max-width: 63.99em) {
+    .hx { --mk: min(58vw, 22rem, calc((100svh - var(--nav-h)) * .42)); padding-block: clamp(2.5rem, 8vw, 4rem); }
+    .hx-copy { margin-top: clamp(2rem, 8vw, 3rem); }
+    .hx .display { font-size: clamp(2.625rem, 11vw, 3.25rem); }
+    .hero-actions { margin-top: 1.75rem; }
+    .hx-svg .ln, .hx-svg .bl { stroke-width: 2.7px; }
+  }
+  /* a phone held sideways: the first screen is about 320px tall, so the stack is set by the
+     height, the mark and the headline in step, and the whole of it still fits above the fold */
+  @media (max-width: 63.99em) and (max-height: 32em) and (orientation: landscape) {
+    .hx { --mk: calc((100svh - var(--nav-h)) * .45); padding-block: 1rem; }
+    .hx-copy { margin-top: 1.25rem; }
+    .hx .display { font-size: clamp(1.75rem, calc((100svh - var(--nav-h)) * .1), 2.5rem); }
+    .hero-actions { margin-top: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hx .display .w { transform: none !important; opacity: 1 !important; }
+    html.js .hx-sec .hx-svg path, html.js .hx-sec .hx-svg .halo { animation: none !important; }
+    .hx-svg .lines path:not([data-q="ln"]) { stroke-linecap: round; }
   }
 
-
-  /* ---- Hero. The mark fills the screen behind the type, monochrome at half strength. The type is centred over it. ---- */
-  .hero-field { position: relative; min-height: 100svh; display: grid; align-items: center; text-align: center; overflow: hidden; isolation: isolate; }
-  .field-stage { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-  .field-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .field-fallback { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 88%; width: auto; filter: grayscale(1); opacity: .3; }
-  .hero-stage { position: relative; z-index: 1; padding-block: clamp(2.5rem, 8vh, 7rem); pointer-events: none; }
-  @media (max-height: 44rem) { .hero-lead { margin-top: 1rem; } .hero-field .hero-actions { margin-top: 1.5rem; } }
-  .hero-stage > * { pointer-events: auto; }
-  .hero-main { max-width: 60rem; margin-inline: auto; }
-  /* Sized by width AND height: a short laptop screen must not cram the hero, a tall monitor must not shrink it. */
-  .hero-field .display { font-size: min(clamp(3.25rem, 9.5vw, 10.5rem), 14vh); font-weight: 400; line-height: 0.98; letter-spacing: -.06em; color: #ffffff; margin: 0 auto; max-width: 13ch; text-wrap: balance; }
-  .hero-field .display .w { display: inline-block; will-change: transform; }
-  .hero-lead { margin: 1.5rem auto 0; max-width: 38rem; font-size: clamp(1rem, 1.05vw + .6rem, 1.375rem); line-height: 1.5; color: var(--fg-muted); text-wrap: balance; }
-  .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 2rem; }
-  @media (prefers-reduced-motion: reduce) { .hero-field .display .w { transform: none !important; opacity: 1 !important; } }
-
-  .pay-steps { list-style: none; counter-reset: pay; }
-  .pay-steps li {
-    counter-increment: pay;
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.875rem;
-    padding-block: 0.875rem;
+  /* ---- The decoder: the headline left; on the right the English above the JSON. The blue
+     frame rests round one of them at a time: the English, until you scroll down to the JSON,
+     when it glides down to it in one short move, and back up the same way. It never follows the
+     scrollbar, so wherever the page stops it sits round a whole card. ---- */
+  .dx { --dg: clamp(1rem, calc(1.6 * var(--vw, 1vw)), 1.5rem); display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); grid-template-rows: auto auto auto;
+    column-gap: clamp(2rem, calc(5 * var(--vw, 1vw)), 5.5rem); row-gap: var(--dg); }
+  .dx-head { grid-area: 1 / 1; padding-top: clamp(1.5rem, 3vw, 2.5rem); }
+  .dx-copy { grid-area: 2 / 1; padding-top: clamp(1.5rem, 3vw, 2.5rem); }
+  .dx-copy p { max-width: 30rem; font-size: 1.0625rem; line-height: 1.55; color: var(--fg-muted); }
+  .dx-copy p + p { margin-top: .75rem; }
+  .dx-acts { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: 1.75rem; }
+  .dx-fig { position: relative; margin: 0; grid-area: 1 / 2 / 4 / 3; display: grid; grid-template-rows: subgrid; }
+  .dx-cell { position: relative; z-index: 1; border-radius: 1.75rem; border: 1.5px solid rgba(255,255,255,.1); padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .dx-sum { min-height: clamp(14rem, 22vw, 18rem); display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
+  .dx-call { font: 400 .8125rem/1.5 var(--mono); color: var(--fg-faint); overflow-wrap: anywhere; }
+  .dx-out { min-height: 2.5em; font-size: clamp(1.375rem, 2.5vw, 2.25rem); line-height: 1.2; letter-spacing: -.035em; color: #fff; max-width: 26ch; }
+  .dx-note { margin: 1rem 0 0; font-size: .875rem; line-height: 1.45; color: var(--fg-muted); }
+  .dx-out .glitch { color: var(--accent-strong); font-family: var(--mono); letter-spacing: 0; }
+  .dx-json pre { margin: 0; font: 400 .875rem/1.75 var(--mono); color: var(--fg-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .dx-json .k { color: var(--fg-faint); }
+  .dx-json .v { color: var(--fg-strong); }
+  .dx-cap { padding-inline: clamp(1.5rem, 3vw, 2.5rem); font-size: .8125rem; color: var(--fg-faint); }
+  .dx-cap a { color: var(--fg-muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.3); }
+  .dx-cap a:hover { color: #fff; }
+  .dx-sum.is-blue, .dx-frame { border-color: rgba(78,158,255,.6); background: radial-gradient(120% 100% at 100% 0%, rgba(78,158,255,.13), rgba(78,158,255,0) 62%), #000; }
+  .dx-frame { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; height: 0; border: 1.5px solid rgba(78,158,255,.6); border-radius: 1.75rem; pointer-events: none; display: none; }
+  .fx-live .dx-frame { display: block; }
+  .fx-glide .dx-frame { transition: transform .7s cubic-bezier(.65,0,.35,1), width .7s cubic-bezier(.65,0,.35,1), height .7s cubic-bezier(.65,0,.35,1); }
+  .fx-live .dx-sum.is-blue { border-color: rgba(255,255,255,.1); background: none; }
+  .fx-live .dx-cell { background: none; }
+  @media (max-width: 63.99em) {
+    .dx { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 2.5rem; }
+    .dx-head, .dx-copy, .dx-fig { grid-area: auto; padding-top: 0; }
+    .dx-head { order: 1; } .dx-fig { order: 2; display: flex; flex-direction: column; gap: 1rem; } .dx-copy { order: 3; }
+    .dx-cap { padding-inline: 0; }
+    .dx-json pre { font-size: .75rem; }
+    .dx-cell { padding: 1.25rem; }
   }
-  .pay-steps li + li { border-top: 1px solid var(--border); }
-  .pay-steps li::before {
-    content: "0" counter(pay);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--fg-faint);
-    padding-top: 0.2rem;
+
+  /* ---- What you can use today: four cards, one of them blue, each showing one real moment of
+     the product, large. On a wide screen with motion the section holds under the nav while the
+     page scrolls on, and the scroll carries the row sideways, a card at a time, the next one in
+     sight at the edge; the page always comes to rest on a whole card, never on two halves. When
+     the last card has arrived the section lets go and the page carries on down. Everywhere else
+     (a phone, a short screen, reduced motion, no script) the four cards stand one above the
+     other, every moment already formed. ---- */
+  /* a card spans the site's measure, so the heading and the card in the middle share the left
+     edge of every other section; on a narrower screen it gives way so the neighbours still show */
+  .ways { --cw: min(calc(var(--container) - 4rem), calc(100cqi - 2 * clamp(1.25rem, 7cqi, 6rem))); --ch: clamp(24rem, 46svh, 30rem); --gg: 1.25rem; --gr: 1.75rem;
+    padding-block: clamp(2rem, 6vw, 5rem) clamp(5rem, 10vw, 8rem); }
+  /* the sizes below are measured on the hold, not the section: a container contains layout, and
+     would keep the held part from being fixed to the screen */
+  .gal-hold { container-type: inline-size; }
+  .ways-head { width: var(--cw); margin: 0 auto clamp(1.5rem, 3vw, 2.25rem); }
+  .gal-track { position: relative; display: grid; gap: var(--gg); width: var(--cw); margin: 0 auto; padding: 0; list-style: none; }
+  .g-item { display: flex; min-width: 0; }
+  /* Held (the script sets it on a screen 64em wide and 40em tall, with motion): the hold fills the
+     screen under the nav, the heading and its dots above the row, and the row is one line the
+     page's scroll moves sideways. The hold clips it, so the page itself never scrolls sideways. */
+  .ways.gal-pin { --ch: clamp(28rem, 56svh, 35rem); padding-block: 0 clamp(2rem, 5vw, 4.5rem); }
+  .gal-pin .gal-hold { height: calc(100svh - var(--nav-h)); display: flex; flex-direction: column; justify-content: center;
+    padding-block: clamp(.75rem, 3vh, 2.5rem); overflow: hidden; overflow: clip; }
+  .gal-pin .ways-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-bottom: clamp(1rem, 3.6vh, 2.25rem); }
+  .gal-pin .gal-track { display: flex; width: auto; padding: .375rem calc((100% - var(--cw)) / 2); will-change: transform; }
+  .gal-pin .g-item { flex: 0 0 var(--cw); }
+  /* Wider than the page's own frame (90rem, the 1440 composition), the row keeps that frame's
+     peeks and fades out just past them, by 48.5rem from the middle, so a wide screen shows the
+     same row larger rather than more of the next card: the fade ends before the neighbours'
+     contents begin (the chat's bubbles start 49.25rem out). It is on the row's frame, which stays
+     still while the row moves through it. At 1440 and below this does not apply. */
+  @media (min-width: 90.0625em) {
+    .gal-pin .gal-view { --gm: linear-gradient(90deg, transparent calc(50% - 48.5rem), #000 calc(50% - 44.5rem), #000 calc(50% + 44.5rem), transparent calc(50% + 48.5rem));
+      -webkit-mask-image: var(--gm); mask-image: var(--gm); }
   }
-  .pay-steps strong { display: block; color: var(--fg); font-weight: 500; }
-  .pay-steps span { color: var(--fg-muted); font-size: 0.875rem; }
-
-  .demo-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-    gap: 1rem;
-    align-items: start;
+  .g-card { position: relative; flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; min-height: var(--ch); overflow: hidden; isolation: isolate;
+    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2.5rem); border-radius: var(--gr); border: 1px solid rgba(255,255,255,.14);
+    background: radial-gradient(60% 55% at 50% 62%, rgba(255,255,255,.035), rgba(255,255,255,0) 72%), #060607;
+    color: inherit; text-decoration: none; -webkit-user-drag: none; transition: border-color .5s ease; }
+  .g-card.is-blue { border-color: rgba(78,158,255,.55); background: radial-gradient(70% 65% at 50% 80%, rgba(78,158,255,.16), rgba(78,158,255,0) 72%), #04060a; }
+  @media (hover: hover) and (pointer: fine) {
+    .g-card:hover { border-color: rgba(255,255,255,.3); }
+    .g-card.is-blue:hover { border-color: rgba(78,158,255,.85); }
   }
-  @media (max-width: 63.9em) {
-    .demo-grid { grid-template-columns: minmax(0, 1fr); }
+  .g-card:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .g-cap { max-width: 36rem; margin-inline: auto; text-align: center; }
+  .g-card h3 { font-size: clamp(1.25rem, 1.75vw, 1.5rem); font-weight: 500; line-height: 1.2; letter-spacing: -.025em; color: #f5f5f7; }
+  .g-card p { margin-top: .5rem; font-size: .9375rem; line-height: 1.5; color: #8b8b90; text-wrap: pretty; }
+  .g-stage { flex: 1 1 auto; display: grid; place-items: center; min-height: 15rem; padding-top: clamp(1.25rem, 3vw, 2.5rem); }
+  /* the card in the middle in full; the ones at the edges stand back */
+  .gal-live .g-cap, .gal-live .g-stage { transition: opacity .7s ease; }
+  .gal-live .g-card:not(.is-cur) .g-cap { opacity: .2; }
+  .gal-live .g-card:not(.is-cur) :is(.g-stage, .q-fold) { opacity: .5; }
+
+  /* Decoder: the hash, then the English it says. The corner turns over to the blue. */
+  .b-decode { display: grid; width: min(100%, 34rem); text-align: center; }
+  .b-decode > span { grid-area: 1 / 1; align-self: center; transition: opacity .9s ease, transform 1.1s cubic-bezier(.2,.8,.2,1), filter .9s ease; }
+  .b-decode .h { font: 400 clamp(1rem, 1.6vw, 1.3125rem)/1.5 var(--mono); color: var(--fg-faint); overflow-wrap: anywhere; opacity: 0; transform: translateY(-14px); filter: blur(6px); }
+  .b-decode .e { font-size: clamp(1.5rem, 2.7vw, 2.375rem); line-height: 1.18; letter-spacing: -.035em; color: #fff; text-wrap: balance; }
+  .b-decode .e em { font-style: normal; color: var(--accent-strong); }
+  .gal-anim .g-card:not(.on) .b-decode .h { opacity: 1; transform: none; filter: none; transition-duration: .5s; }
+  .gal-anim .g-card:not(.on) .b-decode .e { opacity: 0; transform: translateY(14px); filter: blur(6px); transition-duration: .4s; }
+  .gal-anim .g-card.on .b-decode .h { transition-duration: .55s; }
+  .gal-anim .g-card.on .b-decode .e { transition-delay: .45s; }
+  /* the corner, folded over: the flap's own corner is rounded, and what shows under it keeps the
+     card's corner radius (its padding box's: the radius less the 1px border), so the fold sits
+     inside the card's curve, whether or not the card's own clip is applied to it */
+  .q-fold { position: absolute; z-index: -1; right: 0; bottom: 0; width: 6.5rem; height: 6.5rem; pointer-events: none; overflow: hidden; border-bottom-right-radius: calc(var(--gr) - 1px);
+    transition: opacity .7s ease, width 1.1s cubic-bezier(.2,.8,.2,1), height 1.1s cubic-bezier(.2,.8,.2,1); }
+  .q-fold::before, .q-fold::after { content: ""; position: absolute; inset: 0; }
+  .q-fold::before { background: linear-gradient(135deg, rgba(0,0,0,.3) 50%, rgba(255,255,255,.07) 100%) var(--accent); transition: background-color .9s ease;
+    -webkit-mask: linear-gradient(135deg, transparent calc(50% - 1.5px), #000 calc(50% - .5px)); mask: linear-gradient(135deg, transparent calc(50% - 1.5px), #000 calc(50% - .5px)); }
+  .q-fold::after { border-top-left-radius: 34%; background: linear-gradient(135deg, #0f0f11 15%, #2b2b30 50%);
+    -webkit-mask: linear-gradient(135deg, #000 calc(50% - .5px), transparent calc(50% + .5px)); mask: linear-gradient(135deg, #000 calc(50% - .5px), transparent calc(50% + .5px)); }
+  .gal-anim .g-card:not(.on) .q-fold { width: 3.25rem; height: 3.25rem; transition-duration: .7s, .5s, .5s; }
+  .gal-anim .g-card:not(.on) .q-fold::before { background-color: #0f0f12; transition-duration: .4s; }
+  /* under the fold, in the blue: the example transaction's hash in binary, rising slowly. It
+     paints between the blue and the flap, and keeps the blue's own triangle. */
+  .q-bits { position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    -webkit-mask: linear-gradient(135deg, transparent calc(50% + 3px), #000 calc(50% + 12px)); mask: linear-gradient(135deg, transparent calc(50% + 3px), #000 calc(50% + 12px)); }
+  .q-bits > span { position: absolute; right: .5rem; top: 0; white-space: pre; text-align: right;
+    font: 500 .5rem/.75rem var(--mono); letter-spacing: .04em; color: rgba(255, 255, 255, .62); animation: q-rise 16s linear infinite; }
+  @keyframes q-rise { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  .gal-anim .g-card:not(.on) .q-bits { opacity: 0; }
+  .q-bits { transition: opacity .6s ease .5s; }
+  @media (prefers-reduced-motion: reduce) { .q-bits > span { animation: none; } }
+
+  /* MCP: an agent asks, the tool is called, the answer comes back */
+  .b-chat { display: grid; gap: .875rem; width: min(100%, 40rem); }
+  .b-chat span { display: block; max-width: 86%; justify-self: start; padding: .95rem 1.3rem; border-radius: 1.375rem 1.375rem 1.375rem .375rem; border: 1px solid rgba(255,255,255,.09); background: #121215;
+    font-size: clamp(.9375rem, 1.6vw, 1.375rem); line-height: 1.4; color: var(--fg); transition: opacity .7s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .b-chat span:nth-child(n+2) { justify-self: end; border-radius: 1.375rem 1.375rem .375rem 1.375rem; }
+  .b-chat span:nth-child(2) { background: none; color: var(--fg-muted); }
+  .b-chat span:nth-child(3) { border-color: rgba(78,158,255,.5); background: rgba(78,158,255,.13); color: #fff; }
+  .b-chat span b { font-weight: 600; }
+  .b-chat span code { font-size: .875em; color: #fff; }
+  .gal-anim .g-card:not(.on) .b-chat span:nth-child(n+2) { opacity: 0; transform: translateY(12px); transition-duration: .3s; }
+  .gal-anim .g-card.on .b-chat span:nth-child(2) { transition-delay: .45s; }
+  .gal-anim .g-card.on .b-chat span:nth-child(3) { transition-delay: 1.15s; }
+
+  /* Free tier: the 50, lit from the left */
+  .b-fifty { font-size: clamp(9rem, 36cqi, 17rem); font-weight: 500; line-height: .9; letter-spacing: -.07em; padding: 0 .07em 0 0; -webkit-user-select: none; user-select: none;
+    background: linear-gradient(90deg, #fff 0 40%, #4d4d52 60% 100%) 0 0 / 260% 100% no-repeat; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+    transition: background-position 1.8s cubic-bezier(.45,0,.2,1); }
+  .gal-anim .g-card:not(.on) .b-fifty { background-position: 100% 0; transition-duration: .5s; }
+
+  /* Reviews: a stack of statements that fans out */
+  .b-stack { --sw: clamp(14rem, 30cqi, 23rem); --sh: calc(var(--sw) * .66); --fx: clamp(1.5rem, 4cqi, 3rem); --fy: clamp(1rem, 2.4cqi, 1.75rem);
+    position: relative; width: calc(var(--sw) + 2 * var(--fx)); height: calc(var(--sh) + 2 * var(--fy)); }
+  .b-stack i { --ln: #27272d; --hd: #404047; position: absolute; left: var(--fx); top: var(--fy); width: var(--sw); height: var(--sh); border-radius: .875rem;
+    border: 1px solid rgba(255,255,255,.15); background-color: #0d0d10; box-shadow: 0 1.75rem 3.125rem -1.125rem rgba(0,0,0,.9);
+    background-image: linear-gradient(var(--hd), var(--hd)), linear-gradient(var(--ln), var(--ln)), linear-gradient(var(--ln), var(--ln)), linear-gradient(var(--ln), var(--ln)),
+      linear-gradient(var(--ln), var(--ln)), linear-gradient(var(--ln), var(--ln)), linear-gradient(var(--ln), var(--ln)), linear-gradient(#232328, #232328), linear-gradient(var(--hd), var(--hd));
+    background-size: 36% .5rem, 44% .3125rem, 34% .3125rem, 50% .3125rem, 14% .3125rem, 18% .3125rem, 12% .3125rem, calc(100% - 3rem) 1px, 22% .4375rem;
+    background-position: 1.5rem 1.5rem, 1.5rem 42%, 1.5rem 55%, 1.5rem 68%, right 1.5rem top 42%, right 1.5rem top 55%, right 1.5rem top 68%, 1.5rem 80%, right 1.5rem top 89%;
+    background-repeat: no-repeat;
+    transform: translate(calc((var(--n) - 1) * var(--fx)), calc((var(--n) - 1) * var(--fy))); opacity: calc(1 - var(--n) * .34); transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+  .gal-anim .g-card:not(.on) .b-stack i { transform: translate(calc((var(--n) - 1) * .75rem), calc((var(--n) - 1) * .625rem)); transition-duration: .5s; }
+  /* held, the row shares the screen's height with the heading: on a shorter screen the stack
+     draws a little smaller, so the tallest card still fits under the nav */
+  .gal-pin .b-stack { --sw: clamp(14rem, min(30cqi, 42svh), 23rem); }
+
+  /* Beside the heading while held: a dot for each card, the one in the middle a pill. A dot
+     scrolls the page to its card. */
+  .gal-ctl { display: none; flex: none; }
+  .gal-pin .gal-ctl { display: flex; }
+  .gal-dots { display: flex; align-items: center; height: 3.5rem; padding-inline: .625rem; border-radius: 999px; background: rgba(255,255,255,.08); }
+  .gal-dot { display: grid; place-items: center; height: 2.75rem; padding: 0 .4375rem; border: 0; border-radius: 999px; background: none; cursor: pointer; }
+  .gal-dot > span { display: block; width: .5rem; height: .5rem; border-radius: 999px; background: #6e6e73;
+    transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .3s ease; }
+  @media (hover: hover) and (pointer: fine) { .gal-dot:hover > span { background: #a1a1a6; } }
+  .gal-dot[aria-current="true"] > span { width: 2.75rem; background: #f5f5f7; }
+  .gal-dot:focus-visible { outline: none; }
+  .gal-dot:focus-visible > span { outline: 2px solid #fff; outline-offset: 3px; }
+
+  @media (max-width: 40em) {
+    /* a phone: the cards one above the other, the screen's width less its margins */
+    .ways { --cw: calc(100cqi - 2.5rem); --gg: .75rem; --ch: 24rem; --gr: 1.5rem; }
+    .g-card p { font-size: .875rem; }
+    .g-stage { min-height: 13rem; }
+    .b-decode .h { font-size: .9375rem; }
+    .g-stage.is-decode { padding-bottom: 3rem; }
+    .q-fold { width: 5.5rem; height: 5.5rem; }
   }
-  .demo-side { display: flex; flex-direction: column; gap: 1rem; }
-  .demo-note { font-size: 0.8125rem; color: var(--fg-faint); }
-  .demo-note a { color: var(--fg-muted); }
-  .demo-note a:hover { color: var(--fg-strong); }
-  /* ---- Blue, sparingly: labels, links, the live underline. The mark stays monochrome. ---- */
-  .eyebrow { color: var(--accent); }
-  .receipt-band a:not(.btn), #about a:not(.btn), #tool a:not(.btn), #payments a:not(.btn), #work a:not(.btn) { color: var(--accent); }
-  .receipt-band a:not(.btn):hover, #about a:not(.btn):hover, #tool a:not(.btn):hover, #payments a:not(.btn):hover, #work a:not(.btn):hover { color: var(--accent-strong); }
-  .hero-try:focus-within { border-bottom-color: var(--accent); }
-  .hero-try-input:focus-visible { outline-color: var(--accent); }
-
-  /* ---- The receipt. A ledger, not a panel: hairlines, air, tabular numerals, the flag as a dot. ---- */
-  .receipt-band { padding-block: clamp(4rem, 9vw, 7rem); }
-  .decode-intro { max-width: 34rem; font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.45; color: var(--fg); letter-spacing: -.01em; }
-  .receipt-frame { position: relative; max-width: 46rem; margin-top: 2.75rem; }
-  .receipt-frame .led { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); overflow: hidden; }
-  .receipt-frame .panel-head { display: flex; justify-content: space-between; gap: 1rem; padding: .9rem 1.5rem; font-family: var(--mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-faint); border-bottom: 1px solid var(--border); background: transparent; }
-  .receipt-frame .led-sum { padding: 1.5rem 1.5rem 1.25rem; font-size: clamp(1.05rem, 1.5vw, 1.25rem); line-height: 1.4; color: var(--fg-strong); letter-spacing: -.01em; border-bottom: 1px solid var(--border); margin: 0; }
-  .receipt-frame .led-sum b { color: var(--fg-strong); font-family: var(--mono); font-weight: 500; font-size: .92em; }
-  .receipt-frame .led-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) auto; gap: 1.25rem; align-items: baseline; padding: 1.05rem 1.5rem; border-bottom: 1px solid var(--border); background: transparent; }
-  .receipt-frame .led-row:last-of-type { border-bottom: 0; }
-  .receipt-frame .led-lbl { font-family: var(--mono); font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--fg-faint); }
-  .receipt-frame .led-val { font-size: 1rem; color: var(--fg); }
-  .receipt-frame .led-val small { display: block; margin-top: .25rem; font-family: var(--mono); font-size: .72rem; color: var(--fg-faint); letter-spacing: 0; }
-  .receipt-frame .led-amt { font-family: var(--mono); font-size: 1.05rem; font-variant-numeric: tabular-nums; color: var(--fg-strong); text-align: right; white-space: nowrap; }
-  .receipt-frame .q, .receipt-frame .pill { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: none; font-family: var(--mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-muted); }
-  .receipt-frame .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .receipt-frame .q { margin-left: .6rem; }
-  .receipt-frame .led-pill, .receipt-frame .led-pill.ran, .receipt-frame .led-pill.na { color: var(--fg-muted); border: 0; padding: 0; }
-  .receipt-frame .led-pill i, .receipt-frame .pill::before { display: none; }
-  .receipt-frame .led-foot { padding: 1.25rem 1.5rem; font-size: .875rem; line-height: 1.55; color: var(--fg-muted); border-top: 1px solid var(--border); background: rgba(255,255,255,.015); }
-  .receipt-frame .led-foot b { color: var(--fg-strong); font-weight: 500; }
-  .receipt-frame .term-note { margin-top: 1rem; font-size: .75rem; color: var(--fg-faint); }
-  .receipt-frame .term-note a { color: var(--accent); }
-  .receipt-frame .term-note a:hover { color: var(--accent-strong); }
-  .hero-try { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; max-width: 46rem; border-bottom: 1px solid var(--border-strong); padding-bottom: .5rem; }
-  .hero-try-input { flex: 1 1 16rem; min-width: 0; height: 2.75rem; padding: 0; background: transparent; border: 0; color: var(--fg); font-family: var(--mono); font-size: .875rem; }
-  .hero-try-input::placeholder { color: var(--fg-faint); }
-  .hero-try-input:focus-visible { outline: 2px solid var(--fg-strong); outline-offset: 4px; border-radius: 2px; }
-  .hero-try:focus-within { border-bottom-color: var(--fg-strong); }
-  .hero-try .btn { flex: none; }
-  @media (max-width: 40rem) { .receipt-frame .led-pill, .receipt-frame .led-lbl, .receipt-frame .panel-head, .receipt-frame .led-val small, .receipt-frame .term-note { font-size: .72rem; } }
-
-
-
-
-
-
-
-</style>
-<style>
-  .x-wrap { max-width: 64rem; margin-inline: auto; }
-  .x-sec { padding-block: clamp(5rem, 12vw, 10rem) 0; }
-  .x-sec:last-of-type { padding-bottom: clamp(6rem, 14vw, 11rem); }
-  .x-h { font-size: clamp(2.25rem, 5.4vw, 4.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; color: var(--fg-strong); margin: 0; max-width: 16ch; text-wrap: balance; }
-  .x-p { font-size: clamp(1.0625rem, 1.2vw + .6rem, 1.3125rem); color: var(--fg-muted); max-width: 36rem; margin: 1.5rem 0 0; line-height: 1.5; }
-  .x-acts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
+  @media (forced-colors: active) { .b-fifty { background: none; -webkit-text-fill-color: CanvasText; color: CanvasText; } }
+  @media (prefers-reduced-motion: reduce) {
+    .g-card, .g-cap, .g-stage, .q-fold, .q-fold::before, .b-decode > span, .b-chat span, .b-fifty, .b-stack i, .gal-dot > span { transition: none !important; }
+  }
+  /* ---- H2b: the mark as the stage behind the words. The mark and the copy share one grid
+     cell: the mark drawn large and nearly transparent, its blue square kept lit, and the
+     headline, buttons and count in front of it. Once drawn, the blue's light breathes and the
+     mark floats a few pixels; with reduced motion neither moves. ---- */
+  .hx { --mk: min(calc(44 * var(--u)), 86vw); align-items: center; padding-block: calc(2 * var(--u)); }
+  .hx-mark, .hx-copy { grid-row: 1; grid-column: 1; }
+  .hx-copy { margin-top: 0; z-index: 3; }
+  .hx-mark { z-index: 1; }
+  .hx-svg .ln { stroke: rgba(230, 230, 230, .09); }
+  .hx-svg .bl { stroke: rgba(78, 158, 255, .55); }
+  .hx-svg .halo .bl { stroke: rgba(78, 158, 255, .32); stroke-width: 14px; }
+  /* the founder asked for the backdrop a little fainter and a tad blurred, so the words lead */
+  .hx-mark { filter: blur(2.5px); }
+  .hx-cv { opacity: .55; filter: blur(1.5px); }
+  .hx-mark::before { background: radial-gradient(closest-side, rgba(78, 158, 255, .10), rgba(78, 158, 255, .03) 55%, rgba(78, 158, 255, 0) 80%); }
+  .hx .display { text-shadow: 0 2px 30px rgba(0, 0, 0, .6); }
+  @keyframes hx-breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  @keyframes hx-float { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(0, -.6%, 0) scale(1.015); } }
+  html.hx-drawn .hx-svg .halo { animation: hx-breathe 5.5s ease-in-out infinite; }
+  html.hx-drawn .hx-svg { animation: hx-float 11s ease-in-out infinite; transform-origin: 50% 50%; }
+  @media (max-width: 63.99em) {
+    .hx { --mk: min(92vw, calc((100svh - var(--nav-h)) * .7)); }
+    .hx-copy { margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.hx-drawn .hx-svg, html.hx-drawn .hx-svg .halo { animation: none; }
+  }
 </style>
 </head>
 <body data-motion="own">
@@ -177,7 +372,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -185,43 +379,173 @@
 
 <main id="main">
 
-  <section class="hero hero-field" id="top">
-    <div class="field-stage" aria-hidden="true">
-      <canvas id="field" class="field-canvas"></canvas>
-      <img id="field-fallback" class="field-fallback" src="/assets/logo-512.png" width="512" height="512" alt="" hidden>
-    </div>
-    <div class="container hero-stage">
-      <div class="hero-main">
+  <section class="hero hx-sec" id="top">
+    <canvas id="field" class="hx-cv hx-back" aria-hidden="true"></canvas>
+    <div class="container hx">
+      <div class="hx-copy">
         <h1 class="display" data-words>Tools for autonomous AI&nbsp;agents.</h1>
-        <p class="hero-lead">Machine-native infrastructure for autonomous AI agents: deterministic APIs, MCP-native.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/playground/">Try it free</a>
-          <a class="btn btn-ghost" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls on Base, 30 days, $9</a>
         </div>
+        <!-- the price line's tap target is 45px tall without moving the line: its padding is cancelled by its margin -->
+        <p class="hero-count"><a href="/status/" id="hero-count">10,000+ requests served</a>&nbsp;&middot; <a href="/pricing/" style="display:inline-block;white-space:nowrap;padding-block:.8125rem;margin-block:-.8125rem">Pricing</a></p>
+      </div>
+      <div class="hx-mark" aria-hidden="true">
+        <!-- the logo's centrelines, traced from assets/logo-512.png (512 space); the blue's corner
+             opens where the connector meets it, as in the logo -->
+        <svg class="hx-svg" viewBox="56 56 400 400" focusable="false">
+          <defs><filter id="hx-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+          <g class="halo" filter="url(#hx-soft)">
+          <path data-q="tl" class="ln" pathLength="1" d="M226.7 224.8 A42 42 0 0 1 197 237.1 L105.7 237.1 A42 42 0 0 1 63.7 195.1 L63.7 104.4 A42 42 0 0 1 76 74.7"/><path data-q="tl" class="ln" pathLength="1" d="M226.7 224.8 A42 42 0 0 0 239 195.1 L239 104.4 A42 42 0 0 0 197 62.4 L105.7 62.4 A42 42 0 0 0 76 74.7"/>
+          <path data-q="br" class="ln" pathLength="1" d="M285.3 287.4 A42 42 0 0 1 315 275.1 L406.4 275.1 A42 42 0 0 1 448.4 317.1 L448.4 407.9 A42 42 0 0 1 436.1 437.6"/><path data-q="br" class="ln" pathLength="1" d="M285.3 287.4 A42 42 0 0 0 273 317.1 L273 407.9 A42 42 0 0 0 315 449.9 L406.4 449.9 A42 42 0 0 0 436.1 437.6"/>
+          <path data-q="bl" class="ln" pathLength="1" d="M226.8 287.4 A42 42 0 0 1 239.1 317.1 L239.1 407.9 A42 42 0 0 1 197.1 449.9 L105.6 449.9 A42 42 0 0 1 75.9 437.6"/><path data-q="bl" class="ln" pathLength="1" d="M226.8 287.4 A42 42 0 0 0 197.1 275.1 L105.6 275.1 A42 42 0 0 0 63.6 317.1 L63.6 407.9 A42 42 0 0 0 75.9 437.6"/>
+          <path data-q="ln" class="ln" pathLength="1" d="M235.5 300 L300.8 234.7"/>
+          <path data-q="tr" class="bl" pathLength="1" d="M285.2 224.8 A42 42 0 0 1 272.9 195.1 L272.9 104.3 A42 42 0 0 1 314.9 62.3 L406.2 62.3 A42 42 0 0 1 435.9 74.6"/><path data-q="tr" class="bl" pathLength="1" d="M300.8 234.7 A42 42 0 0 0 314.9 237.1 L406.2 237.1 A42 42 0 0 0 448.2 195.1 L448.2 104.3 A42 42 0 0 0 435.9 74.6"/>
+          </g>
+          <g class="lines">
+          <path data-q="tl" class="ln" pathLength="1" d="M226.7 224.8 A42 42 0 0 1 197 237.1 L105.7 237.1 A42 42 0 0 1 63.7 195.1 L63.7 104.4 A42 42 0 0 1 76 74.7"/><path data-q="tl" class="ln" pathLength="1" d="M226.7 224.8 A42 42 0 0 0 239 195.1 L239 104.4 A42 42 0 0 0 197 62.4 L105.7 62.4 A42 42 0 0 0 76 74.7"/>
+          <path data-q="br" class="ln" pathLength="1" d="M285.3 287.4 A42 42 0 0 1 315 275.1 L406.4 275.1 A42 42 0 0 1 448.4 317.1 L448.4 407.9 A42 42 0 0 1 436.1 437.6"/><path data-q="br" class="ln" pathLength="1" d="M285.3 287.4 A42 42 0 0 0 273 317.1 L273 407.9 A42 42 0 0 0 315 449.9 L406.4 449.9 A42 42 0 0 0 436.1 437.6"/>
+          <path data-q="bl" class="ln" pathLength="1" d="M226.8 287.4 A42 42 0 0 1 239.1 317.1 L239.1 407.9 A42 42 0 0 1 197.1 449.9 L105.6 449.9 A42 42 0 0 1 75.9 437.6"/><path data-q="bl" class="ln" pathLength="1" d="M226.8 287.4 A42 42 0 0 0 197.1 275.1 L105.6 275.1 A42 42 0 0 0 63.6 317.1 L63.6 407.9 A42 42 0 0 0 75.9 437.6"/>
+          <path data-q="ln" class="ln" pathLength="1" d="M235.5 300 L300.8 234.7"/>
+          <path data-q="tr" class="bl" pathLength="1" d="M285.2 224.8 A42 42 0 0 1 272.9 195.1 L272.9 104.3 A42 42 0 0 1 314.9 62.3 L406.2 62.3 A42 42 0 0 1 435.9 74.6"/><path data-q="tr" class="bl" pathLength="1" d="M300.8 234.7 A42 42 0 0 0 314.9 237.1 L406.2 237.1 A42 42 0 0 0 448.2 195.1 L448.2 104.3 A42 42 0 0 0 435.9 74.6"/>
+          </g>
+        </svg>
+        <img id="field-fallback" class="field-fallback" src="/assets/logo-512.png" width="512" height="512" alt="">
       </div>
     </div>
   </section>
 
-  <section class="x-sec" id="agents">
-    <div class="container"><div class="x-wrap">
-      <h2 class="x-h">A decoder for AI agents.</h2>
-      <p class="x-p">Send a transaction hash. Get back what happened, in plain English and strict JSON. 50 free calls every 24 hours per IPv4 address or IPv6 /64, no account.</p>
-      <div class="x-acts">
-        <a class="btn btn-primary" href="/playground/">Try it free</a>
-        <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls for $9</a>
+  <section class="v-sec" id="agents">
+    <div class="container dx">
+      <header class="dx-head">
+        <h2 class="v-h">A decoder for AI agents.</h2>
+      </header>
+      <div class="dx-copy">
+        <p>Send a transaction hash. Get back what happened, in plain English and strict JSON.</p>
+        <p>50 free calls every 24 hours <span class="nw">per IPv4 address or IPv6 /64</span>, no account.</p>
+        <div class="dx-acts">
+          <a class="btn btn-primary" href="/playground/">Try it free</a>
+          <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls on Base, 30 days, $9</a>
+        </div>
       </div>
-    </div></div>
+      <figure class="dx-fig" id="decode">
+        <span class="dx-frame" aria-hidden="true"></span>
+        <div class="dx-cell dx-sum is-blue">
+          <div class="dx-call">explain_transaction(&quot;0x12299f675eed…7bf97faa&quot;)</div>
+          <p class="dx-out" id="decode-out" aria-live="off">0x5980...3d88 swapped 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager.</p>
+          <p class="dx-note">Absence of a risk flag here does not mean none exists.</p>
+        </div>
+        <div class="dx-cell dx-json">
+<pre><code>{
+  <span class="k">"action_type"</span>: <span class="v">"swap"</span>,
+  <span class="k">"status"</span>: <span class="v">"success"</span>,
+  <span class="k">"counterparties"</span>: [
+    { <span class="k">"label"</span>: <span class="v">"Uniswap V4 PoolManager"</span> }
+  ],
+  <span class="k">"risk_flags"</span>: [],
+  <span class="k">"checks"</span>: {
+    <span class="k">"contract_verification"</span>: <span class="v">"ok"</span>,
+    <span class="k">"first_interaction"</span>: <span class="v">"unavailable"</span>,
+    <span class="k">"drainer_blacklist"</span>: <span class="v">"ok"</span>
+  },
+  <span class="k">"gas_paid_usd"</span>: <span class="v">0.002748</span>
+}</code></pre>
+        </div>
+        <figcaption class="dx-cap">Actual output for a Base mainnet transaction, trimmed, from the <a href="/docs/#examples">docs</a>.</figcaption>
+      </figure>
+    </div>
   </section>
 
-  <section class="x-sec" id="teams">
-    <div class="container"><div class="x-wrap">
-      <h2 class="x-h">Reviews for finance teams.</h2>
-      <p class="x-p">Send the addresses and dates. We confirm the price and scope in writing. You pay after delivery: no deposit, no card on file, nothing recurs. It is evidence for your team, not a signed attestation.</p>
-      <div class="x-acts">
-        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Addresses%3A%0ADate%20range%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
-        <a class="btn btn-ghost" href="/pricing/">How it works</a>
+  <section class="ways" id="ways" aria-labelledby="h-ways">
+    <div class="gal-hold">
+      <div class="ways-head">
+        <h2 class="v-h" id="h-ways">What you can use today</h2>
+        <div class="gal-ctl" id="gal-ctl">
+          <div class="gal-dots" role="group" aria-labelledby="h-ways"></div>
+        </div>
       </div>
-    </div></div>
+      <div class="gal-view">
+        <ul class="gal-track" id="gal-track" role="list">
+          <li class="g-item">
+            <a class="g-card" href="/playground/">
+              <div class="g-cap">
+                <h3>Decoder</h3>
+                <p>Paste a Base transaction hash and get back what happened, in plain English and strict JSON.</p>
+              </div>
+              <div class="g-stage is-decode" aria-hidden="true">
+                <div class="b-decode"><span class="h">0x12299f675eed…7bf97faa</span><span class="e">0x5980...3d88 <em>swapped</em> 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager.</span></div>
+              </div>
+              <span class="q-fold" aria-hidden="true"><span class="q-bits"><span>00010010 00101001
+10011111 01100111
+01011110 11101101
+10100011 10111100
+00101110 10001000
+11101100 01001101
+11110111 01101011
+11010101 10011101
+11111001 01010000
+10010011 10011000
+01000011 10111111
+01000000 00001000
+10100100 11011010
+11111111 01100111
+01111011 11111001
+01111111 10101010
+00010010 00101001
+10011111 01100111
+01011110 11101101
+10100011 10111100
+00101110 10001000
+11101100 01001101
+11110111 01101011
+11010101 10011101
+11111001 01010000
+10010011 10011000
+01000011 10111111
+01000000 00001000
+10100100 11011010
+11111111 01100111
+01111011 11111001
+01111111 10101010</span></span></span>
+            </a>
+          </li>
+          <li class="g-item">
+            <a class="g-card is-blue" href="/docs/" data-home>
+              <div class="g-cap">
+                <h3>MCP</h3>
+                <p>Agents call it as a tool, over MCP.</p>
+              </div>
+              <div class="g-stage" aria-hidden="true">
+                <div class="b-chat"><span><b>@agent</b> What happened in this transaction?</span><span>Calling <code>explain_transaction</code></span><span>Plain English and JSON, back in one call.</span></div>
+              </div>
+            </a>
+          </li>
+          <li class="g-item">
+            <a class="g-card" href="/pricing/">
+              <div class="g-cap">
+                <h3>Free tier</h3>
+                <p>50 free calls every 24 hours <span class="nw">per IPv4 address or IPv6 /64</span>, no account.</p>
+              </div>
+              <div class="g-stage" aria-hidden="true">
+                <div class="b-fifty">50</div>
+              </div>
+            </a>
+          </li>
+          <li class="g-item">
+            <a class="g-card" href="/services/#reviews">
+              <div class="g-cap">
+                <h3>Reviews for finance teams</h3>
+                <p>Send the transaction hashes and dates; we confirm the price and scope in writing. You pay after delivery: no deposit, no card on file, nothing recurs. Evidence for your team, not a signed attestation.</p>
+              </div>
+              <div class="g-stage" aria-hidden="true">
+                <span class="b-stack"><i style="--n:2"></i><i style="--n:1"></i><i style="--n:0"></i></span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -252,7 +576,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -276,8 +599,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -285,56 +607,458 @@
 <script src="/assets/site.js" defer></script>
 <script type="module">
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const small = matchMedia('(max-width: 63.9em)').matches || navigator.maxTouchPoints > 0;
-  const canvas = document.getElementById('field'), fb = document.getElementById('field-fallback');
-  const showFallback = () => { fb.hidden = false; canvas.hidden = true; };
-  // Dynamic import, so a CDN or importmap failure lands in this catch instead of aborting the
-  // module before any catch exists. Every failure path ends on the same static image.
+  const hasGsap = !!(window.gsap && window.ScrollTrigger);
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const easeIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const within = (p, ms) => Promise.race([p, new Promise(r => setTimeout(r, ms))]);
+  const fontsReady = () => within(document.fonts ? document.fonts.ready : Promise.resolve(), 1500);
+
+  // The docs example, the only transaction on this page. Every hex character drawn anywhere
+  // below is taken from it.
+  const HASH = '12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa';
+
+  /* =====================================================================
+     HERO. The mark is markup, drawn on by CSS. The field behind it is assets/ledger.js: the
+     hash and its bits on rails receding into the dark past the mark. Reduced motion: one
+     still frame, nothing travels. If the field cannot run, the page simply has the mark.
+     ===================================================================== */
+  const hero = document.getElementById('top');
+  const canvas = document.getElementById('field');
+  const markEl = hero.querySelector('.hx-mark'), copyEl = hero.querySelector('.hx-copy');
+  const showFallback = () => { canvas.hidden = true; };
+  // a line that has finished drawing closes its joins (see .cap in the style)
+  markEl.addEventListener('animationend', e => { if (e.animationName === 'hx-draw' && e.target.closest('.lines')) e.target.classList.add('cap'); });
+
+  let field = null;
   (async () => {
     try {
-      const [{ mountField }, points] = await Promise.all([
-        import('/assets/field.js?v=84079f42'),
-        fetch('/assets/mark-points.json?v=2').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }),
-      ]);
-      // Monochrome behind the type, faint, and still under the pointer: no highlight follows the cursor.
-      mountField(canvas, { points, host: canvas.closest('section'), reducedMotion: reduce, fallback: fb, size: small ? 4.2 : 5.4, alpha: small ? 0.22 : 0.3, accent: '#ffffff', margin: 0.04, cursor: false, idle: 1.4 });
-    } catch (e) { showFallback(); }
+      const [{ mountLedger }] = await Promise.all([import('/assets/ledger.js?v=9'), fontsReady()]);
+      field = mountLedger({ host: hero, canvas, anchor: markEl, copy: copyEl, hash: HASH, reduced: reduce });
+      // the field's type is set in Geist; if it arrived after the wait, set it again
+      if (document.fonts && !document.fonts.check('400 32px Geist')) document.fonts.load('400 32px Geist').then(() => field && field.refresh(), () => {});
+    } catch (e) { showFallback(); if (window.__heroDebug) console.warn(e); }
   })();
 
   const h1 = document.querySelector('[data-words]');
-  if (h1 && !reduce) { h1.setAttribute('aria-label', h1.textContent); h1.innerHTML = h1.textContent.split(/(\s+)/).map(w => /\s/.test(w) ? w : '<span class="w">' + w + '</span>').join(''); }
+  if (h1 && !reduce && hasGsap) { h1.setAttribute('aria-label', h1.textContent); h1.innerHTML = h1.textContent.split(/(\s+)/).map(w => /\s/.test(w) ? w : '<span class="w">' + w + '</span>').join(''); }
 
-  addEventListener('DOMContentLoaded', () => {
-    // All or nothing: a partial CDN load must leave the page at rest, not half-choreographed.
-    if (!window.gsap || !window.ScrollTrigger) return;
+  /* =====================================================================
+     DECODER. The real summary is in the page at rest; in view (once) or on hover it resolves
+     out of hex, left to right. The blue square zooms in around the English, then passes down
+     to the JSON as the section scrolls.
+     ===================================================================== */
+  function glitchInto(el, finalHTML, dur, cls) {
+    const finalText = el.textContent;
+    const t0 = performance.now();
+    const step = t => {
+      const k = Math.min(1, (t - t0) / dur), n = Math.floor(k * finalText.length);
+      if (k < 1) {
+        el.textContent = finalText.slice(0, n);
+        const g = document.createElement('span'); g.className = cls;
+        g.textContent = finalText.slice(n, n + 14).replace(/\S/g, () => HASH[(Math.random() * 64) | 0]);
+        el.append(g); el._raf = requestAnimationFrame(step);
+      } else { el.innerHTML = finalHTML; el._raf = 0; }
+    };
+    cancelAnimationFrame(el._raf || 0);
+    el._raf = requestAnimationFrame(step);
+  }
+  const out = document.getElementById('decode-out');
+  if (out && !reduce && 'IntersectionObserver' in window) {
+    const html = out.innerHTML;
+    const run = () => { if (!out._raf) glitchInto(out, html, 1500, 'glitch'); };
+    new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { run(); o.disconnect(); } }, { threshold: 0.6 }).observe(out);
+    document.getElementById('decode').addEventListener('mouseenter', run);
+  }
+  // The frame rests round one card: the English, or the JSON once its top has risen past the
+  // middle of the screen. Crossing that line starts one timed glide (.fx-glide in the style);
+  // crossing back reverses it. Nothing is tied to the scroll position itself, so the frame is
+  // never caught between the two. It is placed before it is shown, so the first paint has it
+  // round the English (or the JSON, on a page that opens scrolled past the line), already still.
+  function mountFrame() {
+    const fig = document.getElementById('decode'); if (!fig) return;
+    const fr = fig.querySelector('.dx-frame'), c1 = fig.querySelector('.dx-sum'), c2 = fig.querySelector('.dx-json');
+    if (!fr || !c1 || !c2) return;
+    let onJson = false, raf = 0, lastY = window.scrollY;
+    const place = () => {
+      const r = (onJson ? c2 : c1).getBoundingClientRect(), o = fig.getBoundingClientRect();
+      fr.style.transform = `translate(${(r.left - o.left - fig.clientLeft).toFixed(2)}px, ${(r.top - o.top - fig.clientTop).toFixed(2)}px)`;
+      fr.style.width = r.width.toFixed(2) + 'px'; fr.style.height = r.height.toFixed(2) + 'px';
+    };
+    // down past the middle to move to the JSON; back below 62% to return, so a page resting on
+    // the line does not flicker between them
+    const want = () => { const t = c2.getBoundingClientRect().top, vh = window.innerHeight; return onJson ? t < vh * .62 : t < vh * .5; };
+    // a resize or a late font changes the cards' sizes: follow them at once, without a glide
+    const snap = () => { fig.classList.remove('fx-glide'); onJson = want(); place(); void fr.offsetWidth; fig.classList.add('fx-glide'); };
+    // a jump of most of a screen in one frame is the page being put somewhere (a reload that
+    // restores the scroll, a link to an anchor), not someone scrolling: the frame is simply there
+    const check = () => {
+      raf = 0;
+      const y = window.scrollY, jump = Math.abs(y - lastY) > window.innerHeight * .9;
+      lastY = y;
+      const n = want();
+      if (n === onJson) return;
+      if (jump) snap(); else { onJson = n; place(); }
+    };
+    onJson = want();
+    place();
+    fig.classList.add('fx-live');
+    void fr.offsetWidth;
+    fig.classList.add('fx-glide');
+    window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(check); }, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(snap).observe(fig);
+  }
+
+  /* =====================================================================
+     WHAT YOU CAN USE TODAY. Four cards. On a screen 64em wide and 40em tall, with motion and the
+     page's smooth scroll, the section holds under the nav and the page's own vertical scroll
+     carries the row sideways, a card per .85 of a screen, so the four take under three screens;
+     then the hold lets go and the page carries on down. Wheel, trackpad, keys and the scrollbar
+     all scroll the page. Inside the hold a key moves exactly one card, a sideways swipe scrolls
+     the page as a scroll down would, and wherever the scroll stops the page eases on to a whole
+     card. The card in the middle plays its one moment as it arrives. A dot scrolls the page to
+     its card, and Tab brings the focused card to the middle. Everywhere else (a phone, a short
+     screen, reduced motion, no script) the cards are stacked and every moment is formed, and
+     this script leaves them alone.
+     ===================================================================== */
+  function mountGallery() {
+    const sec = document.getElementById('ways'), track = document.getElementById('gal-track'), ctl = document.getElementById('gal-ctl');
+    if (!sec || !track || !ctl || !hasGsap || reduce || !window.Lenis) return;
+    const view = track.parentElement, hold = view.parentElement, dotsEl = ctl.querySelector('.gal-dots');
+    const items = [...track.children], cards = items.map(li => li.querySelector('.g-card')), N = items.length;
+    if (N < 2 || cards.some(c => !c) || !dotsEl || !hold.classList.contains('gal-hold')) return;
     gsap.registerPlugin(ScrollTrigger);
-    if (reduce) return;
-    // No document.hidden check: a page that loads hidden (a background tab, a restored
-    // session, an OS link preview) must not disable its scroll feel PERMANENTLY -- nothing
-    // here ever re-checked visibility, so it never recovered on its own. The browser already
-    // throttles a hidden tab's animation frames; motion.js on every other page relies on
-    // exactly that and never needed this gate.
-    // Smooth scroll, and the scroll-linked motion below reads its position from it.
-    if (window.Lenis) {
-      const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(t => lenis.raf(t * 1000));
-      gsap.ticker.lagSmoothing(0);
+
+    const STEP = .85;                       // of a screen's height, per card
+    const lenis = () => window.__lenis || null;
+    const navH = () => { const n = document.querySelector('.nav'); return n ? n.offsetHeight : 0; };
+    // the page's own speed in px/s, from the frames of the last 80ms (the ticker below notes them)
+    const hist = [];
+    const speed = () => { if (hist.length < 2) return 0; const a = hist[0], b = hist[hist.length - 1], dt = b[0] - a[0]; return dt > 8 ? (b[1] - a[1]) / dt * 1000 : 0; };
+    // put the page somewhere at once; Lenis measures the page first, as it may not have seen
+    // the hold's length yet and would stop short of it
+    const jump = y => { hist.length = 0; const l = lenis(); if (l) { l.resize(); l.scrollTo(y, { immediate: true, force: true }); } else window.scrollTo(0, y); };
+    let st = null, tw = null, cur = -1, seen = false, rest = -1, flight = null;
+
+    const dots = cards.map((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'gal-dot';
+      b.setAttribute('aria-label', c.querySelector('h3').textContent.trim());
+      b.append(document.createElement('span'));
+      b.addEventListener('click', () => go(i));
+      dotsEl.append(b);
+      return b;
+    });
+
+    // where card i rests: its share of the hold, from the moment the section meets the nav
+    const stopY = i => st.start + (st.end - st.start) * i / (N - 1);
+    // the scroll, counted in cards
+    const at = () => (window.scrollY - st.start) / ((st.end - st.start) / (N - 1));
+    // the card a place in the hold belongs to, from the scroll rather than the row, which follows
+    // a beat behind; a move under way belongs to the card it is going to
+    const heldCard = y => flight ? flight.i : clamp(Math.round((y - st.start) / ((st.end - st.start) / (N - 1))), 0, N - 1);
+    function setCur(i) {
+      if (i === cur) return;
+      cur = i;
+      dots.forEach((d, k) => { if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
+      cards.forEach((c, k) => c.classList.toggle('is-cur', k === i));
     }
-    gsap.from('.hero-field .display .w', { y: 28, opacity: 0, duration: .9, ease: 'power3.out', stagger: .06, delay: .15, clearProps: 'transform,opacity' });
-    gsap.from('.hero-field .hero-lead, .hero-field .hero-actions', { y: 14, opacity: 0, duration: .8, ease: 'power3.out', stagger: .1, delay: .5, clearProps: 'transform,opacity' });
-    // The entrance is timed; this net is not. If no animation frame ever runs, the type is
-    // still on the page in three seconds.
-    setTimeout(() => gsap.set('.hero-field .display .w, .hero-field .hero-lead, .hero-field .hero-actions', { clearProps: 'transform,opacity' }), 3000);
+    // What the row shows (the scrubbed tween, a beat behind the scroll): the card nearest the
+    // middle is current, and its moment plays once it has nearly arrived. A card that moves
+    // away is reset, so it plays again when it comes back.
+    function paint() {
+      if (!tw) return;
+      const v = tw.progress() * (N - 1), n = clamp(Math.round(v), 0, N - 1);
+      setCur(n);
+      if (seen) cards.forEach((c, k) => { if (k !== n) c.classList.remove('on'); else if (Math.abs(v - k) < .25) c.classList.add('on'); });
+    }
 
-    // Scroll-linked, reversible, read from the scroll position: the hero sinks and fades as
-    // the reader leaves it, the receipt rises to meet them, each row settles into place.
-    gsap.to('.field-stage', { yPercent: 22, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero-field', start: 'top top', end: 'bottom top', scrub: true } });
-    gsap.to('.hero-main', { y: -90, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero-field', start: 'top top', end: '75% top', scrub: true } });
-    // Layout shifts after webfonts land; recompute trigger positions once they have.
-    document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
+    // One move of the page to card i's place in the hold; a later move replaces it, and the
+    // wheel or a touch takes over from it. The move starts at the speed the page already has and
+    // comes to rest on the card (a cubic Hermite curve from the page's place and speed to the
+    // stop, still): from rest it eases in and out, a settle carries on from the scroll under way,
+    // a key pressed again mid-move goes on without a stall, and a turn back after a flick rounds
+    // off instead of flipping. It counts as moving until it lands (the time limit only covers a
+    // move that never reports back).
+    function go(i) {
+      if (!st) return;
+      i = clamp(i, 0, N - 1);
+      const l = lenis(), y0 = l ? l.animatedScroll : window.scrollY, y = stopY(i), D = y - y0;
+      rest = i;
+      if (Math.abs(D) < 1) { flight = null; return; }
+      let T = clamp(.45 + Math.abs(D) / innerHeight * .4, .55, 1.1);
+      const v = speed();
+      // already moving fast toward a near stop: arrive a little sooner rather than brake hard
+      if (v * D > 0 && v * T / D > 3) T = Math.max(.3, 3 * D / v);
+      // the curve's slope at its start, in its own units: 0 is from rest, 3 the most it can take
+      // and still never pass the stop, below 0 runs on a little before turning back
+      const k = clamp(v * T / D, -1.5, 3);
+      const ease = s => k * s * (1 - s) * (1 - s) + s * s * (3 - 2 * s);
+      flight = { i, dir: Math.sign(D), until: performance.now() + T * 1000 + 1500 };
+      if (l) l.scrollTo(y, { duration: T, easing: ease, force: true, onComplete: () => { flight = null; } });
+      else window.scrollTo(0, y);
+    }
 
-  });
+    // a hand on the page (a finger, the scrollbar's thumb, Home or End) stops a move where it is;
+    // a click on the page does not, so a dot or a card clicked mid-move takes the move on smoothly
+    const cancel = () => { if (flight) { flight = null; hist.length = 0; const l = lenis(); if (l) l.scrollTo(window.scrollY, { immediate: true, force: true }); } };
+
+    // Settling. When the wheel or trackpad has gone quiet inside the hold (and a scroll the
+    // browser runs itself, as from the scrollbar, has stopped, with no button or finger down), the page
+    // eases to a card: the one nearest where the scroll is heading, or, if it was nudged off the
+    // card it rested on, the next one in the direction of the nudge. A nudge too small to count
+    // (20px) is given half a second before it is taken back, so a few small moves in a row (a
+    // slow wheel, a light touch on a trackpad) add up to a card instead of each being undone.
+    // Every frame also brings the row's current card up to date, whatever moved the row.
+    let lastY = -1, lastT = 0, lastIn = 0, still = true, ptr = false, touching = false, stale = false, staleT = 0, keepIdx = null;
+    function watch() {
+      const now = performance.now(), y = window.scrollY;
+      hist.push([now, y]); while (hist.length > 2 && now - hist[0][0] > 80) hist.shift();
+      paint();
+      if (!st || stale) return;
+      const l = lenis();
+      if (Math.abs(y - lastY) > .5) { lastY = y; lastT = now; still = false; }
+      if (still || ptr || touching || now - lastIn < 150 || (flight && now < flight.until)) return;
+      const gliding = !!l && l.isScrolling === 'smooth';
+      if (!gliding && now - lastT < 160) return;
+      const to = gliding ? l.targetScroll : y;
+      if (to < st.start - 1) { still = true; rest = -1; return; }
+      if (to > st.end + 1) { still = true; rest = N; return; }
+      const p = (to - st.start) / ((st.end - st.start) / (N - 1)), n = clamp(Math.round(p), 0, N - 1);
+      if (Math.abs(to - stopY(n)) < 2) { still = true; if (!gliding) rest = n; return; }
+      if (n === rest && Math.abs(to - stopY(rest)) <= 20 && now - lastIn < 500) return;
+      still = true;
+      go(n === rest && Math.abs(to - stopY(rest)) > 20 ? rest + Math.sign(p - rest) : n);
+    }
+
+    // Keys inside the hold move one card at a time; past its first and last card they are the
+    // page's again. Arriving from above or below, a key that would cross into the hold stops on
+    // its first or last card. Held down, a key steps a card per move. Typing in a field, and
+    // Space on a button, are left alone.
+    const KEYS = { PageDown: 1, PageUp: -1, ArrowDown: 1, ArrowUp: -1, ' ': 1 };
+    function onKey(e) {
+      if (!st || stale || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === 'Home' || e.key === 'End') { cancel(); return; }
+      const t = e.target instanceof Element ? e.target : null, inRow = !!t && track.contains(t);
+      let dir = KEYS[e.key];
+      if (!dir && inRow && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) dir = e.key === 'ArrowRight' ? 1 : -1;
+      if (!dir) return;
+      if (t && t.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+      if (e.key === ' ' && t && t.closest('button, [role="button"], summary')) return;
+      if (e.key === ' ' && e.shiftKey) dir = -1;
+      const y = window.scrollY, now = performance.now(), page = e.key === ' ' || e.key.startsWith('Page') ? innerHeight * .875 : 40;
+      let to = null;
+      if (flight && now < flight.until) {
+        // already moving: a fresh press goes one further, a held key waits for the move to land
+        e.preventDefault();
+        if (e.repeat) return;
+        to = flight.i + dir;
+        if (to < 0 || to > N - 1) return;
+      } else if (y < st.start - 1) {
+        if (dir > 0 && y + page > st.start) to = 0;
+      } else if (y > st.end + 1) {
+        if (dir < 0 && y - page < st.end) to = N - 1;
+      } else {
+        const p = at();
+        to = dir > 0 ? Math.floor(p + .02) + 1 : Math.ceil(p - .02) - 1;
+      }
+      if (to == null || to < 0 || to > N - 1) return;
+      e.preventDefault();
+      go(to);
+      if (inRow && cards.includes(t)) cards[to].focus({ preventScroll: true });
+    }
+
+    // A ScrollTrigger refresh (a resize, a late font, a reload that restored the scroll) moves
+    // the hold's stops: a page that was in the hold is put back on the same card's new stop. A
+    // resize moves the scroll itself before the refresh comes (the browser keeps its place in
+    // the changed layout), so the card in view is noted as the resize begins, and nothing
+    // settles or steps until the refresh has been.
+    let keep = null, pend = null;
+    const place = p => { if (p.i != null) { rest = p.i; jump(stopY(p.i)); } else jump(Math.max(st.end + 2, endY() - p.below)); };
+    const onResize = () => {
+      if (!st) return;
+      if (!stale) keepIdx = lastY >= st.start - 1 && lastY <= st.end + 1 ? heldCard(lastY) : null;
+      stale = true; clearTimeout(staleT);
+      staleT = setTimeout(() => { stale = false; keepIdx = null; }, 1000);
+    };
+    const onInit = () => {
+      keep = null;
+      if (!st || pend) return;
+      if (stale) { keep = keepIdx; return; }
+      const y = window.scrollY;
+      if (y >= st.start - 1 && y <= st.end + 1) keep = clamp(Math.round(at()), 0, N - 1);
+    };
+    const onRefresh = () => {
+      const i = keep, p = pend;
+      keep = null; keepIdx = null; stale = false; clearTimeout(staleT); pend = null;
+      if (st && p) { place(p); return; }
+      if (!st || i == null) return;
+      const y = stopY(i);
+      rest = i; flight = null;
+      if (Math.abs(window.scrollY - y) > 1) jump(y);
+    };
+
+    // A reload, or a return through the history, comes back to where the reader was. The
+    // browser puts the scroll back before the hold exists, against the shorter stacked page, so
+    // the place is noted as the page is left and put back once the hold is made (only for the
+    // same size of window; a refresh then brings a place inside the hold to its card).
+    const KEY = 'ways-hold:' + location.pathname;
+    let back = null;
+    try {
+      const nt = performance.getEntriesByType('navigation')[0];
+      const b = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      sessionStorage.removeItem(KEY);
+      if (b && nt && (nt.type === 'reload' || nt.type === 'back_forward') && b.w === innerWidth && b.h === innerHeight && b.y >= 0) back = b.y;
+    } catch (e) {}
+
+    // The hold is made once the page's smooth scroll is running (it starts further down this
+    // script). ScrollTrigger notes how the page scrolls when its first trigger is made: made
+    // before Lenis has turned the browser's own smooth scrolling off, it would turn it back on
+    // after every refresh, and a refresh made while scrolled would then lose the hero.
+    queueMicrotask(() => { try { gsap.matchMedia().add('(min-width: 64em) and (min-height: 40em)', makeHold); } catch (e) { if (window.__heroDebug) console.warn(e); } });
+    // The hold is made and unmade as the window crosses 64em by 40em, and the reader's place goes
+    // with the page each way: the card in view, or how far past the section they had read. While
+    // the cards are stacked it is noted as the page scrolls; not as the window changes size, when
+    // the layout moves under the scroll and what is in the middle no longer says what the reader
+    // was looking at.
+    const endY = () => document.documentElement.scrollHeight - innerHeight;
+    const stackedCard = () => { const m = innerHeight / 2; const i = cards.findIndex(c => { const r = c.getBoundingClientRect(); return r.top <= m && r.bottom >= m; }); return i >= 0 ? i : null; };
+    let made = false, seat = null, sizedAt = -1e9;
+    const noteSeat = () => {
+      const r = sec.getBoundingClientRect(), m = innerHeight / 2, i = stackedCard();
+      seat = r.bottom < m ? { below: endY() - window.scrollY } : i != null ? { i } : null;
+    };
+    addEventListener('resize', () => { sizedAt = performance.now(); }, { passive: true });
+    addEventListener('scroll', () => { if (made && !st && performance.now() - sizedAt > 600) noteSeat(); }, { passive: true });
+    function makeHold() {
+      const from = made && back == null ? seat : null;
+      made = true;
+      sec.classList.add('gal-pin', 'gal-live', 'gal-anim');
+      const ac = new AbortController(), signal = ac.signal;
+      tw = gsap.to(track, {
+        x: () => -(items[N - 1].offsetLeft - items[0].offsetLeft), ease: 'none', onUpdate: paint,
+        scrollTrigger: {
+          trigger: hold, start: () => 'top ' + navH() + 'px', end: () => '+=' + Math.round((N - 1) * STEP * innerHeight),
+          pin: true, scrub: .4, invalidateOnRefresh: true, refreshPriority: -1,
+        },
+      });
+      st = tw.scrollTrigger;
+      if (back != null) { jump(back); back = null; }
+      // remade as the window grows, the hold is measured by the refresh that follows the resize,
+      // so the reader's place is put back then (or a moment later, should none come)
+      else if (from) { pend = from; setTimeout(() => { if (pend && st) { const p = pend; pend = null; place(p); } }, 900); }
+
+      addEventListener('keydown', onKey, { signal });
+      addEventListener('resize', onResize, { signal });
+      addEventListener('pagehide', () => { try { sessionStorage.setItem(KEY, JSON.stringify({ y: Math.round(window.scrollY), w: innerWidth, h: innerHeight })); } catch (e) {} }, { signal });
+      addEventListener('pointerdown', e => { ptr = true; if (e.pointerType !== 'mouse' || e.button !== 0 || (e.target === document.documentElement && e.clientX >= document.documentElement.clientWidth)) cancel(); }, { signal, capture: true });
+      addEventListener('pointerup', () => { ptr = false; }, { signal, capture: true });
+      addEventListener('pointercancel', () => { ptr = false; }, { signal, capture: true });
+      addEventListener('pointermove', e => { if (!e.buttons) ptr = false; }, { signal, passive: true });
+      const input = () => { lastIn = performance.now(); still = false; flight = null; };
+      // The wheel takes over from a move. Turned the same way as the move, it goes on from where
+      // the move was going rather than from where it had got to, so a wheel rolled a notch at a
+      // time carries the row on a card a notch without the page stopping between them (Lenis adds
+      // each turn to its target, which during a move is the page's place on the way).
+      addEventListener('wheel', e => {
+        const l = lenis();
+        if (flight && l && st && !e.ctrlKey) {
+          const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : hold.contains(e.target) ? e.deltaX : 0;
+          if (d && Math.sign(d) === flight.dir) l.targetScroll = stopY(flight.i);
+        }
+        input();
+      }, { signal, passive: true, capture: true });
+      addEventListener('touchmove', input, { signal, passive: true, capture: true });
+      addEventListener('touchstart', () => { touching = true; cancel(); }, { signal, passive: true, capture: true });
+      const untouch = () => { touching = false; lastIn = performance.now(); };
+      addEventListener('touchend', untouch, { signal, passive: true, capture: true });
+      addEventListener('touchcancel', untouch, { signal, passive: true, capture: true });
+      // A sideways swipe over the held row scrolls the page instead, so it moves the row as a
+      // scroll down would, stays inside the hold, and never pages the browser back.
+      hold.addEventListener('wheel', e => {
+        const l = lenis(), y = window.scrollY;
+        if (!st || !l || e.ctrlKey || Math.abs(e.deltaX) <= Math.abs(e.deltaY) || y < st.start - 1 || y > st.end + 1) return;
+        e.preventDefault(); e.stopPropagation();
+        l.scrollTo(clamp(l.targetScroll + e.deltaX, st.start, st.end), { programmatic: false });
+      }, { signal, passive: false });
+      // Tab: the focused card comes to the middle. A click on a card at the edge brings it in
+      // first; the card in the middle opens.
+      track.addEventListener('focusin', e => { const i = cards.indexOf(e.target); if (i >= 0 && !(flight && flight.i === i)) go(i); }, { signal });
+      track.addEventListener('click', e => {
+        const i = cards.indexOf(e.target.closest('.g-card'));
+        if (i >= 0 && e.detail > 0 && i !== cur) { e.preventDefault(); go(i); }
+      }, { signal, capture: true });
+      // overflow: clip has no scroll position to move; where it falls back to hidden, focus
+      // could scroll the frame sideways, so it is put straight back
+      [hold, view].forEach(el => el.addEventListener('scroll', () => { if (el.scrollLeft) el.scrollLeft = 0; }, { signal, passive: true }));
+      ScrollTrigger.addEventListener('refreshInit', onInit);
+      ScrollTrigger.addEventListener('refresh', onRefresh);
+      gsap.ticker.add(watch);
+      // the first card's moment waits until the row is in view
+      const io = new IntersectionObserver(([en]) => { if (en.isIntersecting && !seen) { seen = true; paint(); } }, { threshold: .5 });
+      io.observe(view);
+      cur = -1; paint();
+
+      return () => {
+        const was = stale ? keepIdx : st && lastY >= st.start - 1 && lastY <= st.end + 1 ? heldCard(lastY) : null;
+        seat = was != null ? { i: was } : st && lastY > st.end + 1 ? { below: Math.max(0, endY() - lastY) } : null;
+        ac.abort(); io.disconnect(); gsap.ticker.remove(watch); clearTimeout(staleT);
+        ScrollTrigger.removeEventListener('refreshInit', onInit);
+        ScrollTrigger.removeEventListener('refresh', onRefresh);
+        st = tw = null; flight = null; keep = null; pend = null; keepIdx = null; stale = false; cur = -1; seen = false; rest = -1;
+        sec.classList.remove('gal-pin', 'gal-live', 'gal-anim');
+        cards.forEach(c => c.classList.remove('on', 'is-cur'));
+        dots.forEach(d => d.removeAttribute('aria-current'));
+        // the card that was in the middle of the hold stands at the top of the stacked four
+        if (was != null) requestAnimationFrame(() => { if (!st) jump(cards[was].getBoundingClientRect().top + window.scrollY - navH() - 16); });
+      };
+    }
+  }
+  try { mountGallery(); } catch (e) { if (window.__heroDebug) console.warn(e); }
+
+  /* =====================================================================
+     Scroll feel. All or nothing: a partial load leaves the page at rest.
+     ===================================================================== */
+  if (hasGsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    if (!reduce) {
+      if (window.Lenis) {
+        const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+        window.__lenis = lenis;
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(t => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+      gsap.from('.hx .display .w', { y: 28, opacity: 0, duration: 1, ease: 'power3.out', stagger: .07, delay: .15, clearProps: 'transform,opacity' });
+      gsap.from('.hx .hero-actions, .hx .hero-count', { y: 14, opacity: 0, duration: .9, ease: 'power3.out', delay: .55, clearProps: 'transform,opacity' });
+      // The entrance is timed; this net is not. If no animation frame ever runs, the type is
+      // still on the page in three seconds.
+      setTimeout(() => gsap.set('.hx .display .w, .hx .hero-actions, .hx .hero-count', { clearProps: 'transform,opacity' }), 3000);
+      // Leaving the hero, the mark and its field fade where they stand (the field is drawn
+      // from where the mark sits, so neither moves); the headline and buttons fade a little
+      // sooner, drifting down a touch, away from the mark rather than into it.
+      gsap.to('.hx-cv, .hx-mark', { opacity: 0, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+      gsap.to('.hx-copy', { y: 28, opacity: 0, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: '70% top', scrub: true } });
+      mountFrame();
+      document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
+  }
+</script>
+<script>
+/* The calls line under the hero: lifetime.calls from our health endpoint. If the endpoint does
+   not answer, the "10,000+" written into the page stays. */
+(function () {
+  var el = document.getElementById('hero-count');
+  if (!el || !window.fetch) return;
+  fetch('https://api.0200project.com/healthz', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      var n = d && d.lifetime && d.lifetime.calls;
+      if (typeof n === 'number' && n >= 10000) el.textContent = n.toLocaleString('en-US') + ' requests served';
+    })
+    .catch(function () {});
+})();
 </script>
 </body>
 </html>

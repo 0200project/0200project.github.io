@@ -15,20 +15,43 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
   .nf {
     min-height: calc(100vh - var(--nav-h) - 22rem);
     display: flex;
     align-items: center;
-    padding-block: clamp(4rem, 10vw, 7rem);
+    padding-block: clamp(4rem, calc(9 * var(--vw)), 8rem);
   }
-  .nf-wrap { max-width: 30rem; }
-  .nf .panel { margin-top: 2rem; }
-  .nf .panel pre { padding: 1rem 1.125rem; font-size: 0.8125rem; line-height: 1.7; overflow-x: auto; }
-  .nf-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
-.nf > .container { min-width: 0; width: 100%; }
+  .nf > .container { min-width: 0; width: 100%; }
+  /* As the homepage's decoder section: the title at the top left, the response as a large
+     card on the right with its top level with the title's, the two ways out at the bottom
+     left, level with the card's foot. The quiet line above the title stays above it. */
+  .nf-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: clamp(2rem, calc(5 * var(--vw)), 5rem);
+  }
+  .nf-wrap .eyebrow { grid-column: 1; grid-row: 1; }
+  .nf-wrap h1 { grid-column: 1; grid-row: 2; max-width: 12ch; }
+  .nf .panel { grid-column: 2; grid-row: 2 / span 2; align-self: start; }
+  .nf-actions { grid-column: 1; grid-row: 3; align-self: end; display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+  .nf .panel-head { padding: clamp(1.25rem, calc(2 * var(--vw)), 1.75rem) var(--card-pad) 0; font-size: 0.875rem; }
+  .nf .panel pre { padding: clamp(1.5rem, calc(2.6 * var(--vw)), 2.5rem) var(--card-pad) clamp(1.75rem, calc(3 * var(--vw)), 2.75rem); font-size: 0.9375rem; line-height: 1.75; overflow-x: auto; }
+  /* narrower than that, the card's column would cut the response's longest line: one column */
+  @media (max-width: 63.9em) {
+    .nf-wrap { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+    .nf-wrap .eyebrow, .nf-wrap h1, .nf .panel, .nf-actions { grid-column: 1; grid-row: auto; }
+    .nf-wrap h1 { max-width: none; }
+    .nf .panel { margin-top: 2rem; max-width: 36rem; }
+  }
+  /* a phone keeps the response's longest line inside the card, as it was before */
+  @media (max-width: 40em) {
+    .nf .panel-head { padding: 1.125rem 1.125rem 0; }
+    .nf .panel pre { padding: 1.125rem 1.125rem 1.375rem; font-size: 0.8125rem; line-height: 1.7; }
+  }
 </style>
 </head>
 <body>
@@ -49,7 +72,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -103,7 +125,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -127,8 +148,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>

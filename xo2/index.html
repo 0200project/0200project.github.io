@@ -22,193 +22,8 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
-<style>
-  .pr-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-  @media (max-width: 55em) {
-    .pr-grid { grid-template-columns: minmax(0, 1fr); }
-  }
-  .pr-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.75rem;
-  }
-  .pr-tag {
-    font-family: var(--mono);
-    font-size: 0.71875rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 0.75rem;
-  }
-  .pr-price {
-    font-size: 2rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--fg-strong);
-  }
-  .pr-price span { font-size: 1rem; font-weight: 400; color: var(--fg-muted); }
-  .pr-desc { color: var(--fg-muted); font-size: 0.9375rem; margin-top: 0.75rem; }
-  .pr-actions { margin-top: auto; padding-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.625rem; }
-
-  .pr-url {
-    margin-top: 1.25rem;
-    padding: 0.875rem 1rem;
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: var(--mono);
-    font-size: 0.78125rem;
-    color: var(--fg);
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  .pr-url-label { font-size: 0.8125rem; color: var(--fg-muted); margin-top: 1.25rem; margin-bottom: 0.375rem; }
-
-  .pr-buy-wallet { margin-top: 1rem; }
-  .pr-buy-wallet p { color: var(--fg-muted); font-size: 0.875rem; }
-  .pr-buy-wallet p + p { margin-top: 0.5rem; }
-  .pr-buy-wallet .btn { margin-top: 0.625rem; }
-
-  .pr-callout {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    margin-top: 1rem;
-  }
-  .pr-callout p { color: var(--fg-muted); font-size: 0.9375rem; max-width: 34rem; }
-  .pr-callout strong { color: var(--fg); }
-
-  .pr-faq { max-width: 40rem; margin-top: 3rem; }
-  .pr-faq h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-  .pr-faq p { color: var(--fg-muted); font-size: 0.9375rem; }
-
-  #pr-success { display: none; margin-bottom: 2rem; }
-  #pr-success.show { display: block; }
-
-  .pr-success-head { display: flex; align-items: flex-start; gap: 0.875rem; }
-  .pr-success-icon {
-    flex: none;
-    width: 2.125rem;
-    height: 2.125rem;
-    border-radius: 50%;
-    background: var(--accent-dim);
-    position: relative;
-    margin-top: 0.125rem;
-  }
-  .pr-success-icon::after {
-    content: "";
-    position: absolute;
-    left: 0.65rem;
-    top: 0.85rem;
-    width: 0.6rem;
-    height: 0.325rem;
-    border-left: 2px solid var(--accent);
-    border-bottom: 2px solid var(--accent);
-    transform: rotate(-45deg);
-  }
-  .pr-success-head h2 { font-size: 1.0625rem; font-weight: 500; color: var(--fg-strong); }
-  .pr-success-head p { color: var(--fg-muted); font-size: 0.875rem; margin-top: 0.1875rem; }
-  .pr-url-row { display: flex; align-items: stretch; gap: 0.5rem; }
-  .pr-url-row .pr-url { flex: 1; }
-  .pr-url-row .copy-btn { flex: none; align-self: center; }
-  .pr-success-next { font-size: 0.875rem; color: var(--fg-muted); margin-top: 1rem; }
-  .pr-success-next a { color: var(--accent-strong); }
-
-/* ── live chain verifier ─────────────────────────────────────────────── */
-.chain{border:1px solid var(--border-strong);background:var(--bg-panel);border-radius:10px;overflow:hidden;margin-bottom:2.5rem;position:relative}
-.chain-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);background:var(--bg-inset);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint)}
-@keyframes chainPulse{0%,100%{opacity:.25}50%{opacity:1}}
-.chain-body{padding:.9rem}
-.chain-supply{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
-.chain-num{font-family:var(--mono);font-size:clamp(1.5rem,5vw,2.3rem);font-weight:600;color:var(--fg-strong);font-variant-numeric:tabular-nums;line-height:1}
-.chain-unit{font-family:var(--mono);font-size:.8rem;color:var(--fg-muted)}
-.lock{display:grid;grid-template-columns:minmax(6.5rem,auto) 1fr minmax(5.5rem,auto);gap:.6rem;align-items:center;padding:.42rem 0;border-top:1px solid var(--border)}
-.lock:first-of-type{border-top:0}
-.lock-name{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-muted)}
-.lock-bar{height:9px;border-radius:5px;background:var(--bg-inset);overflow:hidden;position:relative}
-.lock-fill{height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--accent-dim,#1f6feb),var(--accent,#58a6ff));transition:width .9s cubic-bezier(.2,.8,.2,1)}
-@media (prefers-reduced-motion:reduce){.lock-fill{transition:none}}
-.lock-amt{font-family:var(--mono);font-size:.78rem;text-align:right;font-variant-numeric:tabular-nums;color:var(--fg)}
-.lock:hover .lock-name,.lock:focus-within .lock-name{color:var(--fg-strong)}
-.chain-foot{padding:.7rem .9rem;border-top:1px solid var(--border);background:var(--bg-inset);font-size:.78rem;color:var(--fg-muted)}
-.chain-btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .7rem;border:1px solid var(--border-strong);border-radius:6px;background:var(--bg-raised);color:var(--fg);cursor:pointer;min-height:32px}
-.chain-btn:hover{border-color:var(--border-hover);color:var(--fg-strong)}
-.chain-btn:disabled{opacity:.5;cursor:default}
-.copyable{cursor:pointer;border-bottom:1px solid var(--border)}
-.copyable:hover{color:var(--fg-strong);border-bottom-color:var(--border-hover)}
-.copied{color:#3fb950 !important}
-
-/* ── token hero, XRP-style presence ─────────────────────────────────── */
-.tok-hero{position:relative;padding:3.5rem 0 3.5rem;border-bottom:1px solid var(--border);overflow:hidden;isolation:isolate}
-.tok-hero .field-stage{position:relative;flex:none;width:clamp(8.5rem,15vw,12.5rem);height:clamp(8.5rem,15vw,12.5rem);margin:0;pointer-events:none}
-.tok-hero .field-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.tok-hero .container{position:relative;z-index:1;pointer-events:none}.tok-hero .container>*{pointer-events:auto}
-.tok-hero .tok-sym{font-family:"Geist",var(--sans)}
-.tok-wrap{position:relative;display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap}
-.tok-coin{width:184px;height:184px;border-radius:50%;flex:none;object-fit:cover;
-  box-shadow:0 0 0 1px var(--border-strong),0 18px 44px -14px rgba(0,0,0,.55);background:var(--bg-inset)}
-.tok-id{min-width:min(100%,17rem);flex:1 1 17rem}
-.tok-ticker{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin:0 0 .35rem}
-.tok-sym{font-family:var(--mono);font-size:clamp(3.4rem,12vw,6.5rem);font-weight:700;letter-spacing:-.03em;
-  line-height:.92;color:var(--fg-strong)}
-.tok-name{font-size:1.15rem;color:var(--fg-muted);letter-spacing:.01em}
-.tok-cash{color:var(--fg-faint);font-weight:500;font-size:.46em;vertical-align:.34em;margin-right:.06em}
-.tok-badges{display:flex;gap:0 .6rem;flex-wrap:wrap;margin-top:1.25rem}
-.tok-badge+.tok-badge::before{content:"\00b7";margin-right:.6rem;color:var(--fg-faint)}
-.tok-badge{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
-  padding:.3rem .6rem;border:1px solid var(--border-strong);border-radius:999px;color:var(--fg-muted);background:var(--bg-raised)}
-.tok-badge.on{color:var(--fg-strong)}
-.tok-stats{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:1px;
-  margin-top:2rem;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.tok-stat{background:var(--bg-panel);padding:.85rem 1rem}
-.tok-stat dt{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-faint);margin:0 0 .3rem}
-.tok-stat dd{margin:0;font-family:var(--mono);font-size:1.02rem;color:var(--fg-strong);font-variant-numeric:tabular-nums;word-break:break-all}
-.tok-note{position:relative;margin:1.15rem 0 0;font-size:.82rem;color:var(--fg-faint);max-width:46rem}
-@media (max-width:40rem){.tok-coin{width:108px;height:108px}.tok-hero{padding:1.5rem 0 2rem}}
-
-/* ── motion & graphics ──────────────────────────────────────────────── */
-
-.tok-coinwrap{position:relative;flex:none;display:grid;place-items:center}
-.tok-coin{position:relative;z-index:1}
-
-
-
-.tok-stat{position:relative;transition:background .25s ease}
-.tok-stat::before{content:"";position:absolute;left:0;top:0;height:2px;width:0;background:var(--accent,#58a6ff);transition:width .35s ease}
-.tok-stat:hover{background:var(--bg-raised)}
-.tok-stat:hover::before{width:100%}
-
-
-/* ── hero presence ──────────────────────────────────────────────────── */
-.tok-hero{padding:4.5rem 0 4.5rem}
-.tok-wrap{gap:3rem}
-.tok-coin{width:168px;height:168px;box-shadow:none;border:1px solid var(--border-strong)}
-.tok-sym{font-size:clamp(3.2rem,11vw,6rem);letter-spacing:-.045em;color:var(--fg-strong)}
-.tok-name{font-size:1.3rem;letter-spacing:.16em;text-transform:uppercase;font-family:var(--mono);font-size:.82rem;color:var(--fg-faint)}
-.tok-ticker{align-items:center;gap:1rem}
-.tok-stats{margin-top:3.5rem}
-.tok-stat dd{font-size:1.15rem}
-
-@media (max-width:40rem){.tok-coin{width:124px;height:124px}.tok-hero{padding:1.5rem 0 2.25rem}.tok-wrap{gap:1.5rem}.tok-hero .field-stage{width:8rem;height:8rem}.tok-bg{font-size:44vw;opacity:.045}}
-/* Badges are a line of text, not tokens. Last, so it outranks the original pill rule above. */
-.tok-badges .tok-badge{border:0;padding:0;background:none;border-radius:0}
-/* Phones: nothing under the 11.5px floor, and the chain panel's head wraps instead of clipping. */
-@media (max-width:40rem){
-  .tok-stat dt,.tok-badge,.panel-head,.panel-head span,.chain-head,.chain-btn,.lock-name,.tok-note{font-size:.72rem}
-  main p.small,main .small{font-size:.72rem !important} /* a floor outranks the page's own small-print rules */
-  .tok-stat .tok-cash{font-size:.8em;vertical-align:.1em}
-  .panel-head span,.chain-head span{white-space:normal}
-}
-</style>
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
   .hero-field { position: relative; min-height: 100svh; display: grid; align-items: center; text-align: center; overflow: hidden; isolation: isolate; }
   .field-stage { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
@@ -235,6 +50,56 @@
 
   .hero-field .display .cash { color: #0350fd; }
 </style>
+<style>
+  /* ---- The facts: four figures in four cards, two by two as in the mark, the top-right one
+     blue as in the mark and as nothing else: it is not a badge, a tick or a rating. Each card
+     is its figure, large, then the words that say what it counts, directly under it and on
+     the same left edge in all four. Every figure is plain text: nothing counts, ticks or
+     updates. With motion, each card settles in once as it comes into view (the script below);
+     without it, or without script, the cards are simply there. ---- */
+  /* "Read the facts" lands with the heading just under the nav, as every other anchor does */
+  #facts { scroll-margin-top: calc(-1 * var(--sec-gap)); }
+  /* Two by two. Each card spans two rows of the grid, its figure's and its words', so the
+     figures in a row end on one line and their words start on the next, however the words wrap. */
+  .xf-quad {
+    --xf-air: clamp(.875rem, calc(1.4 * var(--vw)), 1.25rem);    /* from a figure to its words */
+    --xf-lbl: clamp(1.1875rem, calc(1.7 * var(--vw)), 1.5rem);   /* the words: a card heading's size */
+    /* a card's least height: room for the figure in dark space, and short enough that the
+       heading and all four cards fit one screen from 768px tall up */
+    --xf-h: clamp(13rem, calc((100svh - 22rem) / 2), 17rem);
+    --xf-pad: var(--card-pad);
+    /* the room inside one card, across: what the figure is sized from (a subgrid cannot be a
+       size container itself, so the grid is, and this is its half less the edges) */
+    --xf-in: calc((100cqi - var(--card-gap)) / 2 - 2 * var(--xf-pad));
+    container-type: inline-size;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(calc(var(--xf-h) - var(--xf-pad) - var(--xf-air) - 1.25 * var(--xf-lbl)), auto) auto);
+    gap: var(--card-gap); margin-top: clamp(2.5rem, calc(4.5 * var(--vw)), 4rem); }
+  .xf-q { position: relative; grid-row: span 2; display: grid; grid-template-rows: subgrid; row-gap: var(--xf-air); min-width: 0;
+    padding: var(--xf-pad); border: 1px solid var(--hair); border-radius: var(--r-card); background: var(--card-ground);
+    transition: border-color .6s ease; }
+  .xf-q[data-accent] { border-color: rgba(78,158,255,.6); background: radial-gradient(120% 100% at 100% 0%, rgba(78,158,255,.14), rgba(78,158,255,0) 62%), var(--card-bg); }
+  /* the figure: solid white, the same size in all four, so the widest, 2.506%, sets it, and no
+     larger beside its words than it was before this page was rebuilt */
+  .xf-q b { align-self: end; display: block; font-size: min(7.25rem, .24 * var(--xf-in)); font-weight: 500; line-height: .92; letter-spacing: -.045em; color: #fff; white-space: nowrap; }
+  /* the words that say what it counts, directly under it, nearly as bright as the figure */
+  .xf-q span { align-self: start; display: block; font-size: var(--xf-lbl); font-weight: 500; line-height: 1.25; letter-spacing: -.02em; color: #f5f5f7; text-wrap: balance; }
+  /* the one hover: the edge comes up a little, slowly. The cards are not links; the pointer stays an arrow */
+  @media (hover: hover) and (pointer: fine) {
+    .xf-q:hover { border-color: rgba(255,255,255,.26); }
+    .xf-q[data-accent]:hover { border-color: rgba(78,158,255,.78); }
+  }
+  /* phones: still two by two, as the mark is, in square cards */
+  @media (max-width: 40em) {
+    .xf-quad { --card-gap: .75rem; --xf-air: .625rem; --xf-lbl: 1rem; --xf-pad: 1.125rem;
+      /* a card's width, from the page's (a grid's own track sizes cannot read it as a size
+         container); the words get room for three lines in every card, so all four match */
+      grid-template-rows: repeat(2, minmax(calc((100vw - 2 * clamp(1.25rem, 4vw, 2rem) - var(--card-gap)) / 2 - 5.75rem), auto) minmax(5rem, auto)); }
+    .xf-q b { font-size: calc(.26 * var(--xf-in)); }
+    .xf-q span { line-height: 1.3; letter-spacing: -.01em; }
+  }
+  @media (prefers-reduced-motion: reduce) { .xf-q { transition: none; } }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -255,7 +120,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/" aria-current="page">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -280,15 +144,15 @@
     </div>
   </section>
 
-  <section class="x-sec" id="facts">
+  <section class="x-sec" id="facts" aria-labelledby="xf-h">
     <div class="container"><div class="x-wrap">
-      <h2 class="x-h">XO2 has no utility today.</h2>
+      <h2 class="x-h" id="xf-h">XO2 has no utility today.</h2>
       <p class="x-p">It captures no fee, carries no governance right, entitles you to no revenue and is not required to call anything we run. There is no sale, no liquidity pool and no market.</p>
-      <div class="x-nums">
-        <div><b>100M</b><span>Fixed supply</span></div>
-        <div><b>5</b><span>Release locks hold all of it</span></div>
-        <div><b>2.506%</b><span>Most that can unlock in 30 days</span></div>
-        <div><b>None</b><span>Mint, pause or upgrade functions</span></div>
+      <div class="xf-quad" id="xf-quad">
+        <div class="xf-q"><b>100M</b><span>Fixed supply</span></div>
+        <div class="xf-q" data-accent><b>5</b><span>Release locks hold all of it</span></div>
+        <div class="xf-q"><b>2.506%</b><span>Most that can unlock in 30 days</span></div>
+        <div class="xf-q"><b>None</b><span>Mint, pause or upgrade functions</span></div>
       </div>
     </div></div>
   </section>
@@ -340,7 +204,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -364,8 +227,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -379,7 +241,7 @@
   (async () => {
     try {
       const [{ mountField }, points] = await Promise.all([
-        import('/assets/field.js?v=84079f42'),
+        import('/assets/field.js?v=bc6482c3'),
         fetch('/assets/xo2-points.json?v=2').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }),
       ]);
       mountField(canvas, { points, host: canvas.closest('section'), reducedMotion: reduce, fallback: fb, size: small ? 4.2 : 5.4, alpha: small ? 0.3 : 0.4, accent: '#0350fd', margin: 0.04, cursor: false, idle: 1.4 });
@@ -389,6 +251,41 @@
     if (!window.gsap || reduce) return;
     gsap.from('.hero-field .display, .hero-field .hero-lead, .hero-field .hero-actions', { y: 18, opacity: 0, duration: .9, ease: 'power3.out', stagger: .1, delay: .15, clearProps: 'transform,opacity' });
   });
+</script>
+<script>
+  /* The facts, settling in. Each card that is still below the screen when the page opens
+     rises 1.5rem and fades in once, softly, as it comes into view: the two in a row together,
+     the right one a beat behind. The animation is only ever applied while it plays, so a
+     card's resting state is the card itself, fully drawn; a card already on screen, reduced
+     motion, or a browser without these features, and nothing moves. The figures are text and
+     stay text: nothing counts or ticks. */
+  (() => {
+    const quad = document.getElementById('xf-quad');
+    if (!quad || matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
+    const cards = [...quad.children];
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      // a card met from above (the browser put the page below it before it was seen) stays put:
+      // it only ever rises into view from below
+      if (e.boundingClientRect.top < 0) return;
+      e.target.animate([{ opacity: 0, transform: 'translateY(1.5rem)' }, { opacity: 1, transform: 'none' }],
+        { duration: 1200, delay: (cards.indexOf(e.target) % 2) * 120, easing: 'cubic-bezier(.16, 1, .3, 1)', fill: 'backwards' });
+    }), { rootMargin: '0px 0px 48px 0px' });
+    cards.forEach(c => { if (c.getBoundingClientRect().top > innerHeight + 48) io.observe(c); });
+  })();
+
+  /* "Read the facts": the same place the browser's own jump goes, reached by a glide on the
+     site's smooth scroll where it runs. Without it, the link is a plain anchor. */
+  document.querySelectorAll("a[href='#facts']").forEach(a => a.addEventListener('click', e => {
+    const lenis = window.__lenis, t = document.getElementById('facts');
+    if (!lenis || !t || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    const mar = parseFloat(getComputedStyle(t).scrollMarginTop) || 0;
+    lenis.scrollTo(t.getBoundingClientRect().top + scrollY - pad - mar, { duration: 1.4 });
+    try { history.pushState(null, '', '#facts'); } catch (_) {}
+  }));
 </script>
 </body>
 </html>

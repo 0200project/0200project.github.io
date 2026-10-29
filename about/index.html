@@ -22,9 +22,48 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
+  /* ---- The three principles, as the homepage's cards: the heading at the top, the principle
+     drawn large in thin lines in the middle, its sentence under it. The drawings carry no
+     words. Two of them play one slow move, once, when the card is in view, from a state that
+     is already drawn; without the script, or with reduced motion, each simply rests finished. ---- */
+  .dw-set > * { align-items: center; text-align: center; }
+  .dw-set p { max-width: 21rem; }
+  .dw-set { --stage-h: clamp(10rem, calc(15 * var(--vw)), 13.5rem); }
+  .dw-set .x-stage { flex: 0 0 auto; width: 100%; min-height: 0; height: var(--stage-h); margin-top: .5rem; padding: 0; }
+  .dw { display: block; width: min(100%, 17.5rem); height: auto; max-height: var(--stage-h); overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .dw .ln { stroke: rgba(255,255,255,.72); stroke-width: 1.5; }
+  .dw .fa { fill: rgba(255,255,255,.2); stroke: none; }
+  .dw .fb { fill: rgba(255,255,255,.34); stroke: none; }
+  .dw .ab { stroke: rgba(78,158,255,.85); stroke-width: 1.5; stroke-dasharray: 4 5; }
+
+  /* Each drawing's resting state is its finished one: that is what shows without the script and
+     with reduced motion. Only with the script and motion allowed does a card wait, already
+     drawn, one step before it, until the script marks it in view (.on). */
+  .dw-unk .k1 { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Deterministic: three answers, the same line for line, come into line */
+    .dw-same g { transition: transform 1.6s cubic-bezier(.2,.8,.2,1); }
+    html.js .dw-set > :not(.on) .dw-same g:nth-of-type(1) { transform: translateX(-14px); }
+    html.js .dw-set > :not(.on) .dw-same g:nth-of-type(3) { transform: translateX(10px); }
+    /* Unreachable is not clean: three sources drawn alike; the third cannot be read, so its edge
+       breaks. The two that can carry no mark, so neither reads as a tick. */
+    .dw-unk .k1, .dw-unk .k2 { transition: opacity 1.2s ease .3s; }
+    html.js .dw-set > :not(.on) .dw-unk .k1 { opacity: 1; }
+    html.js .dw-set > :not(.on) .dw-unk .k2 { opacity: 0; }
+    /* Free to start: fifty marks around a ring, drawn still. It has no empty track and does not
+       fill, so it never looks like a meter or a loading ring. */
+  }
+
+  /* the four figures, centred in their cards as on the homepage; the figure and its label
+     keep the kit's sizes, the label straight under the figure */
+  .x-nums > * { align-items: center; text-align: center; }
+
+  @media (max-width: 36em) {
+    .dw-set { --stage-h: 10.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -46,7 +85,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -58,10 +96,27 @@
     <div class="container"><div class="x-wrap">
       <h1 class="x-h1">We build tools agents can trust.</h1>
       <p class="x-p">An agent that acts on an answer needs the same answer every time, a known price, and a plain note of what could not be checked.</p>
-      <div class="x-cols">
-        <div><h3>Deterministic</h3><p>No model in the response path.</p></div>
-        <div><h3>Unreachable is not clean</h3><p>A source that cannot be checked is reported as unknown.</p></div>
-        <div><h3>Free to start</h3><p>50 free calls every 24 hours per IPv4 address or IPv6 /64.</p></div>
+      <div class="x-cols dw-set">
+        <div><h3>Deterministic</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw dw-same" viewBox="0 0 240 150" focusable="false">
+            <g><rect class="ln" x="20" y="27" width="200" height="28" rx="15"/><circle class="fb" cx="38" cy="41" r="4.5"/><rect class="fa" x="52" y="38" width="104" height="6" rx="3"/><rect class="fa" x="168" y="38" width="36" height="6" rx="3"/></g>
+            <g><rect class="ln" x="20" y="61" width="200" height="28" rx="15"/><circle class="fb" cx="38" cy="75" r="4.5"/><rect class="fa" x="52" y="72" width="104" height="6" rx="3"/><rect class="fa" x="168" y="72" width="36" height="6" rx="3"/></g>
+            <g><rect class="ln" x="20" y="95" width="200" height="28" rx="15"/><circle class="fb" cx="38" cy="109" r="4.5"/><rect class="fa" x="52" y="106" width="104" height="6" rx="3"/><rect class="fa" x="168" y="106" width="36" height="6" rx="3"/></g>
+          </svg></div>
+          <p>No model in the response path.</p></div>
+        <div><h3>Unreachable is not clean</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw dw-unk" viewBox="0 0 240 150" focusable="false">
+            <rect class="ln" x="20" y="47" width="56" height="56" rx="14"/>
+            <rect class="ln" x="92" y="47" width="56" height="56" rx="14"/>
+            <rect class="ln k1" x="164" y="47" width="56" height="56" rx="14"/>
+            <rect class="ab k2" x="164" y="47" width="56" height="56" rx="14"/>
+          </svg></div>
+          <p>A source that cannot be checked is reported as unknown.</p></div>
+        <div><h3>Free to start</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw dw-dial" viewBox="0 0 240 150" focusable="false">
+            <circle cx="120" cy="75" r="56" stroke="rgba(255,255,255,.72)" stroke-width="10" pathLength="100" stroke-dasharray=".36 1.64" stroke-dashoffset=".18" stroke-linecap="butt" transform="rotate(-90 120 75)"/>
+          </svg></div>
+          <p>50 free calls every 24 hours per IPv4 address or IPv6 /64.</p></div>
       </div>
     </div></div>
   </section>
@@ -71,7 +126,7 @@
       <h2 class="x-h">Live numbers.</h2>
       <p class="x-p">Read from our health endpoint when this page loads, not written into it.</p>
       <div class="x-nums" id="live-panel">
-        <div><b id="lv-calls">&hellip;</b><span>Calls served. Lifetime, including our own.</span></div>
+        <div><b id="lv-calls">&hellip;</b><span>Requests served.</span></div>
         <div><b id="lv-wall">&hellip;</b><span>Times the free tier ran out. A count of responses, not of people.</span></div>
         <div><b id="lv-deg">&hellip;</b><span>Answered while a check was unavailable. Reported rather than hidden.</span></div>
         <div><b id="lv-ver">&hellip;</b><span>Version in production.</span></div>
@@ -112,7 +167,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -136,8 +190,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -158,6 +211,24 @@
       ['lv-calls', 'lv-wall', 'lv-deg', 'lv-ver'].forEach(function (id) { set(id, 'n/a'); });
       set('lv-note', 'Our health endpoint did not answer, so these numbers are unknown right now, not zero.');
     });
+})();
+</script>
+
+<script>
+/* The principle drawings: each card is marked .on once it is well in view, and its drawing plays
+   its one move (see the style above). Without an observer every card is marked at once. */
+(function () {
+  var cards = document.querySelectorAll('.dw-set > *');
+  var on = function (c) { c.classList.add('on'); };
+  if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(cards, on); return; }
+  var io = new IntersectionObserver(function (es) {
+    // well in view: most of the card, or, for a card taller than the screen, most of the screen
+    es.forEach(function (e) {
+      var r = e.rootBounds, h = r ? r.height : innerHeight;
+      if (e.isIntersecting && (e.intersectionRatio >= 0.6 || e.intersectionRect.height >= 0.6 * h)) { on(e.target); io.unobserve(e.target); }
+    });
+  }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+  Array.prototype.forEach.call(cards, function (c) { io.observe(c); });
 })();
 </script>
 

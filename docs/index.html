@@ -5,10 +5,10 @@
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>base-transaction-decoder Documentation, Decode Base Transactions over MCP</title>
-<meta name="description" content="How to decode Base transactions over MCP: request format, strict JSON schema with 30 action types and 8 risk flags, x402 pay-per-call, and self-hosting.">
+<meta name="description" content="How to decode Base transactions over MCP: request format, strict JSON schema with 30 action types and 8 risk flags, and x402 pay-per-call.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="base-transaction-decoder Documentation, Decode Base Transactions over MCP">
-<meta property="og:description" content="Request format, strict JSON schema, 30 action types, 8 risk flags, x402 pay-per-call, self-hosting.">
+<meta property="og:description" content="Request format, strict JSON schema, 30 action types, 8 risk flags, x402 pay-per-call.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0200project">
 <meta property="og:image" content="https://0200project.com/assets/og.png">
@@ -22,52 +22,184 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
+  /* Docs on the page kit, 2026-10-28. A reference, so it reads like the other reading
+     pages: the same dark space above the title, text at the kit's measure, and cards only
+     for the one real set here, the page's own index on a narrow screen. */
 
+  /* the same dark space above the title as changelog, legal and status (.page-hero) */
+  .docs-layout { padding-top: clamp(5rem, calc(10 * var(--vw)), 9rem); }
+
+  /* the sentence under the title, at the size of the kit's .x-p */
+  .docs-content .docs-lead {
+    font-size: clamp(1.0625rem, calc(1.2 * var(--vw) + .6rem), 1.25rem);
+    line-height: 1.5;
+    max-width: 38rem;
+    margin-bottom: 0;
+    text-wrap: pretty;
+  }
+
+  /* The section list. On a wide screen it stays beside the text; it always fits the
+     screen, so its last links are reachable on a short one (at 1024x768 it was 60px
+     taller than the space it sticks in). */
+  .docs-nav .dn-group + .dn-group { margin-top: 1.75rem; }
+  .docs-nav a[aria-current="location"] { color: var(--fg-strong); }
+  @media (min-width: 64em) {
+    .docs-nav {
+      max-height: calc(100vh - var(--nav-h) - 3.5rem);
+      overflow-y: auto;
+      padding: 0.25rem;            /* room for a link's focus ring inside the scroll box, */
+      margin: -0.25rem;            /* without moving the list off the container's edge */
+      scrollbar-width: thin;
+      scrollbar-color: #2a2a2e transparent;
+    }
+  }
+  @media (min-width: 64em) and (max-height: 52em) {
+    .docs-nav a { padding-block: 0.1875rem; }
+    .docs-nav .dn-group + .dn-group { margin-top: 1.25rem; }
+  }
+  /* On a narrow screen the section list comes before the text, so it is one card: the
+     page's contents, four groups side by side, two on a phone. */
+  @media (max-width: 63.9em) {
+    .docs-nav {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: space-between;
+      gap: 1.5rem 2rem;
+      padding: var(--card-pad);
+      border: 1px solid var(--hair);
+      border-radius: var(--r-card);
+      background: var(--card-ground);
+    }
+    .docs-nav .dn-group + .dn-group { margin-top: 0; }
+  }
+  /* two columns sized to their links, so base-transaction-decoder stays on one line */
+  @media (max-width: 40em) {
+    .docs-nav { grid-template-columns: auto auto; justify-content: stretch; gap: 1.5rem 1.25rem; }
+  }
+
+  /* lists in the text: the changelog's quiet 4px dot, in place of a browser disc */
+  .docs-content ul:not(.enum-list) { list-style: none; padding-left: 0; }
+  .docs-content ul:not(.enum-list) > li { position: relative; padding-left: 1.25rem; }
+  .docs-content ul:not(.enum-list) > li::before {
+    content: "";
+    position: absolute;
+    left: 0.125rem;
+    top: calc(0.85em - 0.125rem);
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background: #4a4a50;
+  }
+  .docs-content ol li::marker { color: var(--fg-faint); }
+  .docs-content li strong { color: var(--fg); font-weight: 500; }
+  /* three literals in Usage are bare <code>; they read as the rest of the inline code */
+  .docs-content p code:not(.inline), .docs-content li code:not(.inline) {
+    font-size: 0.85em;
+    background: #141416;
+    border-radius: .25rem;
+    padding: 0.1em 0.4em;
+    color: var(--fg);
+  }
+  @media (max-width: 40rem) {
+    .docs-content p code:not(.inline), .docs-content li code:not(.inline) { font-size: 0.75rem; overflow-wrap: anywhere; }
+  }
+  /* Where the line is wide enough for every literal here, a chip never breaks across two
+     lines (X-BTX-Pass split at its hyphen). On a phone the kit's wrap still applies. */
+  @media (min-width: 40.01em) {
+    .docs-content p code, .docs-content li code { white-space: nowrap; }
+  }
+
+  /* The headings are what the section list jumps to. The shared scroll reveal moves them
+     24px while they arrive, and a jump measured the moved heading, so it landed flush
+     against the nav. They keep the fade and lose the move, so a jump lands where it should. */
+  .docs-content > h2 { transform: none !important; }
+
+  /* Reference tables on a phone. The kit lets inline code break anywhere on a phone, which
+     in a narrow column split every field and flag name into three-letter lines. Each row
+     becomes one entry: the name whole on the first line (with its type beside it), what it
+     means below at the full width. The pricing table keeps its columns. */
+  @media (max-width: 40em) {
+    .docs-content .table-wrap:not(#pricing + .table-wrap) :is(table, thead, tbody) { display: block; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) tr {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 1rem;
+      padding: 0.875rem 1.125rem;
+    }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) :is(th, td) { padding: 0; background: none; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) :is(th, td):nth-child(n+2):last-child { grid-column: 1 / -1; margin-top: 0.375rem; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) thead tr { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; background: #0b0b0c; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) thead th:nth-child(n+2):last-child { margin-top: 0; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) tbody tr:nth-child(odd) { background: #0a0a0b; }
+    .docs-content .table-wrap:not(#pricing + .table-wrap) td code.inline { overflow-wrap: normal; white-space: nowrap; }
+  }
+
+  /* The 30 action_type values: literal code, so mono, read as a list in columns inside
+     the code block's edge rather than as a row of tags. */
   .docs-content .enum-list {
     list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    padding-left: 0;
-    margin: 1.25rem 0 1.5rem;
+    max-width: none;
+    columns: 3 11.5rem;
+    column-gap: 1.25rem;
+    padding: 1.125rem 1.375rem;
+    margin: 1.5rem 0 1.75rem;
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--r-inner);
+    background: var(--card-bg);
   }
   .docs-content .enum-list li {
     font-family: var(--mono);
     font-size: 0.75rem;
+    line-height: 1.5;
     color: var(--fg-muted);
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.15rem 0.5rem;
+    padding-block: 0.3125rem;
+    break-inside: avoid;
   }
   .docs-content .enum-list li + li { margin-top: 0; }
+  @media (max-width: 40em) {
+    .docs-content .enum-list { columns: auto; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; padding: 1rem 1.25rem; }
+    .docs-content .enum-list li { padding-block: 0; }
+  }
 
-  .docs-content .docs-lead { font-size: 1.0625rem; line-height: 1.65; }
-
-  /* Quickstart client tabs */
+  /* Quickstart client tabs: one dark track, as the homepage gallery's control, with the
+     chosen client a shade lighter. No blue: a chosen tab is a state, not a recommendation.
+     The corner is a full pill on one row and a soft rounded block if the row wraps. */
   .qs-tabs {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin: 1.25rem 0 0.25rem;
+    gap: 0;
+    max-width: 100%;
+    padding: 0.25rem;
+    margin: 1.75rem 0 1.25rem;
+    background: #141416;
+    border-radius: 1.375rem;
   }
   html:not(.js) .qs-tabs { display: none; }
   .qs-tab {
     background: none;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.3rem 0.65rem;
-    font-family: var(--mono);
-    font-size: 0.71875rem;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--sans);
+    font-size: 0.8125rem;
+    line-height: 1.3;
     color: var(--fg-muted);
     cursor: pointer;
-    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    transition: color 0.3s ease, background-color 0.3s ease;
   }
-  .qs-tab:hover { color: var(--fg); background: var(--bg-hover); border-color: var(--border-strong); }
-  .qs-tab[aria-selected="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+  @media (hover: hover) and (pointer: fine) {
+    .qs-tab:hover { color: var(--fg-strong); }
+  }
+  .qs-tab[aria-selected="true"] { color: var(--fg-strong); background: #2a2a2e; }
+  @media (max-width: 40em) {
+    .qs-tab { min-height: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qs-tab { transition: none; }
+  }
   .js .qs-panel:not(.qs-active) { display: none; }
   .js .qs-panel > h3:first-child { display: none; }
 </style>
@@ -91,7 +223,6 @@
       <li><a href="/docs/" aria-current="page">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -101,34 +232,42 @@
   <div class="container docs-layout">
 
     <aside class="docs-nav" aria-label="Documentation navigation">
-      <h4>Getting started</h4>
-      <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#quickstart">Quickstart</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#authentication">Authentication</a></li>
-      </ul>
-      <h4>Tools</h4>
-      <ul>
-        <li><a href="#base-transaction-decoder">base-transaction-decoder</a></li>
-        <li><a href="#request-format">Request format</a></li>
-        <li><a href="#response-schema">Response schema</a></li>
-        <li><a href="#provenance">provenance</a></li>
-        <li><a href="#error-handling">Error handling</a></li>
-        <li><a href="#examples">Examples</a></li>
-      </ul>
-      <h4>Payments</h4>
-      <ul>
-        <li><a href="#x402-payments">x402 payments</a></li>
-        <li><a href="#pass">The $9 pass</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-      </ul>
-      <h4>For agents</h4>
-      <ul>
-        <li><a href="https://api.0200project.com/openapi.json">openapi.json</a></li>
-        <li><a href="https://api.0200project.com/llms.txt">llms.txt</a></li>
-      </ul>
+      <div class="dn-group">
+        <h4>Getting started</h4>
+        <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#quickstart">Quickstart</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#authentication">Authentication</a></li>
+        </ul>
+      </div>
+      <div class="dn-group">
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="#base-transaction-decoder">base-transaction-decoder</a></li>
+          <li><a href="#request-format">Request format</a></li>
+          <li><a href="#response-schema">Response schema</a></li>
+          <li><a href="#provenance">provenance</a></li>
+          <li><a href="#error-handling">Error handling</a></li>
+          <li><a href="#examples">Examples</a></li>
+        </ul>
+      </div>
+      <div class="dn-group">
+        <h4>Payments</h4>
+        <ul>
+          <li><a href="#x402-payments">x402 payments</a></li>
+          <li><a href="#pass">The $9 pass</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="dn-group">
+        <h4>For agents</h4>
+        <ul>
+          <li><a href="https://api.0200project.com/openapi.json">openapi.json</a></li>
+          <li><a href="https://api.0200project.com/llms.txt">llms.txt</a></li>
+        </ul>
+      </div>
     </aside>
 
     <article class="docs-content">
@@ -162,7 +301,7 @@
           <div class="panel-head"><span>terminal</span><button class="copy-btn" type="button" data-copy="#qs-rest-cmd">Copy</button></div>
           <pre><code id="qs-rest-cmd">curl -X POST https://api.0200project.com/explain \
   -H 'Content-Type: application/json' \
-  -d '{"tx_hash":"0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c"}'</code></pre>
+  -d '{"tx_hash":"0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa"}'</code></pre>
         </div>
         <p>The first calls are free. Past the free tier the endpoint answers with a standard HTTP 402 x402 challenge, pay $0.02 in USDC on Base and retry, or use an x402-capable HTTP client that handles it automatically. For heavy use, the <a href="#pass">$9 pass</a> covers 10,000 calls over 30 days via the <code class="inline">X-BTX-Pass</code> header.</p>
       </div>
@@ -229,7 +368,7 @@ await client.connect(
 
 const result = await client.callTool({
   name: 'explain_transaction',
-  arguments: { tx_hash: '0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c' },
+  arguments: { tx_hash: '0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa' },
 });
 console.log(result.structuredContent);
 
@@ -247,7 +386,7 @@ await client.close();</code></pre>
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 
-TX = "0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c"
+TX = "0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa"
 
 async def main() -> None:
     async with streamablehttp_client("https://api.0200project.com/mcp") as (read, write, _):
@@ -268,7 +407,7 @@ asyncio.run(main())</code></pre>
           <pre><code id="curl-cmd">curl -X POST https://api.0200project.com/mcp \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"explain_transaction","arguments":{"tx_hash":"0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c"}}}'</code></pre>
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"explain_transaction","arguments":{"tx_hash":"0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa"}}}'</code></pre>
         </div>
         <p>The response arrives as a server-sent-events frame, an <code class="inline">event: message</code> line followed by a <code class="inline">data:</code> line carrying the JSON-RPC result:</p>
         <div class="codeblock">
@@ -281,7 +420,7 @@ data: {"jsonrpc":"2.0","id":1,"result":{ ... }}</code></pre>
       <div class="qs-panel" role="tabpanel" id="qs-x402" aria-labelledby="tab-qs-x402">
         <h3>x402 paid client</h3>
         <p>The autonomous-payment path: the client makes the call, catches the in-band 402 challenge, signs a USDC payment, and retries, no account, no API key. The wallet needs USDC on Base; the exact scheme uses an EIP-3009 authorization, so it needs no ETH for gas. Use a dedicated wallet holding a small balance, never a personal one.</p>
-        <p>Packages: <code class="inline">npm install @modelcontextprotocol/sdk @x402/mcp @x402/evm viem</code>. Excerpted from the runnable test client at <a href="https://github.com/0200project/base-tx-explain/blob/main/scripts/paid-call.ts">scripts/paid-call.ts</a>:</p>
+        <p>Packages: <code class="inline">npm install @modelcontextprotocol/sdk @x402/mcp @x402/evm viem</code>. Excerpted from our runnable test client, <code class="inline">scripts/paid-call.ts</code>:</p>
         <div class="codeblock">
           <div class="panel-head"><span>paid-call.ts</span><button class="copy-btn" type="button" data-copy="#qs-x402-code">Copy</button></div>
           <pre><code id="qs-x402-code">import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
@@ -305,7 +444,7 @@ const client = createx402MCPClient({
 await client.connect(new StreamableHTTPClientTransport(new URL('https://api.0200project.com/mcp')));
 
 const result = await client.callTool('explain_transaction', {
-  tx_hash: '0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c',
+  tx_hash: '0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa',
 });
 console.log(`paid=${result.paymentMade} isError=${result.isError ?? false}`);
 
@@ -320,31 +459,7 @@ await client.close();</code></pre>
       <h3>Hosted endpoint</h3>
       <p>The hosted server at <code class="inline">https://api.0200project.com/mcp</code> works with any MCP client using the config in the <a href="#quickstart">quickstart</a> — nothing to install. It is also listed in the MCP registry as <code class="inline">io.github.0200project/base-transaction-decoder</code>.</p>
       <h3>Self-hosting</h3>
-      <p>The server is open source under an MIT-style license and runs anywhere Docker runs. It is a <strong>single-writer</strong> service: the free-tier counters, the passes and the event log are files on one machine&rsquo;s disk, so it runs as one instance rather than a scaled pool. That is a deliberate constraint rather than a stage we have not outgrown, a settled engagement cannot be charged a second time, because the guard that refuses a repeat reads state only one process writes. Two instances would split that state: the free allowance and the rate limit would both double, and a pass minted on one would be unknown to the other.</p>
-      <div class="codeblock">
-        <div class="panel-head"><span>terminal</span><button class="copy-btn" type="button" data-copy="#selfhost-cmd">Copy</button></div>
-        <pre><code id="selfhost-cmd">git clone https://github.com/0200project/base-tx-explain
-cd base-tx-explain
-npm install
-cp .env.example .env
-npm run dev</code></pre>
-      </div>
-      <p>Defaults are free mode with public Base RPCs. Key environment variables:</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Variable</th><th>Purpose</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code class="inline">PAYMENT_MODE</code></td><td><code class="inline">none</code> or <code class="inline">x402</code>. Default is free mode.</td></tr>
-            <tr><td><code class="inline">X402_PAY_TO</code></td><td>Address that receives x402 payments.</td></tr>
-            <tr><td><code class="inline">X402_PRICE_USD</code></td><td>Price per paid call, in USD.</td></tr>
-            <tr><td><code class="inline">X402_FACILITATOR_URL</code></td><td>x402 facilitator used to verify and settle payments.</td></tr>
-            <tr><td><code class="inline">FREE_CALLS_PER_IP</code></td><td>Free calls granted per client before payment is required.</td></tr>
-            <tr><td><code class="inline">BASE_RPC_URLS</code></td><td>Base RPC endpoints. Defaults to public Base RPCs.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <p>The server runs anywhere Docker runs. The source is not public today, so self-hosting is not currently available. It is a <strong>single-writer</strong> service: the free-tier counters, the passes and the event log are files on one machine&rsquo;s disk, so it runs as one instance rather than a scaled pool. That is a deliberate constraint rather than a stage we have not outgrown, a settled engagement cannot be charged a second time, because the guard that refuses a repeat reads state only one process writes. Two instances would split that state: the free allowance and the rate limit would both double, and a pass minted on one would be unknown to the other.</p>
 
       <h2 id="authentication">Authentication</h2>
       <p>There is none, by design. No accounts, no API keys, no OAuth, nothing to provision, rotate, leak, or revoke.</p>
@@ -380,7 +495,7 @@ npm run dev</code></pre>
   <span class="tok-key">"params"</span><span class="tok-punc">: {</span>
     <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"explain_transaction"</span><span class="tok-punc">,</span>
     <span class="tok-key">"arguments"</span><span class="tok-punc">: {</span>
-      <span class="tok-key">"tx_hash"</span><span class="tok-punc">:</span> <span class="tok-str">"0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c"</span>
+      <span class="tok-key">"tx_hash"</span><span class="tok-punc">:</span> <span class="tok-str">"0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa"</span>
     <span class="tok-punc">}</span>
   <span class="tok-punc">}</span>
 <span class="tok-punc">}</span></code></pre>
@@ -530,34 +645,31 @@ npm run dev</code></pre>
       <p>An x402-capable agent handles this autonomously; see <a href="#x402-payments">x402 payments</a>.</p>
 
       <h2 id="examples">Examples</h2>
-      <p>Actual output for a <a href="https://basescan.org/tx/0x0c84b951051f779903b57af9225ca570c77cd5531195968dd78106a69d6c4d8c">live Base transaction</a>, trimmed for width — <code class="inline">from</code>/<code class="inline">to</code>/<code class="inline">token_address</code>/<code class="inline">standard</code> on assets, addresses on counterparties, flag details, timestamp, and block number elided:</p>
+      <p>Actual output for a <a href="https://basescan.org/tx/0x12299f675eeda3bc2e88ec4df76bd59df950939843bf4008a4daff677bf97faa">live Base transaction</a>, trimmed for width — <code class="inline">from</code>/<code class="inline">to</code>/<code class="inline">token_address</code>/<code class="inline">standard</code> on assets, addresses on counterparties, flag details, timestamp, and block number elided:</p>
       <div class="codeblock">
         <div class="panel-head"><span>explain_transaction · trimmed output</span></div>
         <pre><code><span class="tok-punc">{</span>
-  <span class="tok-key">"summary"</span><span class="tok-punc">:</span> <span class="tok-str">"0x401d…f2c5 swapped 0.03 ETH for
-    12,899,422 WNL via Uniswap V4 PoolManager."</span><span class="tok-punc">,</span>
+  <span class="tok-key">"summary"</span><span class="tok-punc">:</span> <span class="tok-str">"0x5980...3d88 swapped 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager. Not all risk checks returned an answer for this transaction; see checks. Absence of a risk flag here does not mean none exists."</span><span class="tok-punc">,</span>
   <span class="tok-key">"action_type"</span><span class="tok-punc">:</span> <span class="tok-str">"swap"</span><span class="tok-punc">,</span>
   <span class="tok-key">"status"</span><span class="tok-punc">:</span> <span class="tok-str">"success"</span><span class="tok-punc">,</span>
   <span class="tok-key">"assets_moved"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"ETH"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"0.03"</span> <span class="tok-punc">},</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"WNL"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"12899422.14…"</span> <span class="tok-punc">}</span>
+    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"ETH"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"0.016"</span> <span class="tok-punc">},</span>
+    <span class="tok-punc">{</span> <span class="tok-key">"token"</span><span class="tok-punc">:</span> <span class="tok-str">"USDC"</span><span class="tok-punc">,</span>  <span class="tok-key">"amount"</span><span class="tok-punc">:</span> <span class="tok-str">"37.502263"</span> <span class="tok-punc">}</span>
   <span class="tok-punc">],</span>
   <span class="tok-key">"counterparties"</span><span class="tok-punc">: [</span>
     <span class="tok-punc">{</span> <span class="tok-key">"label"</span><span class="tok-punc">:</span> <span class="tok-str">"Uniswap V4 PoolManager"</span> <span class="tok-punc">}</span>
   <span class="tok-punc">],</span>
-  <span class="tok-key">"risk_flags"</span><span class="tok-punc">: [</span>
-    <span class="tok-punc">{</span> <span class="tok-key">"flag"</span><span class="tok-punc">:</span> <span class="tok-flag">"unverified_contract"</span> <span class="tok-punc">}</span>
-  <span class="tok-punc">],</span>
+  <span class="tok-key">"risk_flags"</span><span class="tok-punc">: [],</span>
   <span class="tok-key">"checks"</span><span class="tok-punc">: {</span>
     <span class="tok-key">"contract_verification"</span><span class="tok-punc">:</span> <span class="tok-str">"ok"</span><span class="tok-punc">,</span>
-    <span class="tok-key">"first_interaction"</span><span class="tok-punc">:</span> <span class="tok-str">"ok"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"first_interaction"</span><span class="tok-punc">:</span> <span class="tok-str">"unavailable"</span><span class="tok-punc">,</span>
     <span class="tok-key">"drainer_blacklist"</span><span class="tok-punc">:</span> <span class="tok-str">"ok"</span><span class="tok-punc">,</span>
     <span class="tok-key">"unchecked_addresses"</span><span class="tok-punc">: [],</span>
-    <span class="tok-key">"note"</span><span class="tok-punc">:</span> <span class="tok-flag">null</span>
+    <span class="tok-key">"note"</span><span class="tok-punc">:</span> <span class="tok-str">"counterparty history could not be checked. No flag was emitted for those checks, and that absence carries no information: treat it as unknown, not as clean."</span>
   <span class="tok-punc">},</span>
-  <span class="tok-key">"gas_paid_usd"</span><span class="tok-punc">:</span> <span class="tok-num">0.020562</span><span class="tok-punc">,</span>
-  <span class="tok-key">"tx_hash"</span><span class="tok-punc">:</span> <span class="tok-str">"0x0c84b951051f…9d6c4d8c"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"basescan_url"</span><span class="tok-punc">:</span> <span class="tok-str">"https://basescan.org/tx/0x0c84…"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"gas_paid_usd"</span><span class="tok-punc">:</span> <span class="tok-num">0.002748</span><span class="tok-punc">,</span>
+  <span class="tok-key">"tx_hash"</span><span class="tok-punc">:</span> <span class="tok-str">"0x12299f675eed…7bf97faa"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"basescan_url"</span><span class="tok-punc">:</span> <span class="tok-str">"https://basescan.org/tx/0x1229…"</span><span class="tok-punc">,</span>
   <span class="tok-key">"partial"</span><span class="tok-punc">:</span> <span class="tok-flag">false</span>
 <span class="tok-punc">}</span></code></pre>
       </div>
@@ -609,7 +721,7 @@ npm run dev</code></pre>
           </tbody>
         </table>
       </div>
-      <p>No accounts, no API keys, no minimums. Self-hosting is free under an MIT-style license, see <a href="#installation">Installation</a>. Full comparison and checkout: <a href="/pricing/">pricing</a>.</p>
+      <p>No accounts, no API keys, no minimums. Full comparison and checkout: <a href="/pricing/">pricing</a>.</p>
 
     </article>
 
@@ -642,7 +754,6 @@ npm run dev</code></pre>
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -666,8 +777,7 @@ npm run dev</code></pre>
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -686,6 +796,7 @@ npm run dev</code></pre>
       t.setAttribute('tabindex', on ? '0' : '-1');
     });
     panels.forEach(function (p) { p.classList.toggle('qs-active', p.id === name); });
+    if (window.ScrollTrigger) ScrollTrigger.refresh(); // a different panel height moves every scroll position below it
   }
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () { select(t.getAttribute('data-panel')); });
@@ -698,6 +809,44 @@ npm run dev</code></pre>
       select(next.getAttribute('data-panel'));
     });
   });
+})();
+
+/* The section list: the link for the section being read turns white. Runs on scroll
+   only, so nothing loops at rest or in a hidden tab. Without JS no link is marked. */
+(function () {
+  'use strict';
+  var nav = document.querySelector('.docs-nav');
+  if (!nav) return;
+  var items = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]')).map(function (a) {
+    return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+  }).filter(function (x) { return x.el; });
+  if (!items.length) return;
+  var cur = null, queued = 0;
+  function update() {
+    queued = 0;
+    var line = window.innerHeight * 0.35;
+    var active = null;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].el.getBoundingClientRect().top <= line) active = items[i]; else break;
+    }
+    var root = document.documentElement;
+    if (window.scrollY + window.innerHeight >= root.scrollHeight - 2) active = items[items.length - 1];
+    if (active === cur) return;
+    if (cur) cur.a.removeAttribute('aria-current');
+    if (active) active.a.setAttribute('aria-current', 'location');
+    cur = active;
+  }
+  function queue() { if (!queued) queued = requestAnimationFrame(update); }
+  /* The list scrolls on its own only when it is taller than the space it sticks in; only
+     then does the wheel over it go to the list rather than to the page's smooth scroll. */
+  function fit() {
+    if (nav.scrollHeight > nav.clientHeight + 1) nav.setAttribute('data-lenis-prevent-wheel', '');
+    else nav.removeAttribute('data-lenis-prevent-wheel');
+    queue();
+  }
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', fit);
+  fit();
 })();
 </script>
 <script src="/assets/site.js" defer></script>

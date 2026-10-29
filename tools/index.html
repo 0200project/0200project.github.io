@@ -22,8 +22,8 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -46,65 +46,29 @@
 }
 </script>
 <style>
-  .directory {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    padding-bottom: clamp(4.5rem, 10vw, 7rem);
-  }
-
-  .tool-featured {
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
-    gap: clamp(1.75rem, 4vw, 3rem);
-    align-items: start;
-  }
-  @media (max-width: 63.9em) {
-    .tool-featured { grid-template-columns: minmax(0, 1fr); }
-  }
-
-  .tool-head {
-    display: flex;
+  /* ---- The tool's page: its name on one line where it fits, the sentence under it, and its
+     three figures as three equal cards, each figure with the words that say what it counts
+     right under it, at the size the figures had before. Nothing here moves. ---- */
+  .tl-h1 { max-width: none; }
+  .tl-nums { margin-top: clamp(2.75rem, calc(5 * var(--vw)), 4.5rem); }
+  .tl-nums > div {
+    justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.875rem;
+    text-align: center;
+    min-height: clamp(12rem, calc(17 * var(--vw)), 15.5rem);
+    padding: clamp(1.5rem, calc(2.6 * var(--vw)), 2.5rem);
   }
-  .tool-name {
-    font-family: var(--mono);
-    font-size: clamp(1.25rem, 3vw, 1.5rem);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  .tool-desc { margin-top: 0.75rem; color: var(--fg-muted); max-width: 32rem; }
-  .tool-featured .checks { margin-top: 1.5rem; }
-  .tool-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; }
-  .tool-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  /* every label holds two lines' room, so the three figures sit on one line across the row */
+  .tl-nums span { max-width: 17rem; min-height: 2.9em; font-size: 1rem; line-height: 1.45; text-wrap: balance; }
+  .tl-fine { max-width: 38rem; margin-top: 2rem; }
 
-  .tool-sample .panel pre {
-    padding: 1.125rem 1.25rem;
-    overflow-x: auto;
-    font-size: 0.78125rem;
-    line-height: 1.7;
+  /* three figures do not split two and one: one card to a row on a narrow screen */
+  @media (max-width: 52em) {
+    .tl-nums { grid-template-columns: minmax(0, 1fr); }
+    .tl-nums > div { min-height: 8.75rem; }
+    /* one card to a row: nothing to line up across, so each figure and its label sit centred */
+    .tl-nums span { min-height: 0; }
   }
-  .tool-sample-note { margin-top: 0.75rem; }
-  .tool-sample-note a { color: var(--fg-muted); }
-  .tool-sample-note a:hover { color: var(--fg-strong); }
-
-  .decode-scope { padding: 0.5rem 0 1rem; max-width: 44rem; }
-  .decode-scope h2 { font-size: 1.375rem; letter-spacing: -0.015em; margin-bottom: 0.75rem; }
-  .decode-scope a { color: var(--accent); }
-  .decode-scope a:hover { color: var(--accent-strong); }
-
-  .more-note {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    font-size: 0.875rem;
-    color: var(--fg-faint);
-  }
-  .more-note a { color: var(--fg-muted); }
-  .more-note a:hover { color: var(--fg-strong); }
 </style>
 </head>
 <body>
@@ -126,7 +90,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -136,14 +99,14 @@
 
   <section class="x-top">
     <div class="container"><div class="x-wrap">
-      <h1 class="x-h1">base-transaction-decoder</h1>
+      <h1 class="x-h1 tl-h1">base-transaction-decoder</h1>
       <p class="x-p">Any Base mainnet transaction, back as plain English and strict JSON. When a transaction can&rsquo;t be fully decoded, the output says so.</p>
-      <div class="x-nums" style="--cols:3">
+      <div class="x-nums tl-nums" style="--cols:3">
         <div><b>30</b><span>Action types</span></div>
         <div><b>8</b><span>Risk flags, each raised only on evidence</span></div>
         <div><b>50</b><span>Free calls every 24 hours per IPv4 address or IPv6 /64</span></div>
       </div>
-      <p class="x-fine">Swaps, transfers, NFT sales, bridges, lending, staking, account abstraction, attestations, Basenames and contract deployments. More tools are in development.</p>
+      <p class="x-fine tl-fine">Swaps, transfers, NFT sales, bridges, lending, staking, account abstraction, attestations, Basenames and contract deployments. More tools are in development.</p>
       <div class="x-acts">
         <a class="btn btn-primary" href="/playground/">Try it free</a>
         <a class="btn btn-ghost" href="/docs/">Read the docs</a>
@@ -179,7 +142,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -203,8 +165,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>

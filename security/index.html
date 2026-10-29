@@ -22,10 +22,41 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
   .prose h2:first-of-type { margin-top: 0; }
+
+  /* ---- The six, as the homepage's cards: the heading at the top, the point drawn large in
+     thin lines in the middle, its sentence under it. The drawings carry no words; a dashed
+     line is something the service does not have. One of them plays one slow move, once, when
+     its card is in view, from a state that is already drawn; without the script, or with
+     reduced motion, every drawing simply rests finished. The two lists are drawn still: no line
+     passes over them, so nothing pictures a scan or its result. ---- */
+  .dw-set { --cols: 2; }
+  .dw-set > * { align-items: center; text-align: center; }
+  .dw-set p { max-width: 27rem; }
+  .dw-set { --stage-h: clamp(10rem, calc(15 * var(--vw)), 13.5rem); }
+  .dw-set .x-stage { flex: 0 0 auto; width: 100%; min-height: 0; height: var(--stage-h); margin-top: .5rem; padding: 0; }
+  .dw { display: block; width: min(100%, 21rem); height: auto; max-height: var(--stage-h); overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .dw .ln { stroke: rgba(255,255,255,.72); stroke-width: 1.5; }
+  .dw .no { stroke: rgba(255,255,255,.52); stroke-width: 1.5; stroke-dasharray: 4 4.5; }
+  .dw .fa { fill: rgba(255,255,255,.2); stroke: none; }
+  .dw .fc { fill: rgba(255,255,255,.1); stroke: none; }
+  .dw .dot { fill: #f5f5f7; stroke: none; }
+
+  /* Each drawing's resting state is its finished one: that is what shows without the script and
+     with reduced motion. Only with the script and motion allowed does a card wait, already
+     drawn, one step before it, until the script marks it in view (.on). */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Payments: one on each rail, the same, at the same time, from one end to the other */
+    .dw-rails .dot { transition: transform 1.9s cubic-bezier(.45,0,.2,1); }
+    html.js .dw-set > :not(.on) .dw-rails .dot { transform: translateX(-164px); }
+  }
+
+  @media (max-width: 36em) {
+    .dw-set { --stage-h: 10.5rem; }
+  }
 </style>
 </head>
 <body>
@@ -47,7 +78,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -59,13 +89,49 @@
     <div class="container"><div class="x-wrap">
       <h1 class="x-h1">Very little to attack.</h1>
       <p class="x-p">No private keys and no accounts. The service holds very little, by design.</p>
-      <div class="x-cols">
-        <div><h3>No private keys</h3><p>The service never asks for, receives or stores keys or seed phrases.</p></div>
-        <div><h3>No accounts</h3><p>No accounts, no cookies, no analytics.</p></div>
-        <div><h3>Payments</h3><p>USDC payments settle on Base through x402, verified by a facilitator that can confirm a payment but cannot move or redirect funds. Card payments run on Stripe&rsquo;s hosted checkout, so card numbers never reach us.</p></div>
-        <div><h3>No model in the answer</h3><p>Every response is a deterministic decode of public chain data.</p></div>
-        <div><h3>Read-only blocklists</h3><p>The ScamSniffer and MyEtherWallet lists are read, never written. How fresh each one is is published on <a href="https://api.0200project.com/healthz">/healthz</a>.</p></div>
-        <div><h3>Honest limits</h3><p>A flag means evidence was found. A missing flag is not a safety guarantee, and nothing here is financial advice.</p></div>
+      <div class="x-cols dw-set">
+        <div><h3>No private keys</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw" viewBox="0 0 240 150" focusable="false">
+            <circle class="no" cx="70" cy="75" r="25"/><circle class="no" cx="70" cy="75" r="8"/>
+            <path class="no" d="M94.3 69H195a6 6 0 0 1 0 12H183v13a4 4 0 0 1-4 4h-12a4 4 0 0 1-4-4V81H94.3"/>
+          </svg></div>
+          <p>The service never asks for, receives or stores keys or seed phrases.</p></div>
+        <div><h3>No accounts</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw" viewBox="0 0 240 150" focusable="false">
+            <rect class="no" x="40" y="37" width="160" height="76" rx="19"/>
+            <circle class="no" cx="80" cy="75" r="17"/>
+            <rect class="fc" x="112" y="62" width="62" height="6" rx="3"/><rect class="fc" x="112" y="80" width="40" height="6" rx="3"/>
+          </svg></div>
+          <p>No accounts, no cookies, no analytics.</p></div>
+        <div><h3>Payments</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw dw-rails" viewBox="0 0 240 150" focusable="false">
+            <path class="ln" d="M42 60H198M42 90H198"/>
+            <circle class="ln" cx="38" cy="60" r="4"/><circle class="ln" cx="202" cy="60" r="4"/>
+            <circle class="ln" cx="38" cy="90" r="4"/><circle class="ln" cx="202" cy="90" r="4"/>
+            <circle class="dot" cx="202" cy="60" r="4.5"/><circle class="dot" cx="202" cy="90" r="4.5"/>
+          </svg></div>
+          <p>USDC payments settle on Base through x402, verified by a facilitator that can confirm a payment but cannot move or redirect funds. Card payments run on Stripe&rsquo;s hosted checkout, so card numbers never reach us.</p></div>
+        <div><h3>No model in the answer</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw" viewBox="0 0 240 150" focusable="false">
+            <rect class="ln" x="22" y="62" width="26" height="26" rx="7"/><rect class="ln" x="60" y="62" width="26" height="26" rx="7"/><rect class="ln" x="98" y="62" width="26" height="26" rx="7"/>
+            <path class="ln" d="M48 75h12M86 75h12M132 75h18"/>
+            <rect class="ln" x="158" y="43" width="62" height="64" rx="14"/>
+            <rect class="fa" x="170" y="60" width="38" height="6" rx="3"/><rect class="fa" x="170" y="72" width="28" height="6" rx="3"/><rect class="fa" x="170" y="84" width="34" height="6" rx="3"/>
+          </svg></div>
+          <p>Every response is a deterministic decode of public chain data.</p></div>
+        <div><h3>Read-only blocklists</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw" viewBox="0 0 240 150" focusable="false">
+            <rect class="ln" x="42" y="27" width="72" height="96" rx="16"/><rect class="ln" x="126" y="27" width="72" height="96" rx="16"/>
+            <rect class="fa" x="56" y="48" width="44" height="5" rx="2.5"/><rect class="fa" x="56" y="64" width="34" height="5" rx="2.5"/><rect class="fa" x="56" y="80" width="40" height="5" rx="2.5"/><rect class="fa" x="56" y="96" width="28" height="5" rx="2.5"/>
+            <rect class="fa" x="140" y="48" width="38" height="5" rx="2.5"/><rect class="fa" x="140" y="64" width="44" height="5" rx="2.5"/><rect class="fa" x="140" y="80" width="30" height="5" rx="2.5"/><rect class="fa" x="140" y="96" width="40" height="5" rx="2.5"/>
+          </svg></div>
+          <p>The ScamSniffer and MyEtherWallet lists are read, never written. How fresh each one is is published on <a href="https://api.0200project.com/healthz">/healthz</a>.</p></div>
+        <div><h3>Honest limits</h3>
+          <div class="x-stage" aria-hidden="true"><svg class="dw" viewBox="0 0 240 150" focusable="false">
+            <path class="ln" d="M78 36V116M78 40H126L116 55L126 70H78"/>
+            <path class="no" d="M146 36V116M146 40H194L184 55L194 70H146"/>
+          </svg></div>
+          <p>A flag means evidence was found. A missing flag is not a safety guarantee, and nothing here is financial advice.</p></div>
       </div>
       <p class="x-fine">Found a security issue? Email <a href="mailto:security@0200project.com">security@0200project.com</a>.</p>
     </div></div>
@@ -99,7 +165,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -123,11 +188,28 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
+
+<script>
+/* The drawings that move: each card is marked .on once it is well in view, and its drawing plays
+   its one move (see the style above). Without an observer every card is marked at once. */
+(function () {
+  var cards = document.querySelectorAll('.dw-set > *');
+  var on = function (c) { c.classList.add('on'); };
+  if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(cards, on); return; }
+  var io = new IntersectionObserver(function (es) {
+    // well in view: most of the card, or, for a card taller than the screen, most of the screen
+    es.forEach(function (e) {
+      var r = e.rootBounds, h = r ? r.height : innerHeight;
+      if (e.isIntersecting && (e.intersectionRatio >= 0.6 || e.intersectionRect.height >= 0.6 * h)) { on(e.target); io.unobserve(e.target); }
+    });
+  }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+  Array.prototype.forEach.call(cards, function (c) { io.observe(c); });
+})();
+</script>
 
 <script src="/assets/site.js" defer></script>
 </body>

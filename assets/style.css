@@ -26,11 +26,33 @@
   --sans: "Geist", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  --radius: 8px;
-  --radius-sm: 6px;
+  /* radii in rem, so a big screen's larger card keeps the same corner (16px root: 8px and 6px) */
+  --radius: .5rem;
+  --radius-sm: .375rem;
 
   --nav-h: 4rem;
   --container: 72rem;
+  /* A vw that keeps the 1440x900 composition. Below 1440px wide it is 1vw exactly; above it,
+     it grows with the root size (a 1440px vw is .9rem), not with the raw width, so a value in
+     vw stays in proportion to the rest of the page on a wide screen instead of outgrowing it. */
+  --vw: min(1vw, .9rem);
+}
+
+/* Page kit tokens, 2026-10-28. What each is for is written above the kit, at the end of
+   this file. In rem, so they scale with the root on a big screen; hairlines stay 1px. */
+:root {
+  --r-card: 1.75rem;          /* a card's corner: 28px at 1440, as on the homepage */
+  --r-inner: 1rem;            /* a code block or table inside reading text */
+  --hair: rgba(255, 255, 255, 0.14);
+  --hair-soft: rgba(255, 255, 255, 0.09);
+  --hair-hover: rgba(255, 255, 255, 0.3);
+  --card-bg: #060607;
+  --card-ground: radial-gradient(60% 55% at 50% 62%, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 72%), var(--card-bg);
+  --card-pad: clamp(1.5rem, calc(2.8 * var(--vw)), 2.5rem);
+  --card-gap: 1rem;
+  --measure: 36rem;           /* about 70 characters of reading text (--read-size Geist) */
+  --read-size: 1.0625rem;     /* reading text: 17px at 1440 */
+  --sec-gap: clamp(4.5rem, calc(9.5 * var(--vw)), 8.5rem);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,6 +62,10 @@ html {
   color-scheme: dark;
   scroll-padding-top: calc(var(--nav-h) + 1.5rem);
 }
+
+/* Big screens keep the 1440x900 composition, scaled by whichever dimension runs out first.
+   Never below the reader's own default size; capped so a 4K screen is not a poster. */
+html { font-size: clamp(100%, min(1.1111vw, 1.7778vh), 162.5%); }
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -89,11 +115,13 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   text-wrap: balance;
 }
 
+/* The title of a reading page (changelog, status, legal, 404): the homepage's
+   section-heading size, sentence case, on the container's left edge. */
 .h-section {
-  font-size: clamp(1.625rem, 3.4vw, 2.125rem);
-  line-height: 1.18;
-  letter-spacing: -0.04em;
-  font-weight: 450;
+  font-size: clamp(2.25rem, calc(4 * var(--vw)), 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  font-weight: 400;
   text-wrap: balance;
 }
 
@@ -103,20 +131,22 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   letter-spacing: -0.01em;
 }
 
+/* Where markup still has an eyebrow, it reads as a quiet line of text in sentence case,
+   not as a tracked uppercase label. */
 .eyebrow {
   display: block;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-  margin-bottom: 1rem;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: -0.008em;
+  text-transform: none;
+  color: var(--fg-faint);
+  margin-bottom: 0.875rem;
 }
 
 .lead {
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  font-size: clamp(1.0625rem, calc(1.2 * var(--vw) + .6rem), 1.25rem);
+  line-height: 1.5;
   color: var(--fg-muted);
   text-wrap: pretty;
 }
@@ -346,33 +376,38 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
 
 /* ---------- Cards & panels ---------- */
 
+/* .card is the legacy name for the kit's card (.x-card, at the end of this file), and
+   draws the same. motion.js fades .card in on scroll; .x-card stays still. */
 .card {
   position: relative;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  background: var(--card-ground);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-card);
+  padding: var(--card-pad);
+  transition: border-color 0.5s ease;
 }
-a.card:hover, .card-link:hover { border-color: var(--border-strong); background: var(--bg-panel); }
+@media (hover: hover) and (pointer: fine) {
+  a.card:hover, .card-link:hover { border-color: var(--hair-hover); }
+}
 
+/* A tool surface: an output, a list of checks, a response. The card's edge and corner,
+   a plain dark ground so what it holds reads first. */
 .panel {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-card);
   overflow: hidden;
 }
 
+/* The panel's own name and meta, quiet, in the panel's ground: no band, no uppercase. */
 .panel-head {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.625rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-inset);
-  font-family: var(--mono);
-  font-size: 0.75rem;
+  padding: 1.125rem 1.25rem 0.25rem;
+  background: none;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   color: var(--fg-faint);
 }
 /* Terminal window chrome: three quiet dots, monochrome — only on the actual terminal. */
@@ -407,38 +442,40 @@ a.card:hover, .card-link:hover { border-color: var(--border-strong); background:
 
 /* ---------- Code ---------- */
 
+/* Literal code inside reading text: a smaller corner than a card, the same hairline. */
 .codeblock {
-  background: var(--bg-inset);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1px solid var(--hair-soft);
+  border-radius: var(--r-inner);
   overflow: hidden;
 }
 .codeblock pre {
-  padding: 1rem 1.125rem;
+  padding: 0.875rem 1.25rem 1.125rem;
   overflow-x: auto;
   font-size: 0.8125rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--fg);
 }
-.codeblock .panel-head { border-radius: 0; }
+.codeblock .panel-head { border-radius: 0; padding: 0.75rem 0.875rem 0 1.25rem; }
 
+/* A small pill with a hairline; it inverts to white under a pointer. */
 .copy-btn {
   background: none;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.125rem 0.45rem;
-  font-family: var(--mono);
-  font-size: 0.71875rem;
-  color: var(--fg-faint);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 0.1875rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 code.inline {
   font-size: 0.85em;
   background: var(--bg-hover);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: .25rem;
   padding: 0.1em 0.4em;
   color: var(--fg);
 }
@@ -452,18 +489,19 @@ code.inline {
 
 /* ---------- Tables ---------- */
 
-.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+/* A table keeps the code block's corner and hairline; its head is sentence case. */
+.table-wrap { overflow-x: auto; border: 1px solid var(--hair-soft); border-radius: var(--r-inner); background: var(--card-bg); }
 table { width: 100%; border-collapse: collapse; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
-th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+th, td { text-align: left; padding: 0.8125rem 1.25rem; border-bottom: 1px solid var(--border); }
 tr:last-child td { border-bottom: none; }
 th {
-  font-family: var(--mono);
-  font-size: 0.71875rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--fg-faint);
-  background: var(--bg-inset);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--fg);
+  background: #0b0b0c;
 }
 td { color: var(--fg-muted); }
 td:first-child { color: var(--fg); }
@@ -477,7 +515,7 @@ td:first-child { color: var(--fg); }
   padding: 0.2rem 0.65rem;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.71875rem;
   color: var(--fg-muted);
   white-space: nowrap;
@@ -501,12 +539,8 @@ a.pill {
   flex-shrink: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .dot-live { animation: pulse 2.8s ease-in-out infinite; }
-  @keyframes pulse {
-    50% { opacity: 0.45; }
-  }
-}
+/* The live dot holds still (2026-10-28). It used to pulse forever; a state indicator is
+   content and stays, quietly, and a loop that never rests is neither. */
 
 /* ---------- Check list ---------- */
 
@@ -601,6 +635,10 @@ a.pill {
 /* ---------- Smooth scroll root ---------- */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
+/* While Lenis drives scrolling, native smooth scrolling must stay off between scrolls too: a
+   ScrollTrigger refresh made while the page is scrolled measures mid-glide otherwise, and the
+   hero's fade start lands hundreds of pixels off, leaving it hidden back at the top. */
+html.lenis { scroll-behavior: auto; }
 
 /* ---------- Skip link ---------- */
 
@@ -634,20 +672,22 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ---------- Docs layout ---------- */
 
+/* A reading page: the section list on the left, the text at a reading measure (about
+   70 characters) on the right, code and tables a little wider than the text. */
 .docs-layout {
   display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
-  gap: 3.5rem;
+  grid-template-columns: 14rem minmax(0, 1fr);
+  gap: clamp(2rem, calc(5.5 * var(--vw)), 5rem);
   align-items: start;
-  padding-block: 2.5rem 6rem;
+  padding-block: clamp(3.5rem, calc(7 * var(--vw)), 6rem) clamp(5rem, calc(10 * var(--vw)), 9rem);
 }
 @media (max-width: 63.9em) {
-  .docs-layout { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .docs-layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
 }
 
 .docs-nav {
   position: sticky;
-  top: calc(var(--nav-h) + 2rem);
+  top: calc(var(--nav-h) + 2.5rem);
   font-size: 0.875rem;
 }
 @media (max-width: 63.9em) {
@@ -655,39 +695,43 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 .docs-nav h4 {
-  font-family: var(--mono);
-  font-size: 0.71875rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fg-faint);
-  margin: 1.5rem 0 0.625rem;
+  text-transform: none;
+  letter-spacing: -0.008em;
+  color: var(--fg);
+  margin: 1.75rem 0 0.5rem;
 }
 .docs-nav h4:first-child { margin-top: 0; }
 .docs-nav ul { list-style: none; }
 .docs-nav a {
   display: block;
-  padding: 0.3125rem 0.75rem;
-  margin-left: -0.75rem;
-  border-radius: var(--radius-sm);
-  color: var(--fg-muted);
+  padding: 0.3125rem 0;
+  color: var(--fg-faint);
+  transition: color 0.3s ease;
 }
-.docs-nav a:hover { color: var(--fg-strong); background: var(--bg-hover); }
+.docs-nav a:hover { color: var(--fg-strong); }
 
 .docs-content { max-width: 44rem; }
-.docs-content h1 { font-size: 2rem; letter-spacing: -0.022em; margin-bottom: 0.75rem; }
-.docs-content h2 {
-  font-size: 1.375rem;
-  letter-spacing: -0.015em;
-  margin: 3rem 0 0.875rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid var(--border);
+.docs-content h1 { font-size: clamp(2.25rem, calc(4 * var(--vw)), 3.5rem); font-weight: 400; line-height: 1.02; letter-spacing: -0.05em; margin-bottom: 1.25rem; }
+/* A reading page's section heading is one size on every reading page: docs and legal alike. */
+.docs-content h2, .prose h2, .x-read h2 {
+  font-size: clamp(1.5rem, calc(2 * var(--vw)), 1.875rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
 }
-.docs-content h3 { font-size: 1.0625rem; margin: 2rem 0 0.625rem; }
-.docs-content p { color: var(--fg-muted); margin-bottom: 1rem; }
+.docs-content h2 {
+  margin: clamp(3.5rem, calc(6 * var(--vw)), 5rem) 0 1rem;
+  padding-top: 0;
+  border-top: 0;
+}
+.docs-content h3 { font-size: 1.1875rem; font-weight: 500; letter-spacing: -0.02em; margin: 2.25rem 0 0.75rem; }
+.docs-content p { color: var(--fg-muted); font-size: var(--read-size); line-height: 1.7; max-width: var(--measure); margin-bottom: 1rem; }
 .docs-content p strong { color: var(--fg); font-weight: 500; }
-.docs-content .codeblock, .docs-content .table-wrap { margin: 1.25rem 0 1.5rem; }
-.docs-content ul, .docs-content ol { color: var(--fg-muted); padding-left: 1.25rem; margin-bottom: 1rem; }
+.docs-content .codeblock, .docs-content .table-wrap { margin: 1.5rem 0 1.75rem; }
+.docs-content ul, .docs-content ol { color: var(--fg-muted); font-size: var(--read-size); line-height: 1.7; max-width: var(--measure); padding-left: 1.25rem; margin-bottom: 1rem; }
 .docs-content li + li { margin-top: 0.375rem; }
 .docs-content a:not(.btn) { color: var(--accent); }
 .docs-content a:not(.btn):hover { color: var(--accent-strong); }
@@ -695,8 +739,10 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ---------- Page hero (interior pages) ---------- */
 
-.page-hero { padding-block: clamp(3.5rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem); }
-.page-hero .lead { margin-top: 1rem; max-width: 38rem; }
+/* A reading page's top (changelog, status, legal): the same dark space above the title
+   as .x-top, a little less below it, because reading starts straight after. */
+.page-hero { padding-block: clamp(5rem, calc(10 * var(--vw)), 9rem) clamp(2.5rem, calc(5 * var(--vw)), 4.5rem); }
+.page-hero .lead { margin-top: 1.25rem; max-width: 38rem; }
 
 .page-hero-statement { padding-block: clamp(5rem, 11vw, 8.5rem) clamp(4rem, 8vw, 6rem); }
 .statement {
@@ -717,19 +763,24 @@ html.lenis, html.lenis body { height: auto; }
   .hero-mark-grid { grid-template-columns: minmax(0, 1fr); }
   .hero-mark { display: none; }
 }
-}
+/* (A stray closing brace sat here until 2026-10-28. It made the browser drop the rule after
+   it, so the status banner below had no padding, ground or corner on any page.) */
 
-/* ---------- Status ---------- */
+/* ---------- Status ----------
+   The status page's state IS its content, so its dots and words stay, quietly: the banner
+   and the rows are cards, the dot is the only colour. */
 
 .status-banner {
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  padding: 1.25rem 1.5rem;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  padding: 1.375rem 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-card);
+  font-size: 1.0625rem;
   font-weight: 500;
+  letter-spacing: -0.015em;
   color: var(--fg-strong);
 }
 
@@ -738,44 +789,52 @@ html.lenis, html.lenis body { height: auto; }
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.25rem;
   border-bottom: 1px solid var(--border);
 }
 .service-row:last-child { border-bottom: none; }
+/* on a phone a row's name and its state stack, so neither is squeezed into a column */
+@media (max-width: 40rem) {
+  .service-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
 .service-row .name { color: var(--fg); font-weight: 500; }
 .service-row .state {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.78125rem;
   color: var(--fg-muted);
 }
 
 /* ---------- Changelog ---------- */
 
+/* A dated entry: the date on the left, the entry at a reading measure on the right. */
 .log-entry {
   display: grid;
   grid-template-columns: 11rem minmax(0, 1fr);
-  gap: 2rem;
-  padding-block: 2.5rem;
+  gap: 2.5rem;
+  padding-block: clamp(2.5rem, calc(4.5 * var(--vw)), 4rem);
   border-top: 1px solid var(--border);
 }
 @media (max-width: 47.9em) {
   .log-entry { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
 }
 .log-date {
-  font-family: var(--mono);
-  font-size: 0.8125rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
   color: var(--fg-faint);
-  padding-top: 0.25rem;
+  padding-top: 0.375rem;
 }
-.log-body h2, .log-body h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
-.log-body p { color: var(--fg-muted); margin-bottom: 0.75rem; }
-.log-body ul { list-style: none; }
+.log-body h2, .log-body h3 { font-size: clamp(1.25rem, calc(1.7 * var(--vw)), 1.5rem); font-weight: 500; line-height: 1.25; letter-spacing: -0.025em; margin-bottom: 0.875rem; max-width: var(--measure); }
+.log-body h3 { font-size: 1.1875rem; }
+.log-body p { color: var(--fg-muted); font-size: var(--read-size); line-height: 1.7; max-width: var(--measure); margin-bottom: 0.875rem; }
+.log-body ul { list-style: none; max-width: var(--measure); margin-bottom: 0.875rem; }
 .log-body ul li {
   position: relative;
   padding-left: 1.25rem;
+  font-size: var(--read-size);
+  line-height: 1.7;
   color: var(--fg-muted);
 }
 .log-body ul li + li { margin-top: 0.375rem; }
@@ -783,30 +842,32 @@ html.lenis, html.lenis body { height: auto; }
   content: "";
   position: absolute;
   left: 0;
-  top: 0.65em;
-  width: 0.3125rem;
-  height: 0.3125rem;
-  border-radius: 1px;
-  background: var(--border-strong);
+  top: 0.75em;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  background: #4a4a50;
 }
 
 /* ---------- Prose (legal / security pages) ---------- */
 
-.prose { max-width: 44rem; padding-bottom: 6rem; }
-.prose h2 { font-size: 1.25rem; letter-spacing: -0.012em; margin: 2.75rem 0 0.75rem; }
-.prose p, .prose li { color: var(--fg-muted); }
-.prose p { margin-bottom: 1rem; }
-.prose ul { padding-left: 1.25rem; margin-bottom: 1rem; }
-.prose li + li { margin-top: 0.375rem; }
-.prose a:not(.btn) { color: var(--accent); }
-.page-hero .updated, .prose .updated { font-family: var(--mono); font-size: 0.8125rem; color: var(--fg-faint); margin-top: 1rem; }
+/* Reading text at a reading measure (about 70 characters), one calm size, headings in
+   the kit's weight. .x-read is the same thing for new markup. */
+.prose, .x-read { max-width: var(--measure); padding-bottom: clamp(5rem, calc(10 * var(--vw)), 9rem); }
+.prose h2, .x-read h2 { margin: clamp(2.75rem, calc(4.5 * var(--vw)), 3.75rem) 0 0.875rem; } /* size: with .docs-content h2 */
+.prose p, .prose li, .x-read p, .x-read li { color: var(--fg-muted); font-size: var(--read-size); line-height: 1.7; }
+.prose p, .x-read p { margin-bottom: 1rem; }
+.prose ul, .x-read ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+.prose li + li, .x-read li + li { margin-top: 0.5rem; }
+.prose a:not(.btn), .x-read a:not(.btn) { color: var(--accent); }
+.page-hero .updated, .prose .updated { font-family: var(--sans); font-size: 0.9375rem; color: var(--fg-faint); margin-top: 1.25rem; }
 
 /* ---------- Card icons & mini-diagrams ---------- */
 
 .card-icon {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 8px;
+  border-radius: .5rem;
   border: 1px solid var(--border-strong);
   background: var(--bg-inset);
   display: flex;
@@ -853,10 +914,8 @@ html.lenis, html.lenis body { height: auto; }
   transform: translate(50%, -50%);
 }
 
-/* ---------- Footer live status ---------- */
-
-.footer-status { font-family: var(--mono); font-size: 0.75rem; color: var(--fg-muted); }
-.footer-status:hover { color: var(--fg-strong); }
+/* The footer's live status line was removed from every page on 2026-10-28; the Status
+   link in the footer columns stays. site.js's probe finds no element and does nothing. */
 
 /* ---------- Command palette ---------- */
 
@@ -882,11 +941,11 @@ html.lenis, html.lenis body { height: auto; }
   position: relative;
   width: min(34rem, calc(100vw - 2rem));
   margin: 16vh auto 0;
-  background: var(--bg-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
+  background: var(--card-bg);
+  border: 1px solid var(--hair);
+  border-radius: 1.25rem;
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.55);
 }
 
 .cmdk-input {
@@ -911,10 +970,10 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 .cmdk-group {
-  font-family: var(--mono);
-  font-size: 0.65625rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--fg-faint);
   padding: 0.625rem 0.75rem 0.25rem;
 }
@@ -925,14 +984,14 @@ html.lenis, html.lenis body { height: auto; }
   justify-content: space-between;
   gap: 1rem;
   padding: 0.5625rem 0.75rem;
-  border-radius: var(--radius-sm);
+  border-radius: 0.75rem;
   font-size: 0.875rem;
   color: var(--fg-muted);
   cursor: pointer;
 }
 .cmdk-item[aria-selected="true"] { background: var(--bg-hover); color: var(--fg-strong); }
 .cmdk-hint {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.6875rem;
   color: var(--fg-faint);
 }
@@ -945,7 +1004,7 @@ html.lenis, html.lenis body { height: auto; }
   padding: 0.5625rem 1.125rem;
   border-top: 1px solid var(--border);
   background: var(--bg-inset);
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 0.65625rem;
   color: var(--fg-faint);
 }
@@ -965,7 +1024,7 @@ html.lenis, html.lenis body { height: auto; }
     background: var(--bg-panel); overflow: hidden;
   }
   .led .panel-head {
-    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.09em;
+    font-family: var(--sans); font-size: 0.66rem; letter-spacing: 0.09em;
     text-transform: uppercase; color: var(--fg-faint);
     padding: 0.8rem 1.05rem; border-bottom: 1px solid var(--border);
     background: rgba(255,255,255,0.012);
@@ -976,9 +1035,9 @@ html.lenis, html.lenis body { height: auto; }
     font-size: 0.98rem; line-height: 1.5; color: var(--fg-strong);
     letter-spacing: -0.012em;
   }
-  .led-sum b { color: var(--accent-strong); font-weight: 500; font-family: var(--mono); font-size: 0.92rem; }
+  .led-sum b { color: var(--accent-strong); font-weight: 500; font-family: var(--sans); font-size: 0.92rem; }
   .led-row {
-    display: grid; grid-template-columns: 76px 1fr auto; gap: 1rem;
+    display: grid; grid-template-columns: 4.75rem 1fr auto; gap: 1rem;
     align-items: baseline; padding: 0.72rem 1.05rem;
     border-bottom: 1px solid var(--border);
     transition: background 0.16s ease;
@@ -986,20 +1045,20 @@ html.lenis, html.lenis body { height: auto; }
   .led-row:hover { background: rgba(255,255,255,0.022); }
   .led-row:last-of-type { border-bottom: 0; }
   .led-lbl {
-    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em;
+    font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--fg-faint);
   }
   .led-val { font-size: 0.875rem; color: var(--fg); letter-spacing: -0.005em; }
   .led-val small { display: block; color: var(--fg-faint); font-size: 0.72rem; margin-top: 0.2rem; letter-spacing: 0; }
   .led-amt {
-    font-family: var(--mono); font-size: 1.02rem; font-weight: 500;
+    font-family: var(--sans); font-size: 1.02rem; font-weight: 500;
     color: var(--fg-strong); font-variant-numeric: tabular-nums;
     letter-spacing: -0.03em; text-align: right; white-space: nowrap;
   }
   .led-amt.q { font-size: 0.78rem; font-weight: 400; letter-spacing: 0; color: var(--fg-muted); }
   /* status words, not tokens: mono text, no outline, no dot, no colour */
   .led-pill {
-    display: inline-flex; align-items: center; gap: 0.3rem; font-family: var(--mono);
+    display: inline-flex; align-items: center; gap: 0.3rem; font-family: var(--sans);
     font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase;
     border: 0; padding: 0; color: var(--fg-muted); vertical-align: 1px;
   }
@@ -1012,7 +1071,7 @@ html.lenis, html.lenis body { height: auto; }
   }
   .led-foot b { color: var(--fg-strong); font-weight: 500; }
   @media (max-width: 40rem) {
-    .led-row { grid-template-columns: 68px 1fr; }
+    .led-row { grid-template-columns: 4.25rem 1fr; }
     .led-amt { grid-column: 1 / -1; text-align: left; }
   }
 
@@ -1062,7 +1121,7 @@ html.lenis, html.lenis body { height: auto; }
         9.6px and code.inline 9.79px -- readable on a 27in display, not in
         a hand at arm's length. */
   .small, .faint.small, .card-mini, .term-note, .led-foot,
-  .panel-head, .eyebrow { font-size: 0.72rem; }
+  .panel-head { font-size: 0.72rem; }
   .led-val small, .led-lbl, .led-amt { font-size: 0.72rem; }
   code.inline { font-size: 0.75rem; }
 
@@ -1078,7 +1137,9 @@ html.lenis, html.lenis body { height: auto; }
    <style> blocks. Anything that still has to read as a container gets a quiet
    raised background instead of a line. */
 :root { --border: transparent; --border-strong: transparent; --bg-raised: #0b0b0c; --bg-panel: #0b0b0c; }
-.card, .panel, .codeblock, .table-wrap, .status-banner, .cmdk-panel, .copy-btn, .card-icon, .led { background: #0b0b0c; }
+/* (2026-10-28: the kit's card, panel, code block, table and status banner draw their own
+   ground and a 1px hairline, as the homepage's cards do; they are no longer listed here.) */
+.card-icon, .led { background: #0b0b0c; }
 .pill, code.inline { background: #141416; }
 tbody tr:nth-child(odd) td { background: #0a0a0b; }
 .pg-field { background: #0d0d0f; }
@@ -1087,39 +1148,126 @@ tbody tr:nth-child(odd) td { background: #0a0a0b; }
 .f-min nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .875rem; }
 .f-min nav a { color: var(--fg-faint); text-decoration: none; }
 .f-min nav a:hover { color: var(--fg-strong); }
-.f-min .footer-status { margin-left: auto; font-size: .8125rem; color: var(--fg-faint); }
-@media (max-width: 40em) { .f-min .footer-status { margin-left: 0; } }
 
-/* ---------- Minimal page kit (2026-10-22) ----------
-   One pattern, varied by layout rather than by more words: a large headline,
-   one muted sentence, buttons. Columns and number rows break the rhythm so a
-   page is not the same block four times. */
-.x-wrap { max-width: 64rem; margin-inline: auto; }
-.x-sec { padding-block: clamp(4.5rem, 11vw, 9rem) 0; }
-.x-sec:last-of-type { padding-bottom: clamp(5.5rem, 13vw, 10rem); }
-.x-h { font-size: clamp(2.25rem, 5.4vw, 4.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; color: var(--fg-strong); margin: 0; max-width: 16ch; text-wrap: balance; }
-.x-h1 { font-size: clamp(2.75rem, 7vw, 5.75rem); font-weight: 400; letter-spacing: -.055em; line-height: .98; color: var(--fg-strong); margin: 0; max-width: 14ch; text-wrap: balance; }
-.x-p { font-size: clamp(1.0625rem, 1.2vw + .6rem, 1.3125rem); color: var(--fg-muted); max-width: 36rem; margin: 1.5rem 0 0; line-height: 1.5; }
-.x-acts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
-.x-top { padding-block: clamp(7rem, 16vw, 12rem) 0; }
-main > section:last-of-type { padding-bottom: clamp(6rem, 14vw, 11rem); }
-.x-cols { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: clamp(2rem, 4vw, 3.5rem); margin-top: clamp(3rem, 6vw, 4.5rem); }
-.x-cols h3 { margin: 0; font-size: clamp(1.25rem, 1.6vw + .5rem, 1.625rem); font-weight: 400; letter-spacing: -.03em; line-height: 1.15; color: var(--fg-strong); }
-.x-cols p { margin: .75rem 0 0; color: var(--fg-muted); font-size: 1rem; line-height: 1.55; }
-.x-cols .btn { margin-top: 1.25rem; }
-.x-nums { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 2rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+/* ---------- Fields, 2026-10-28 ----------
+   The minimal pass removed every hairline, which also removed the edge of the
+   text field: an input with no edge does not read as somewhere to type. Fields
+   and filter chips keep one quiet line; dividers stay gone. */
+:root { --field-border: #2e2e32; --field-border-hover: #5a5a63; --field-bg: #0a0a0a; --card-border: #1f1f22; --card-border-hover: #3a3a40; }
+/* Nav buttons are small rectangles, as on Vercel; hero buttons stay pills. */
+.nav .btn-sm { height: 2rem; border-radius: .375rem; padding-inline: .75rem; }
+
+/* ============================================================
+   Page kit, 2026-10-28: the homepage's vibe on every interior page.
+   Black ground, white Geist, one blue used sparingly. Big, calm headings in sentence case
+   on the container's left edge; a SET of things (figures, plans, services, questions)
+   becomes large rounded dark cards; lots of dark space at a steady rhythm. Sizes are in
+   rem, so the whole composition scales with the root on any screen.
+
+   Page structure
+   .x-top      the first section of an interior page: dark space above the title.
+   .x-sec      every later section: one steady gap (--sec-gap) above each.
+   .x-wrap     inner wrapper. It spans the container, so headings and cards share the left
+               edge of the nav and of the homepage's "What you can use today".
+   .x-h1       the page title (h1), the homepage hero's size.
+   .x-h        a section heading (h2), the homepage's section-heading size.
+   .x-p        the one muted sentence under a heading.
+   .x-acts     a row of buttons (.btn-primary, .btn-ghost; sizes as they are).
+   .x-fine     small print under a block. Scope notes (dates, sources, what was counted)
+               live here and stay legible: never fainter or smaller than this.
+
+   Cards: an Apple-style card is a dark ground, a 1px hairline, a 28px corner (--r-card)
+   and generous padding (--card-pad), its content in a column.
+   .x-grid     a grid of cards. --cols sets the columns (default 3); 2 below 52em, 1 below 36em.
+   .x-card     one card. Inside it, in this order:
+                 h3          the item's own heading, a caption at the top
+                 .x-stage    the thing itself, shown large and centred (optional)
+                 p           the quiet supporting line(s)
+                 .btn        under the text, never stretched
+               .x-cap wraps h3 + p to centre them above a stage, as on the homepage.
+               On an <a> the card's edge brightens on hover, slowly; that is its one motion.
+               On a <div> it does not move: it is not clickable, so it must not look it.
+   .x-cols     a grid whose children ARE cards (div > h3 + p [+ .btn]): the shortcut for
+               principles, plans, services and questions. Same --cols.
+   .x-nums     a grid of figure cards (div > b + span); --cols defaults to 4. The figure
+               keeps the size it had before the kit and its label is --fg-muted, not faint:
+               a number must never outshout the words that say what it counts.
+   .x-terms    a definition list (label, value), not a set of things, so no card.
+   .x-read     a reading column at about 70 characters (docs, legal, changelog); the same
+               rules as .prose.
+   .panel      a tool surface (an output, status rows, a response) in a card's edge.
+   .codeblock, .table-wrap   literal code and tables in reading text: --r-inner corner.
+
+   What the kit leaves out on purpose: no blue card or ring on a price, a plan, a rail or
+   a figure (emphasis is a claim); no eyebrows, uppercase labels or tags; mono only for
+   literal code; no entrance animation, so everything is visible at rest and without JS.
+   ============================================================ */
+
+.x-wrap { max-width: none; margin-inline: 0; }
+.x-top { padding-block: clamp(5rem, calc(10 * var(--vw)), 9rem) 0; }
+.x-sec { padding-block: var(--sec-gap) 0; }
+/* the dark space between a page's last block and the footer: one value, whatever the last section is */
+.x-sec:last-of-type, main > section:last-of-type { padding-bottom: clamp(6rem, 14vw, 11rem); }
+
+.x-h1 { font-size: clamp(2.625rem, calc(4.75 * var(--vw)), 4.25rem); font-weight: 400; letter-spacing: -.055em; line-height: 1; color: var(--fg-strong); margin: 0; max-width: 15ch; text-wrap: balance; }
+.x-h { font-size: clamp(2.125rem, calc(4 * var(--vw)), 3.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1.02; color: var(--fg-strong); margin: 0; max-width: 20ch; text-wrap: balance; }
+.x-p { font-size: clamp(1.0625rem, calc(1.2 * var(--vw) + .6rem), 1.25rem); color: var(--fg-muted); max-width: 38rem; margin: 1.25rem 0 0; line-height: 1.5; text-wrap: pretty; }
+.x-acts { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.5rem; }
+.x-fine { margin-top: 1.75rem; font-size: .9375rem; line-height: 1.55; color: var(--fg-faint); max-width: 40rem; }
+.x-fine a, .x-p a, .x-cols p a, .x-card p a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .x-fine a:hover, .x-p a:hover, .x-cols p a:hover, .x-card p a:hover { text-decoration-color: var(--fg-muted); }
+}
+
+/* the grids */
+.x-grid, .x-cols, .x-nums { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: var(--card-gap); margin-top: clamp(2.5rem, calc(4.5 * var(--vw)), 4rem); }
+.x-nums { grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); }
+
+/* the card */
+.x-card, .x-cols > *, .x-nums > * {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--card-pad);
+  border: 1px solid var(--hair);
+  border-radius: var(--r-card);
+  background: var(--card-ground);
+  color: inherit;
+}
+a.x-card { text-decoration: none; transition: border-color .5s ease; }
+@media (hover: hover) and (pointer: fine) {
+  a.x-card:hover { border-color: var(--hair-hover); }
+}
+a.x-card:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.x-card h3, .x-cols h3 { margin: 0; font-size: clamp(1.1875rem, calc(1.7 * var(--vw)), 1.5rem); font-weight: 500; line-height: 1.2; letter-spacing: -.025em; color: #f5f5f7; text-wrap: balance; }
+.x-card p, .x-cols p { margin: .75rem 0 0; font-size: 1rem; line-height: 1.55; color: var(--fg-muted); text-wrap: pretty; }
+.x-card .btn, .x-cols .btn { align-self: flex-start; margin-top: 1.5rem; }
+.x-card .x-cap { align-self: center; max-width: 36rem; text-align: center; }
+.x-stage { flex: 1 1 auto; display: grid; place-items: center; min-height: clamp(10rem, calc(18 * var(--vw)), 15rem); padding-block: clamp(1.25rem, calc(2.8 * var(--vw)), 2.5rem); text-align: center; }
+
+/* figure cards: the figure first and as large as it was; its label beside it, legible */
+.x-nums > * { padding: clamp(1.375rem, calc(2.2 * var(--vw)), 2rem); }
 .x-nums b { display: block; font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 400; letter-spacing: -.045em; line-height: 1; color: var(--fg-strong); font-variant-numeric: tabular-nums; }
-.x-nums span { display: block; margin-top: .625rem; font-size: .9375rem; color: var(--fg-faint); }
+.x-nums span { display: block; margin-top: .75rem; font-size: .9375rem; line-height: 1.45; color: var(--fg-muted); }
+
 .x-terms { display: grid; gap: 1.25rem; margin-top: 2.5rem; max-width: 44rem; }
 .x-terms div { display: grid; grid-template-columns: 8rem 1fr; gap: 1.5rem; }
 .x-terms dt { color: var(--fg-faint); font-size: .9375rem; }
 .x-terms dd { margin: 0; color: var(--fg); font-size: 1rem; }
-.x-fine { margin-top: 2rem; font-size: .875rem; color: var(--fg-faint); max-width: 40rem; }
-.x-fine a, .x-p a, .x-cols p a { color: var(--fg); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+
 @media (max-width: 52em) {
-  .x-cols, .x-nums { grid-template-columns: 1fr 1fr; }
+  .x-grid, .x-cols, .x-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* a set of exactly three does not split two and one: one card to a row, as pricing and tools do */
+  .x-grid:has(> :nth-child(3):last-child), .x-cols:has(> :nth-child(3):last-child), .x-nums:has(> :nth-child(3):last-child) { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 40em) {
+  :root { --r-card: 1.5rem; }
 }
 @media (max-width: 36em) {
-  .x-cols { grid-template-columns: 1fr; }
+  .x-grid, .x-cols { grid-template-columns: minmax(0, 1fr); }
   .x-terms div { grid-template-columns: 1fr; gap: .25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  a.x-card, .card, .copy-btn, .docs-nav a { transition: none; }
 }

@@ -5,7 +5,7 @@
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pricing, 0200project</title>
-<meta name="description" content="Four ways to call base-transaction-decoder: free, $0.02 per call via x402, a $9 pass for 10,000 calls, or $9/month recurring. No accounts anywhere.">
+<meta name="description" content="Four ways to call base-transaction-decoder: free, $0.02 per call via x402, a $9 pass for 10,000 calls over 30 days, or $9/month recurring. No accounts anywhere.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="Pricing, 0200project">
 <meta property="og:description" content="Free, pay-per-call, a $9 pass, or $9/month recurring, 10,000 calls either way. No accounts anywhere.">
@@ -22,77 +22,67 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
-  .pr-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-  @media (max-width: 55em) {
-    .pr-grid { grid-template-columns: minmax(0, 1fr); }
-  }
-  .pr-card {
-    display: flex;
-    flex-direction: column;
-    padding: 1.75rem;
-  }
-  .pr-tag {
-    font-family: var(--mono);
-    font-size: 0.71875rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 0.75rem;
-  }
-  .pr-price {
-    font-size: 2rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--fg-strong);
-  }
-  .pr-price span { font-size: 1rem; font-weight: 400; color: var(--fg-muted); }
-  .pr-desc { color: var(--fg-muted); font-size: 0.9375rem; margin-top: 0.75rem; }
-  .pr-actions { margin-top: auto; padding-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.625rem; }
+  /* The opening sentence sets in two lines rather than three, so on a desktop screen the
+     three plans end inside the first view instead of a sliver below it. Same size, colour
+     and weight as every page's opening sentence. */
+  .x-top .x-p { max-width: 41rem; }
 
-  .pr-url {
-    margin-top: 1.25rem;
-    padding: 0.875rem 1rem;
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: var(--mono);
-    font-size: 0.78125rem;
-    color: var(--fg);
-    overflow-x: auto;
-    white-space: nowrap;
+  /* Pricing on the page kit. The three plans are three cards at one weight. From 52em up
+     their headings, their lines and their first buttons share rows across the cards
+     (subgrid), so the plans read side by side; only the Pass card has a fourth row, its
+     second way to pay, at exactly the size and weight it had before (Field notes, below the
+     plans, has the same fourth row). Nothing here makes one plan, price or rail louder than
+     another. */
+  @media (min-width: 52em) {
+    .pr-plans { row-gap: 0; }
+    .pr-plans > div { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
+    .pr-plans > div > * { min-width: 0; }
+    .pr-plans > div > .btn { justify-self: start; align-self: start; }
   }
-  .pr-url-label { font-size: 0.8125rem; color: var(--fg-muted); margin-top: 1.25rem; margin-bottom: 0.375rem; }
+  /* Below that, the three plans stack in one column rather than two and a stray third. */
+  @media (max-width: 52em) {
+    .x-cols.pr-plans { grid-template-columns: minmax(0, 1fr); }
+  }
+  /* Field notes, a fourth card in the same grid, at the same weight: from 52em up it takes the
+     whole row under the three plans (alone in a third of it, it read as a stray), one card gap
+     below them, its lines held to a reading measure. On a phone it is simply the next card. */
+  @media (min-width: 52em) {
+    .pr-plans > #field-notes { grid-column: 1 / -1; margin-top: var(--card-gap); }
+    #field-notes > p, #field-notes .pr-buy-wallet p { max-width: 40rem; }
+  }
 
-  .pr-buy-wallet { margin-top: 1rem; }
+  /* The Pass card's second way to pay: smaller and quieter than the card button above it,
+     as it always was. Field notes uses the same block for its own second way to pay. */
+  .pr-buy-wallet { margin-top: 1.25rem; }
   .pr-buy-wallet p { color: var(--fg-muted); font-size: 0.875rem; }
   .pr-buy-wallet p + p { margin-top: 0.5rem; }
   .pr-buy-wallet .btn { margin-top: 0.625rem; }
 
-  .pr-callout {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    margin-top: 1rem;
+  /* A proof-of-purchase URL wraps rather than scrolls, so all of it is in sight. Literal,
+     so mono. */
+  .pr-url {
+    padding: 0.875rem 1rem;
+    background: var(--bg-inset);
+    border: 1px solid var(--hair-soft);
+    border-radius: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.78125rem;
+    line-height: 1.55;
+    color: var(--fg);
+    overflow-wrap: anywhere;
   }
-  .pr-callout p { color: var(--fg-muted); font-size: 0.9375rem; max-width: 34rem; }
-  .pr-callout strong { color: var(--fg); }
+  .pr-url-row { display: flex; align-items: center; gap: 0.625rem; margin-top: 1rem; }
+  .pr-url-row .pr-url { flex: 1; min-width: 0; }
+  .pr-url-row .copy-btn { flex: none; }
 
-  .pr-faq { max-width: 40rem; margin-top: 3rem; }
-  .pr-faq h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-  .pr-faq p { color: var(--fg-muted); font-size: 0.9375rem; }
-
-  #pr-success { display: none; margin-bottom: 2rem; }
+  /* The card checkout, back from Stripe: a tool surface in a card's edge, its state quiet. */
+  #pr-success { display: none; margin-top: 2.5rem; margin-bottom: 2rem; }
   #pr-success.show { display: block; }
+  #pr-success .panel-head { padding: 1.25rem var(--card-pad) 0; }
+  .pr-success-body { padding: 1.25rem var(--card-pad) var(--card-pad); }
 
   .pr-success-head { display: flex; align-items: flex-start; gap: 0.875rem; }
   .pr-success-icon {
@@ -117,11 +107,19 @@
   }
   .pr-success-head h2 { font-size: 1.0625rem; font-weight: 500; color: var(--fg-strong); }
   .pr-success-head p { color: var(--fg-muted); font-size: 0.875rem; margin-top: 0.1875rem; }
-  .pr-url-row { display: flex; align-items: stretch; gap: 0.5rem; }
-  .pr-url-row .pr-url { flex: 1; }
-  .pr-url-row .copy-btn { flex: none; align-self: center; }
   .pr-success-next { font-size: 0.875rem; color: var(--fg-muted); margin-top: 1rem; }
   .pr-success-next a { color: var(--accent-strong); }
+  /* the warning that the URL is the only proof: as strong as it was */
+  #pr-success p.pr-warn { margin-top: 1rem; color: var(--fg-strong); font-weight: 500; }
+  /* the same states inside the Pass card, at the card's smaller size */
+  #pass-wallet .pr-success-head { margin-top: 0.75rem; align-items: center; }
+  #pass-wallet .pr-success-icon { margin-top: 0; }
+  #pass-wallet .pr-success-head h2 { font-size: 0.9375rem; }
+  #pass-wallet p.pr-warn { margin-top: 0.625rem; color: var(--fg-strong); font-weight: 500; }
+  #pass-wallet p.pr-note, #pass-wallet .pr-url-row { margin-top: 0.75rem; }
+
+  /* Arriving at #engagements, the heading lands under the nav, not a section gap below it. */
+  #engagements { scroll-margin-top: calc(-1 * var(--sec-gap)); }
 </style>
 </head>
 <body>
@@ -143,7 +141,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/" aria-current="page">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -156,39 +153,48 @@
       <h1 class="x-h1">Free to start. Pay when you need more.</h1>
       <p class="x-p">50 free calls every 24 hours per IPv4 address or IPv6 /64, no account. Agents can also pay $0.02 per call in USDC on Base via x402.</p>
 
-      <div id="pr-success" class="panel" style="margin-top:2.5rem">
+      <div id="pr-success" class="panel">
         <div class="panel-head"><span>checkout</span><span id="pr-success-meta"></span></div>
-        <div id="pr-success-body" style="padding:1.25rem"></div>
+        <div id="pr-success-body" class="pr-success-body"></div>
       </div>
 
-      <div class="x-cols">
+      <div class="x-cols pr-plans">
         <div>
           <h3>Free</h3>
           <p>$0. 50 calls every 24 hours per IPv4 address or IPv6 /64, shared by everyone behind it.</p>
           <a class="btn btn-ghost btn-sm" href="/playground/">Try it</a>
         </div>
-        <div>
+        <div id="pass">
           <h3>Pass</h3>
           <p>$9 once. 10,000 calls over 30 days. A bearer token, nothing renews.</p>
           <a class="btn btn-primary btn-sm" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Pay with card, $9</a>
-          <div class="pr-buy-wallet" id="pass-wallet" style="margin-top:1.25rem">
+          <div class="pr-buy-wallet" id="pass-wallet">
             <p>Or pay $9 in USDC from a Base wallet. If your wallet shows a warning, stop and use card.</p>
             <button class="btn btn-ghost btn-sm" type="button" id="pass-buy-btn">Pay with USDC, $9</button>
             <div id="pass-wallet-panel"></div>
           </div>
         </div>
-        <div>
+        <div id="developer">
           <h3>Developer</h3>
           <p>$9 a month. The same 10,000 calls, renewing. Cancel anytime in Stripe&rsquo;s portal.</p>
           <a class="btn btn-primary btn-sm" href="https://buy.stripe.com/5kQ4gzfQMbDn2cHd9w3wQ01" rel="noopener">Pay with card, $9/month</a>
         </div>
+        <div id="field-notes">
+          <h3>Field notes</h3>
+          <p>$500 flat, and the document already exists. You get the x402 settlement failures we observed as one merchant up to 6 September 2026, with the evidence, the dead ends, and where we could not see.</p>
+          <a class="btn btn-primary btn-sm" href="mailto:contact@0200project.com?subject=Field%20notes">Email to buy, $500</a>
+          <div class="pr-buy-wallet">
+            <p>An x402 client can pay $500 in USDC on Base by POSTing to api.0200project.com/field-notes, and the document is the response. Otherwise email us; if a wallet shows a warning, stop and email us instead.</p>
+            <a class="btn btn-ghost btn-sm" href="/services/">Read the offer</a>
+          </div>
+        </div>
       </div>
-      <p class="x-fine">Already subscribed? <a href="https://billing.stripe.com/p/login/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Manage or cancel</a>.</p>
+      <p class="x-fine">Already subscribed? <a href="https://billing.stripe.com/p/login/eVq8wP0VS22N2cHglI3wQ00" rel="noopener" style="display:inline-block;padding-block:.75rem;margin-block:-.75rem">Manage or cancel</a>.</p>
     </div></div>
   </section>
 
   <section class="x-sec" id="engagements">
-    <div class="container"><div class="x-wrap">
+    <div class="container"><div class="x-wrap" id="reviews">
       <h2 class="x-h">Reviews for finance teams.</h2>
       <p class="x-p">A written review of your own Base activity, with the evidence attached. It is evidence, not an opinion you can hand to a regulator.</p>
       <dl class="x-terms">
@@ -197,7 +203,7 @@
         <div><dt>Payment</dt><dd>After delivery: no deposit, no card on file, nothing recurs. USDC on Base is the default because the on-chain transfer is the receipt, and that transfer is public. Card can usually be arranged by email, and if your wallet shows a warning, stop and use card.</dd></div>
       </dl>
       <div class="x-acts">
-        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Addresses%3A%0ADate%20range%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
+        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Transaction%20hashes%3A%0ADates%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
       </div>
     </div></div>
   </section>
@@ -230,7 +236,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -254,8 +259,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
@@ -400,14 +404,14 @@
     var token = payload && payload.pass_token;
     var url = (payload && payload.mcp_url) || (token ? 'https://api.0200project.com/mcp/' + token : null);
     renderPanel(
-      '<div class="pr-success-head" style="margin-top:0.75rem">' +
+      '<div class="pr-success-head">' +
         '<div class="pr-success-icon" aria-hidden="true"></div>' +
-        '<div><h2 style="font-size:0.9375rem">Paid.</h2></div>' +
+        '<div><h2>Paid.</h2></div>' +
       '</div>' +
-      '<p style="margin-top:0.625rem;color:var(--fg-strong);font-weight:500">This is the only proof of purchase, save it now.</p>' +
+      '<p class="pr-warn">This is the only proof of purchase, save it now.</p>' +
       (url
-        ? '<div class="pr-url-row" style="margin-top:0.75rem"><div class="pr-url" id="pr-wallet-url-value">' + esc(url) + '</div><button class="copy-btn" type="button" id="pr-wallet-copy-btn">Copy</button></div>'
-        : '<p style="margin-top:0.75rem">' + esc((payload && (payload.note || payload.keep_this_token)) || 'Check the response for your token.') + '</p>')
+        ? '<div class="pr-url-row"><div class="pr-url" id="pr-wallet-url-value">' + esc(url) + '</div><button class="copy-btn" type="button" id="pr-wallet-copy-btn">Copy</button></div>'
+        : '<p class="pr-note">' + esc((payload && (payload.note || payload.keep_this_token)) || 'Check the response for your token.') + '</p>')
     );
     wireCopyButton('pr-wallet-copy-btn', 'pr-wallet-url-value');
     buyBtn.textContent = 'Paid';
@@ -469,7 +473,7 @@
 
   function startBuy() {
     if (!window.x402Pay || !window.x402Pay.available()) {
-      renderPanel('<p>No browser wallet detected. Install one (MetaMask, Coinbase Wallet, or similar) to pay this way, or use an x402-capable agent with the <code class="inline">buy_pass</code> tool.</p>');
+      renderPanel('<p>No browser wallet found. On a phone, open this page in your wallet app&rsquo;s browser; on a computer, use a wallet extension (MetaMask, Coinbase Wallet, or similar). Or pay by card, or use an x402-capable agent with the <code class="inline">buy_pass</code> tool.</p>');
       return;
     }
     buyBtn.disabled = true;
@@ -567,10 +571,10 @@
                 ' &middot; 10,000 calls' + (isSub ? ', renews automatically' : ' over 30 days') + '</p>' +
             '</div>' +
           '</div>' +
-          '<p style="margin-top:1rem;color:var(--fg-strong);font-weight:500">' +
+          '<p class="pr-warn">' +
             esc(r.body.warning || 'This URL is your only proof of purchase, copy it now, there is no account to recover it from later.') +
           '</p>' +
-          '<div class="pr-url-row" style="margin-top:0.75rem">' +
+          '<div class="pr-url-row">' +
             '<div class="pr-url" id="pr-url-value">' + esc(r.body.mcp_url) + '</div>' +
             '<button class="copy-btn" type="button" id="pr-copy-btn">Copy</button>' +
           '</div>' +

@@ -22,27 +22,16 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
-.pay-steps { list-style: none; counter-reset: pay; }
-  .pay-steps li {
-    counter-increment: pay;
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.875rem;
-    padding-block: 0.875rem;
+  /* Paying for an engagement: two cards at one weight, the order the money moves in. From
+     36em up their headings and their lines share rows (subgrid). */
+  @media (min-width: 36em) {
+    .pay-how { row-gap: 0; }
+    .pay-how > div { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
   }
-  .pay-steps li + li { border-top: 1px solid var(--border); }
-  .pay-steps li::before {
-    content: "0" counter(pay);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--fg-faint);
-    padding-top: 0.2rem;
-  }
-  .pay-steps strong { display: block; color: var(--fg); font-weight: 500; }
-  .pay-steps span { color: var(--fg-muted); font-size: 0.875rem; }
+  .pay-acts { margin-top: 3rem; }
 </style>
 </head>
 <body>
@@ -64,7 +53,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -75,13 +63,13 @@
   <section class="x-top">
     <div class="container"><div class="x-wrap">
       <h1 class="x-h1">You get the work first. Then you pay.</h1>
-      <div class="x-cols" style="--cols:2">
+      <div class="x-cols pay-how" style="--cols:2">
         <div><h3>After delivery</h3><p>Once the work is delivered, we send a payment request for the agreed amount. Nothing is due before.</p></div>
         <div><h3>USDC on Base by default</h3><p>USDC on Base is the default because the on-chain transfer is the receipt, and the receipt is the invoice. That transfer is public on Base. Card can usually be arranged by email, and if your wallet shows a warning when you sign, stop and use card.</p></div>
       </div>
-      <div class="x-acts" style="margin-top:3rem">
-        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Addresses%3A%0ADate%20range%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
-        <a class="btn btn-ghost" href="/pricing/">Pricing</a>
+      <div class="x-acts pay-acts">
+        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Transaction%20hashes%3A%0ADates%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
+        <a class="btn btn-ghost" href="/pricing/#reviews">Pricing</a>
       </div>
     </div></div>
   </section>
@@ -114,7 +102,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -138,8 +125,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>

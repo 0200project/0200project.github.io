@@ -22,50 +22,18 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
-  /* "What this is not" is a list of DENIALS. The .checks class draws an
-     affirmative blue tick, so every line rendered as "yes: not a review that
-     issues a verdict" -- the mark contradicting the sentence it sits beside.
-     A dash reads as what it is: a boundary, not an endorsement. */
-  .nots { list-style: none; }
-  .nots li {
-    position: relative;
-    padding-left: 1.75rem;
-    color: var(--fg-muted);
+  /* Two services as two cards at one weight. From 36em up their headings, their lines and
+     their buttons share rows across the cards (subgrid), so both buttons stand on one line
+     under the longer text; both stay the same quiet button. */
+  @media (min-width: 36em) {
+    .sv-cards { row-gap: 0; }
+    .sv-cards > div { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
+    .sv-cards > div > * { min-width: 0; }
+    .sv-cards > div > .btn { justify-self: start; align-self: end; }
   }
-  .nots li + li { margin-top: 0.625rem; }
-  .nots li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.72em;
-    width: 0.75rem;
-    height: 1px;
-    background: var(--border-strong);
-  }
-  .pr-faq { margin-top: 3rem; }
-
-.pay-steps { list-style: none; counter-reset: pay; }
-  .pay-steps li {
-    counter-increment: pay;
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.875rem;
-    padding-block: 0.875rem;
-  }
-  .pay-steps li + li { border-top: 1px solid var(--border); }
-  .pay-steps li::before {
-    content: "0" counter(pay);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--fg-faint);
-    padding-top: 0.2rem;
-  }
-  .pay-steps strong { display: block; color: var(--fg); font-weight: 500; }
-  .pay-steps span { color: var(--fg-muted); font-size: 0.875rem; }
-
 </style>
 </head>
 <body>
@@ -87,7 +55,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -99,7 +66,7 @@
     <div class="container"><div class="x-wrap">
       <h1 class="x-h1">Lessons from selling over x402, for hire.</h1>
       <p class="x-p">Two fixed-price services for teams building x402 payments. This is evidence, not an opinion about whether your system is sound.</p>
-      <div class="x-cols" style="--cols:2">
+      <div class="x-cols sv-cards" style="--cols:2">
         <div>
           <h3>Field notes: x402 settlement failures</h3>
           <p>$500 flat, and the document already exists. You get the x402 settlement failures we observed as one merchant up to 6 September 2026, with the evidence, the dead ends, and where we could not see. An x402 client can pay $500 in USDC on Base by POSTing to api.0200project.com/field-notes, and the document is the response. Otherwise email us; if a wallet shows a warning, stop and email us instead.</p>
@@ -110,6 +77,21 @@
           <p>$1,500 to $2,000 fixed, one week. Your API sells over x402, and the work is done when a real settlement lands on your own payout wallet. If that never happens, you owe nothing.</p>
           <a class="btn btn-ghost btn-sm" href="mailto:contact@0200project.com?subject=Integration">Ask about an integration</a>
         </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="x-sec">
+    <div class="container"><div class="x-wrap" id="reviews">
+      <h2 class="x-h">Reviews for finance teams.</h2>
+      <p class="x-p">A written review of your own Base activity, with the evidence attached. It is evidence, not an opinion you can hand to a regulator.</p>
+      <dl class="x-terms">
+        <div><dt>Price</dt><dd>$5,000 per engagement, scope agreed in writing first</dd></div>
+        <div><dt>Delivery</dt><dd>3 to 5 days</dd></div>
+        <div><dt>Payment</dt><dd>After delivery: no deposit, no card on file, nothing recurs. USDC on Base is the default because the on-chain transfer is the receipt, and that transfer is public. Card can usually be arranged by email, and if your wallet shows a warning, stop and use card.</dd></div>
+      </dl>
+      <div class="x-acts">
+        <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Transaction%20hashes%3A%0ADates%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
       </div>
     </div></div>
   </section>
@@ -142,7 +124,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -166,8 +147,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>

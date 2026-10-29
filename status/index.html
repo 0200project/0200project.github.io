@@ -5,10 +5,10 @@
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Status, 0200project</title>
-<meta name="description" content="Current operational state of 0200project services, checked live from your browser against the production endpoints.">
+<meta name="description" content="Live checks of the 0200project decoder API, MCP endpoint and x402 challenge, run from your browser against the production endpoints when you open the page.">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="Status, 0200project">
-<meta property="og:description" content="Current operational state of 0200project services.">
+<meta property="og:description" content="Live checks of the decoder API, MCP endpoint and x402 challenge, run from your browser when you open the page.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0200project">
 <meta property="og:image" content="https://0200project.com/assets/og.png">
@@ -22,40 +22,128 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
-  .status-col { max-width: 46rem; }
-  .status-body { padding-bottom: clamp(4rem, 9vw, 6.5rem); }
-  .status-banner { margin-bottom: 1rem; }
+  /* Status: one live headline, a few rows, each dot backed by a real check. */
+  .st { max-width: 48rem; margin-top: clamp(2.5rem, calc(4.5 * var(--vw)), 4rem); }
+  html:not(.js) .st-live { display: none; }
 
-  .service-sub {
-    font-family: var(--mono);
-    font-size: 0.71875rem;
-    color: var(--fg-faint);
-    margin-top: 0.2rem;
-    overflow-wrap: anywhere;
-  }
-  .state [data-ms] { color: var(--fg-faint); }
-  .state [data-ms]:empty { display: none; }
+  .st-card { background: var(--card-bg); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: hidden; }
 
-  .dot-wait { background: var(--border-strong); }
-  .dot-down { background: transparent; border: 1.5px solid var(--fg-muted); }
-
-  .status-meta {
-    display: flex;
-    flex-wrap: wrap;
+  .st-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "state btn" "when when";
     align-items: center;
-    gap: 0.75rem 1rem;
-    margin-top: 1.25rem;
+    gap: 0.875rem 1.5rem;
+    padding: var(--card-pad);
   }
-  .method-note { margin-top: 1.5rem; max-width: 40rem; }
+  .st-head .btn { grid-area: btn; }
+  .st-state {
+    grid-area: state;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin: 0;
+    font-size: clamp(1.5rem, calc(2.2 * var(--vw)), 2rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--fg-strong);
+    text-wrap: balance;
+  }
+  .st-when {
+    grid-area: when;
+    margin: 0;
+    padding-left: 1.5rem;
+    max-width: 36rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--fg-muted);
+  }
 
-  .incidents {
-    border-top: 1px solid var(--border);
-    padding-block: clamp(3.5rem, 8vw, 5.5rem);
+  .st-rows { list-style: none; margin: 0; padding: 0; }
+  .st-row, .st-checks li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(11.5rem, auto);
   }
-  .incidents h2 { font-size: 1.375rem; letter-spacing: -0.015em; }
+  .st-row {
+    gap: 0.375rem 1.5rem;
+    padding: 1.375rem var(--card-pad);
+    border-top: 1px solid var(--hair-soft);
+  }
+  .st-name { display: block; font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.012em; color: var(--fg); }
+  .st-sub { display: block; margin-top: 0.25rem; font-size: 0.875rem; line-height: 1.45; color: var(--fg-faint); overflow-wrap: anywhere; }
+  .st-is {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: start;
+    justify-self: start;
+    padding-top: 0.125rem;
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+  .st-is [data-ms] { color: var(--fg-faint); font-variant-numeric: tabular-nums; margin-left: 0.25rem; }
+  .st-is [data-ms]:empty { display: none; }
+
+  .st-checks { grid-column: 1 / -1; margin-top: 1rem; }
+  .st-checks-cap { margin: 0 0 0.375rem; font-size: 0.875rem; line-height: 1.45; color: var(--fg-faint); }
+  .st-checks ul { list-style: none; margin: 0; padding: 0; }
+  .st-checks li {
+    align-items: center;
+    gap: 0.25rem 1.5rem;
+    padding-block: 0.375rem;
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
+  }
+  .st-checks li .st-is { padding-top: 0; }
+
+  /* The dot: filled blue when a check passed, half when degraded, an empty ring when
+     unreachable, grey while checking or when nothing could be measured. */
+  .st .dot { position: relative; overflow: hidden; width: 0.5rem; height: 0.5rem; transition: background-color 0.6s ease, box-shadow 0.6s ease; }
+  .st-state .dot { width: 0.625rem; height: 0.625rem; }
+  .st .dot-ok { background: var(--accent); }
+  .st .dot-wait { background: #3a3a40; }
+  .st .dot-down { background: transparent; box-shadow: inset 0 0 0 1.5px var(--fg-muted); }
+  .st .dot-part { background: transparent; box-shadow: inset 0 0 0 1.5px var(--fg-muted); }
+  .st .dot-part::before { content: ""; position: absolute; inset: 0 50% 0 0; background: var(--fg-muted); }
+
+  .st-notes { margin-top: 1.75rem; max-width: 40rem; }
+  .st-notes .x-fine { margin-top: 0; }
+  .st-notes #lifetime-line { margin-top: 1rem; }
+  .st-notes #lifetime-line:empty { display: none; }
+  .st .method-note { font-size: 0.9375rem; line-height: 1.55; color: var(--fg-faint); max-width: 40rem; }
+
+  @media (max-width: 40rem) {
+    .st-head { grid-template-columns: minmax(0, 1fr); grid-template-areas: "state" "when" "btn"; }
+    .st-head .btn { justify-self: start; margin-top: 0.25rem; }
+    .st-when { padding-left: 0; }
+    .st-row { grid-template-columns: minmax(0, 1fr); }
+    .st-row > .st-is { margin-top: 0.25rem; }
+    .st-checks li { grid-template-columns: minmax(0, 1fr) auto; gap: 0.25rem 1rem; }
+  }
+  /* Every state shares one column, so the dots line up at any width. */
+  @supports (grid-template-columns: subgrid) {
+    .st-rows { display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, auto); column-gap: 1.5rem; }
+    .st-row, .st-checks, .st-checks ul, .st-checks li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; column-gap: normal; }
+    .st-checks-cap { grid-column: 1 / -1; }
+    @media (max-width: 40rem) {
+      .st-rows { grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.75rem; }
+      .st-is [data-ms] { margin-left: 0; }
+      .st-is, .st-checks li { font-size: 0.875rem; }
+      .st-row > div:first-child { display: contents; }
+      .st-name { grid-area: 1 / 1; }
+      .st-row > .st-is { grid-area: 1 / 2; margin-top: 0; }
+      .st-sub { grid-column: 1 / -1; grid-row: 2; margin-top: 0; }
+      .st-checks { grid-row: 3; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .st .dot { transition: none; }
+  }
 </style>
 </head>
 <body>
@@ -77,7 +165,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -85,73 +172,63 @@
 
 <main id="main">
 
-  <section class="page-hero">
+  <section class="x-top status-body">
     <div class="container">
-      <span class="eyebrow">Status</span>
       <h1 class="h-section">System status</h1>
-      <p class="lead">The current operational state of 0200project services, checked live from this page.</p>
-    </div>
-  </section>
 
-  <div class="container status-body">
-    <div class="status-col">
+      <div class="st">
 
-      <div class="status-banner" role="status" aria-live="polite">
-        <span class="dot dot-wait" id="banner-dot"></span>
-        <span id="banner-text">Checking&hellip;</span>
-      </div>
+        <div class="st-live">
+          <div class="st-card">
+            <div class="st-head">
+              <p class="st-state" role="status" aria-live="polite"><span class="dot dot-wait" id="banner-dot" aria-hidden="true"></span><span id="banner-text">Checking&hellip;</span></p>
+              <button class="btn btn-ghost btn-sm" id="recheck" type="button">Re-check</button>
+              <p class="st-when"><time id="last-checked"></time> <span>Nothing here is monitored on our side. This page checks when you open it.</span></p>
+            </div>
 
-      <p class="small faint" id="lifetime-line" style="margin:-0.25rem 0 1rem"></p>
-
-      <div class="panel">
-        <div class="service-row" id="row-mcp">
-          <div>
-            <div class="name">MCP Endpoint</div>
-            <div class="service-sub">api.0200project.com/mcp</div>
+            <ul class="st-rows">
+              <li class="st-row" id="row-decoder">
+                <div>
+                  <span class="st-name">Decoder API</span>
+                  <span class="st-sub">api.0200project.com/healthz</span>
+                </div>
+                <span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span><span data-ms></span></span>
+                <div class="st-checks" id="decoder-checks">
+                  <p class="st-checks-cap" id="checks-cap">Address checks, as the decoder reports them</p>
+                  <ul id="check-list">
+                    <li data-check="contract_verification"><span>Contract verification</span><span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span></span></li>
+                    <li data-check="first_interaction"><span>First interaction</span><span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span></span></li>
+                    <li data-check="drainer_blacklist"><span>Drainer blacklist</span><span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span></span></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="st-row" id="row-mcp">
+                <div>
+                  <span class="st-name">MCP endpoint</span>
+                  <span class="st-sub">api.0200project.com/mcp</span>
+                </div>
+                <span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span><span data-ms></span></span>
+              </li>
+              <li class="st-row" id="row-x402">
+                <div>
+                  <span class="st-name">x402 challenge</span>
+                  <span class="st-sub">Our challenge, read from the same /mcp request. Whether a payment goes through is not checked.</span>
+                </div>
+                <span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label>Checking&hellip;</span></span>
+              </li>
+            </ul>
           </div>
-          <span class="state"><span class="dot dot-wait" data-dot></span><span data-label>Checking&hellip;</span><span data-ms></span></span>
-        </div>
-        <div class="service-row" id="row-decoder">
-          <div>
-            <div class="name">Transaction Decoder</div>
-            <div class="service-sub">same deployment &middot; probed via /healthz</div>
-          </div>
-          <span class="state"><span class="dot dot-wait" data-dot></span><span data-label>Checking&hellip;</span></span>
-        </div>
-        <div class="service-row" id="row-pay">
-          <div>
-            <div class="name">Payment System</div>
-            <div class="service-sub">x402 facilitator &middot; facilitator.payai.network</div>
-          </div>
-          <span class="state"><span class="dot dot-wait" data-dot></span><span data-label>Checking&hellip;</span><span data-ms></span></span>
-        </div>
-      </div>
 
-      <div class="status-meta">
-        <button class="btn btn-ghost btn-sm" id="recheck" type="button">Re-check</button>
-        <span class="small faint" id="last-checked"></span>
-      </div>
-
-      <p class="small faint method-note">These checks run from your browser against the production endpoints, no third-party monitoring service is involved. Reported latency is the round trip from your network location. The server permits reading <code class="inline">/healthz</code> cross-origin, so the MCP row reflects the actual health payload: reported version, payment mode, and lifetime call counters. The facilitator is a third-party host this page can only ping; cross-origin rules prevent reading its response body, so "reachable" means exactly that, the host answered. The MCP endpoint and the transaction decoder are one deployment, so both rows derive from a single probe of <code class="inline">/healthz</code>.</p>
-
-      <noscript>
-        <p class="small faint method-note">JavaScript is disabled, so live checks cannot run from this page. You can probe the endpoint directly: <code class="inline">curl https://api.0200project.com/healthz</code></p>
-      </noscript>
-
-    </div>
-  </div>
-
-  <section class="incidents">
-    <div class="container">
-      <div class="status-col">
-        <h2>Incident history</h2>
-        <div class="log-entry">
-          <div class="log-date">Since Aug 20, 2026</div>
-          <div class="log-body">
-            <h3>No incidents reported.</h3>
-            <p>Operational history begins August 20, 2026, when base-transaction-decoder first shipped. It has been through several releases since; the changelog records each one and its date. Incidents, when they occur, will be listed here.</p>
+          <div class="st-notes">
+            <p class="x-fine">These checks run from your browser against the production endpoints; no third-party monitoring service is involved. Reported latency is the round trip from your network location.</p>
+            <p class="small faint" id="lifetime-line"></p>
           </div>
         </div>
+
+        <noscript>
+          <p class="small faint method-note">JavaScript is disabled, so live checks cannot run from this page. You can probe the endpoint directly: <code class="inline">curl https://api.0200project.com/healthz</code></p>
+        </noscript>
+
       </div>
     </div>
   </section>
@@ -184,7 +261,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -208,197 +284,201 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
 
 <script>
 (function () {
-  var HEALTH = 'https://api.0200project.com/healthz';
-  var FACILITATOR = 'https://facilitator.payai.network/';
+  var API = 'https://api.0200project.com';
+  var TIMEOUT = 10000;
+  var NAMES = { decoder: 'Decoder API', mcp: 'MCP endpoint', x402: 'x402 challenge' };
+  var DOT = { ok: 'dot-ok', part: 'dot-part', down: 'dot-down', unknown: 'dot-wait', wait: 'dot-wait' };
 
-  var bannerDot = document.getElementById('banner-dot');
-  var bannerText = document.getElementById('banner-text');
-  var lastChecked = document.getElementById('last-checked');
-  var lifetimeLine = document.getElementById('lifetime-line');
-  var btn = document.getElementById('recheck');
+  var $ = function (id) { return document.getElementById(id); };
+  var bannerDot = $('banner-dot');
+  var bannerText = $('banner-text');
+  var lastChecked = $('last-checked');
+  var lifetimeLine = $('lifetime-line');
+  var btn = $('recheck');
+  var checksWrap = $('decoder-checks');
+  var checksCap = $('checks-cap');
+  var checkList = $('check-list');
+  if (!window.fetch || !window.AbortController || !bannerText) return;
 
-  function refs(id) {
-    var el = document.getElementById(id);
-    return {
-      dot: el.querySelector('[data-dot]'),
-      label: el.querySelector('[data-label]'),
-      ms: el.querySelector('[data-ms]')
-    };
+  function refs(el) {
+    return { dot: el.querySelector('[data-dot]'), label: el.querySelector('[data-label]'), ms: el.querySelector('[data-ms]') };
+  }
+  var rows = { decoder: refs($('row-decoder')), mcp: refs($('row-mcp')), x402: refs($('row-x402')) };
+
+  function paint(r, state, label, ms) {
+    r.dot.className = 'dot ' + DOT[state];
+    r.label.textContent = label;
+    if (r.ms) r.ms.textContent = typeof ms === 'number' ? ms + ' ms' : '';
+  }
+  function setRow(key, state, label, ms, phrase) {
+    var r = rows[key];
+    r.state = state;
+    r.phrase = phrase || null;
+    paint(r, state, label, ms);
   }
 
-  var rows = { mcp: refs('row-mcp'), decoder: refs('row-decoder'), pay: refs('row-pay') };
-
-  function setState(row, dotClass, label, ms) {
-    row.dot.className = 'dot ' + dotClass;
-    row.label.textContent = label;
-    if (row.ms) row.ms.textContent = (typeof ms === 'number') ? ms + ' ms' : '';
-  }
-
-  // An opaque (no-cors) response resolving means the host answered;
-  // a rejected fetch (or a 10s timeout) means it was unreachable from this browser.
-  function probe(url) {
+  // One GET; the timeout also covers reading the body. res is null when nothing came back.
+  function get(path, wantBody) {
     var t0 = performance.now();
     var ctrl = new AbortController();
-    var to = setTimeout(function () { ctrl.abort(); }, 10000);
-    return fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
-      .then(function () { clearTimeout(to); return { ok: true, ms: Math.round(performance.now() - t0) }; })
-      .catch(function () { clearTimeout(to); return { ok: false }; });
-  }
-
-  // /healthz permits cross-origin reads, so fetch the real health payload:
-  // ok flag, version, payment mode, and lifetime demand counters. If the
-  // CORS fetch fails, fall back to the opaque reachability probe above
-  // before declaring the host down.
-  function probeHealth() {
-    var t0 = performance.now();
-    var ctrl = new AbortController();
-    var to = setTimeout(function () { ctrl.abort(); }, 10000);
-    return fetch(HEALTH, { mode: 'cors', cache: 'no-store', signal: ctrl.signal })
+    var to = setTimeout(function () { ctrl.abort(); }, TIMEOUT);
+    return fetch(API + path, { mode: 'cors', cache: 'no-store', signal: ctrl.signal })
       .then(function (res) {
-        clearTimeout(to);
-        if (!res.ok) throw new Error('bad status');
-        return res.json().then(function (data) {
-          return { ok: true, ms: Math.round(performance.now() - t0), data: data };
-        });
-      })
-      .catch(function () { clearTimeout(to); return probe(HEALTH); });
+        var out = { res: res, ms: Math.round(performance.now() - t0), body: null };
+        if (!wantBody) return out;
+        return res.text().then(function (t) { out.body = t; }, function () {}).then(function () { return out; });
+      }, function () { return { res: null }; })
+      .then(function (out) { clearTimeout(to); return out; });
+  }
+
+  function num(v) { return typeof v === 'number' && isFinite(v); }
+
+  // One address check, from the decoder's own counts. Only a check whose every
+  // attempt came back ok passes; no attempts is not a pass.
+  function checkState(c) {
+    if (!c || !num(c.attempts) || !num(c.ok) || !num(c.unavailable)) return ['unknown', 'Not reported'];
+    if (c.attempts === 0) return ['unknown', 'No traffic to measure'];
+    if (c.unavailable >= c.attempts) return ['down', 'Unavailable'];
+    if (c.unavailable > 0) return ['part', 'Sometimes unavailable'];
+    if (c.ok < c.attempts) return ['part', 'Partial coverage'];
+    return ['ok', 'Answering'];
+  }
+
+  function humanize(k) { k = String(k).replace(/_/g, ' '); return k.charAt(0).toUpperCase() + k.slice(1); }
+
+  function renderChecks(h) {
+    var checks = h && h.checks;
+    if (!checks || typeof checks !== 'object') { checksWrap.hidden = true; return []; }
+    checksCap.textContent = num(h.window_hours)
+      ? 'Address checks over the past ' + h.window_hours + ' hours, as the decoder reports them'
+      : 'Address checks, as the decoder reports them';
+    var states = [];
+    var seen = {};
+    Array.prototype.slice.call(checkList.children).forEach(function (li) {
+      var k = li.getAttribute('data-check');
+      if (!Object.prototype.hasOwnProperty.call(checks, k)) { li.remove(); return; }
+      seen[k] = true;
+    });
+    Object.keys(checks).forEach(function (k) {
+      if (seen[k]) return;
+      var li = document.createElement('li');
+      li.setAttribute('data-check', k);
+      li.innerHTML = '<span></span><span class="st-is"><span class="dot dot-wait" data-dot aria-hidden="true"></span><span data-label></span></span>';
+      li.firstChild.textContent = humanize(k);
+      checkList.appendChild(li);
+    });
+    Array.prototype.slice.call(checkList.children).forEach(function (li) {
+      var s = checkState(checks[li.getAttribute('data-check')]);
+      paint(refs(li), s[0], s[1]);
+      states.push(s[0]);
+    });
+    checksWrap.hidden = !states.length;
+    return states;
+  }
+
+  function lifetime(lt) {
+    if (!lt || typeof lt.calls !== 'number') return;
+    var parts = [lt.calls.toLocaleString() + ' requests served'];
+    if (typeof lt.free === 'number') parts.push(lt.free.toLocaleString() + ' served free');
+    if (typeof lt.wall_hits === 'number') parts.push(lt.wall_hits.toLocaleString() + ' returned a payment challenge');
+    lifetimeLine.textContent = parts.join(' · ');
+  }
+
+  // Decoder API: 200 with ok:true, and every address check answering.
+  function decoder(r) {
+    if (!r.res) { checksWrap.hidden = true; return setRow('decoder', 'down', 'Unreachable'); }
+    if (r.res.status !== 200) { checksWrap.hidden = true; return setRow('decoder', 'part', 'Responded ' + r.res.status, r.ms); }
+    var d;
+    try { d = r.body == null ? undefined : JSON.parse(r.body); } catch (e) { d = undefined; }
+    if (d === undefined) { checksWrap.hidden = true; return setRow('decoder', 'part', 'Unreadable response', r.ms); }
+    if (!d || d.ok !== true) { checksWrap.hidden = true; return setRow('decoder', 'part', 'Reports a problem', r.ms); }
+    var states = renderChecks(d.check_health);
+    if (!states.length) setRow('decoder', 'unknown', 'Checks not reported', r.ms, 'Decoder API checks not reported');
+    else if (states.indexOf('down') !== -1 || states.indexOf('part') !== -1) setRow('decoder', 'part', 'Degraded', r.ms);
+    else if (states.indexOf('unknown') !== -1) setRow('decoder', 'unknown', 'Not fully measured', r.ms, 'Decoder API not fully measured');
+    else setRow('decoder', 'ok', 'Operational', r.ms);
+    lifetime(d.lifetime);
+  }
+
+  // Our x402 challenge: a 402 whose PAYMENT-REQUIRED header decodes to a well-formed offer.
+  function challenge(res) {
+    if (res.status !== 402) return 'none';
+    var h = res.headers.get('payment-required');
+    if (!h) return 'unread';
+    try {
+      var bin = atob(h);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var c = JSON.parse(new TextDecoder().decode(bytes));
+      var good = num(c.x402Version) && Array.isArray(c.accepts) && c.accepts.length > 0 &&
+        c.accepts.every(function (a) { return a && a.scheme && a.network && a.asset && a.amount && a.payTo; });
+      return good ? 'ok' : 'bad';
+    } catch (e) { return 'bad'; }
+  }
+
+  // MCP endpoint: 402 (the paywall answering) or 200. The x402 row reads the same response.
+  function mcp(r) {
+    if (!r.res) {
+      setRow('mcp', 'down', 'Unreachable');
+      setRow('x402', 'down', 'Unreachable');
+      return;
+    }
+    var s = r.res.status;
+    if (s === 402 || s === 200) setRow('mcp', 'ok', 'Operational', r.ms);
+    else setRow('mcp', 'part', 'Responded ' + s, r.ms);
+    var c = challenge(r.res);
+    if (c === 'ok') setRow('x402', 'ok', 'Live');
+    else if (c === 'unread') setRow('x402', 'unknown', 'Could not be read', null, 'x402 challenge could not be read');
+    else if (c === 'bad') setRow('x402', 'part', 'Malformed', null, 'x402 challenge malformed');
+    else setRow('x402', 'down', 'Not issued', null, 'x402 challenge not issued');
+  }
+
+  function headline() {
+    var bad = Object.keys(rows).filter(function (k) { return rows[k].state !== 'ok'; });
+    var has = function (st) { return bad.some(function (k) { return rows[k].state === st; }); };
+    var text, dot;
+    if (!bad.length) { text = 'All systems operational'; dot = 'ok'; }
+    else {
+      dot = has('down') ? 'down' : has('part') ? 'part' : 'unknown';
+      if (bad.length === 1) {
+        var r = rows[bad[0]];
+        text = r.phrase || NAMES[bad[0]] + (r.state === 'down' ? ' unreachable' : r.state === 'part' ? ' degraded' : ' not confirmed');
+      } else {
+        var unreachable = bad.every(function (k) { return rows[k].label.textContent === 'Unreachable'; });
+        var unconfirmed = bad.every(function (k) { return rows[k].state === 'unknown'; });
+        text = unreachable ? 'Some systems unreachable' : unconfirmed ? 'Some checks not confirmed' : 'Some systems degraded';
+        dot = unreachable ? 'down' : unconfirmed ? 'unknown' : 'part';
+      }
+    }
+    bannerDot.className = 'dot ' + DOT[dot];
+    bannerText.textContent = text;
   }
 
   function run() {
     btn.disabled = true;
     bannerDot.className = 'dot dot-wait';
     bannerText.textContent = 'Checking…';
+    lastChecked.textContent = '';
+    lastChecked.removeAttribute('datetime');
     lifetimeLine.textContent = '';
-    setState(rows.mcp, 'dot-wait', 'Checking…');
-    setState(rows.decoder, 'dot-wait', 'Checking…');
-    setState(rows.pay, 'dot-wait', 'Checking…');
+    Object.keys(rows).forEach(function (k) { setRow(k, 'wait', 'Checking…'); });
+    Array.prototype.slice.call(checkList.children).forEach(function (li) { paint(refs(li), 'wait', 'Checking…'); });
 
-    Promise.all([probeHealth(), probe(FACILITATOR)]).then(function (results) {
-      var health = results[0];
-      var facilitator = results[1];
-      var healthy = !!(health.ok && health.data && health.data.ok === true);
-
-      if (healthy) {
-        var d = health.data;
-        setState(rows.mcp, 'dot-live', 'Operational · v' + d.version + ' · payments: ' + d.payment_mode, health.ms);
-        setState(rows.decoder, 'dot-live', 'Operational');
-        var lt = d.lifetime || {};
-        if (typeof lt.calls === 'number') {
-          /* MONEY ON A PUBLIC PAGE MUST NOT FLATTER, AND THIS COMMENT USED TO BE
-               THE LEAK IT WARNED ABOUT.
-
-               THE ORIGINAL DEFECT. This line once showed a paid figure taken from
-               lt.paid_calls, which counts calls that ARRIVED CARRYING a payment,
-               not payments that settled. It overstated paid activity: wrong, in
-               public, about money, in our favour. A free-out-of-total split is
-               misleading on its own too, because it invites the reader to assume
-               the remainder were paid.
-
-               WHAT THIS COMMENT ITSELF DISCLOSED, found 2026-10-28. Explaining
-               the fix, it published a full historical /healthz read, a later
-               paid_calls figure, an internal-traffic percentage, and -- worst --
-               the exact identity by which the usage buckets sum to `calls`.
-               /healthz publishes all but two of those terms, so the identity
-               CLOSED: a reader could solve the published page plus the public
-               health endpoint for the two figures we deliberately withhold.
-               Verified by doing it. The withheld pair was recoverable to the
-               exact number.
-
-               So the rationale was the disclosure. Nothing here now carries a
-               commercial figure, a percentage, or the decomposition -- and that
-               is a standing rule for this file, not a claim about this revision.
-               The bound is all a reader gets: THE REMAINDER IS NOT PAID TRAFFIC,
-               AND MOST OF IT IS OURS. paid_calls and pass_calls are withheld.
-
-               DO NOT ADD `unmarked_calls` TO ANY SUM HERE. It is not a bucket. It
-               is an overlay counted at :289 over rows that then fall through into
-               a real bucket, so adding it double-counts -- and nothing in the
-               payload says so. That is what made the arithmetic here look
-               unreconcilable when it never was.
-
-               THE REMAINING PROBLEM IS THE TOTAL, NOT THE MISSING CLAUSES.
-               `calls` is what invites the subtraction: a total published beside a
-               partial decomposition is a trap, because CORRECT arithmetic on
-               HONEST numbers yields a wrong third number. Publishing the full
-               partition, or publishing no total, are the two leak-free options.
-               BOTH ARE DISCLOSURE DECISIONS, NOT ENGINEERING ONES, and they are
-               the founder's -- open on his page, not here. */
-          /* OMIT AN ABSENT COMPONENT, NEVER ZERO IT. This block used to do
-             `typeof lt.free === 'number' ? lt.free : 0` for both, which is the
-             same construction that published "0 payments settled" -- it just
-             happened to be aimed at two fields the server does publish, so it
-             was latent rather than live. site/assets/site.js is the reference
-             implementation and it omits; this now matches it. A missing figure
-             disappears from the line instead of asserting none. */
-          var parts = [lt.calls.toLocaleString() + ' tool calls all-time'];
-          if (typeof lt.free === 'number') {
-            parts.push(lt.free.toLocaleString() + ' served free');
-          }
-          if (typeof lt.wall_hits === 'number') {
-            parts.push(lt.wall_hits.toLocaleString() + ' returned a payment challenge');
-          }
-          var line = parts.join(' \u00b7 ');
-          /* NO SETTLEMENT COUNT HERE, for two independent reasons.
-
-             (1) /healthz does not publish `settlements` — that is commercial
-             state and belongs on the token-gated surface, exactly as the comment
-             above already says. This page read the field anyway and rendered the
-             ABSENCE as the number zero, publishing a settled count of zero at a
-             time when settlements existed. An instrument with no spelling for
-             "I cannot tell you" answers with a number instead. A false figure
-             about our own record is worst on this page of all, because this page
-             tells the reader the checks run live against production and invites
-             them to verify.
-
-             (2) Even holding the field, a bare count may not be rendered here: a
-             count of settlements reads as a count of CUSTOMERS, and ours is not
-             one. A count may not imply a population we do not have. If this
-             clause ever returns it carries its split.
-
-             ⛔ AND THE OPERANDS STAY OUT OF THIS COMMENT. It used to state the
-             split, the date, the amount and a transaction hash prefix — and
-             COMMENTS ARE SERVED. View-source published the exact population fact
-             that rule (2) exists to withhold, with no token and no auth, for as
-             long as the page has been up. The reasoning was right and writing the
-             reasoning down was the leak. site-check.sh enforces this rule on
-             rendered copy and could not see it four lines from the code it
-             guards. */
-          lifetimeLine.textContent = line;
-        }
-      } else if (health.ok) {
-        // The host answered but the health body could not be read.
-        setState(rows.mcp, 'dot-live', 'Reachable', health.ms);
-        setState(rows.decoder, 'dot-live', 'Reachable');
-      } else {
-        setState(rows.mcp, 'dot-down', 'Unreachable');
-        setState(rows.decoder, 'dot-down', 'Unreachable');
-      }
-
-      if (facilitator.ok) {
-        setState(rows.pay, 'dot-live', 'Reachable', facilitator.ms);
-      } else {
-        setState(rows.pay, 'dot-down', 'Unreachable');
-      }
-
-      if (health.ok && facilitator.ok) {
-        bannerDot.className = 'dot dot-live';
-        bannerText.textContent = healthy
-          ? 'All systems operational'
-          : 'All endpoints reachable from your browser';
-      } else {
-        bannerDot.className = 'dot dot-down';
-        bannerText.textContent = 'An endpoint is unreachable from your browser';
-      }
-
-      lastChecked.textContent = 'Last checked: ' + new Date().toLocaleTimeString();
+    Promise.all([
+      get('/healthz', true).then(decoder).catch(function () { checksWrap.hidden = true; setRow('decoder', 'part', 'Unreadable response'); }),
+      get('/mcp').then(mcp).catch(function () { setRow('mcp', 'part', 'Unreadable response'); setRow('x402', 'unknown', 'Could not be read'); })
+    ]).then(function () {
+      headline();
+      var now = new Date();
+      lastChecked.setAttribute('datetime', now.toISOString());
+      lastChecked.textContent = 'Checked from your browser at ' + now.toLocaleTimeString().replace(/\s/g, '\u00a0') + '.';
       btn.disabled = false;
     });
   }

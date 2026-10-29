@@ -23,10 +23,6 @@
 - OpenAPI: https://api.0200project.com/openapi.json
 - MCP registry name: io.github.0200project/base-transaction-decoder
 
-## Source
-
-- [Repository](https://github.com/0200project/base-tx-explain): server source, self-host instructions
-
 ## Pricing
 
 - 50 free calls per 24h per IPv4 address or IPv6 /64, shared by everyone behind it (an

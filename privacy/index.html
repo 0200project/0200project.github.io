@@ -22,9 +22,11 @@
 <script src="/assets/gsap.min.js?v=3.12.5" defer></script>
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
-<script src="/assets/motion.js?v=a6fef4d5" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=93ce7757">
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=08399f67">
 <style>
+  /* Corrections and update notes are scope notes: never smaller than the kit's fine print. */
+  .prose .small { font-size: 0.9375rem; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -46,7 +48,6 @@
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/xo2/">$XO2</a></li>
-      <li class="nav-cta"><a class="btn btn-ghost btn-sm" href="https://github.com/0200project">GitHub</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -58,7 +59,7 @@
     <div class="page-hero">
       <span class="eyebrow">Legal</span>
       <h1 class="h-section">Privacy Policy</h1>
-      <p class="updated">Last updated: August 20, 2026</p>
+      <p class="updated">Last updated: October 29, 2026</p>
     </div>
 
     <div class="prose">
@@ -81,37 +82,41 @@
       </ul>
 
       <h2>Third parties</h2>
-      <p>These are the external systems your browser or your payment touches, found by enumerating the requests our pages make, checked 2026-09-06.</p>
+      <p>These are the external systems that receive data from your visit, your request or your payment. We found them by recording every request each of our pages makes in a browser and by reading the code of our pages and our server, checked 2026-10-29.</p>
       <ul>
-        <li><strong>Google Fonts.</strong> This website loads the Geist and Geist Mono typefaces from Google Fonts, so your browser makes a request to Google's servers when a page loads.</li>
-        <li><strong>Base RPC providers.</strong> The token page reads balances directly from Base when you scroll to that section, using a public endpoint at mainnet.base.org and falling back to base-rpc.publicnode.com. Your browser contacts whichever answers, and we run neither. We also name that same endpoint if you add Base to your wallet from our pay flow; whether your wallet uses it is your wallet's decision, not ours.</li>
-        <li><strong>The x402 facilitator.</strong> The status page checks whether facilitator.payai.network is reachable when it loads and when you press Re-check, so your browser contacts PayAI's servers on that page. We run neither the facilitator nor its host.</li>
-        <li><strong>Fly.io.</strong> Our own servers run on Fly.io. Every page contacts them when it loads, for the status line in the footer, not only when you use the tool.</li>
-        <li><strong>The Base blockchain.</strong> If you pay for calls via x402, the payment settles on Base and is public by the nature of blockchains. A payment links your wallet address to a tool call. If that linkage matters to you, use a wallet accordingly.</li>
-        <li><strong>Stripe.</strong> Card payments for passes and subscriptions are handled by Stripe on their own pages at buy.stripe.com and billing.stripe.com. We never see or store your card details; Stripe does.</li>
+        <li><strong>GitHub Pages.</strong> GitHub hosts this website, so every page you open is a request to GitHub&rsquo;s servers. GitHub receives your IP address, your browser&rsquo;s user agent and the full address of the page, including any transaction hash in a playground link and the checkout session id when Stripe sends you back from a card payment.</li>
+        <li><strong>Google Fonts.</strong> This website loads the Geist and Geist Mono typefaces from Google Fonts, so your browser makes a request to Google&rsquo;s servers when a page loads.</li>
+        <li><strong>Your wallet.</strong> If you pay with a wallet on the playground or pricing page, our page does not contact Base itself. It asks your wallet, which reaches Base through its own provider, and that provider can see your address and the balance check before you sign. If your wallet does not know Base yet, we suggest mainnet.base.org and basescan.org when adding it. Whether your wallet uses them is your wallet&rsquo;s decision, not ours.</li>
+        <li><strong>Base RPC providers.</strong> To decode a transaction, our server asks a Base RPC provider for it: mainnet.base.org first, then base-rpc.publicnode.com and base.llamarpc.com if the one before fails. The provider receives the transaction hash you sent us and the addresses of the tokens and contracts in that transaction. It sees our server, not your IP address.</li>
+        <li><strong>Contract and history lookups.</strong> For the risk checks, our server sends addresses taken from that transaction, never the hash you sent and never your IP address. Contract addresses go to Sourcify (sourcify.dev), to check whether their code is published and to name events we do not recognise. A function identifier we do not recognise goes to Sourcify&rsquo;s signature database (api.4byte.sourcify.dev). The transaction&rsquo;s sender and block number go to Blockscout (api.blockscout.com), to check whether the sender has dealt with the other party before. When Sourcify or Blockscout does not answer, the same lookups go to Etherscan (api.etherscan.io). As of 2026-10-29, Etherscan refuses these lookups for Base and the history check gets no answer from either service, so it reports itself unavailable, but both services still receive the lookups.</li>
+        <li><strong>The x402 facilitators.</strong> When you pay via x402, our server sends your signed payment authorization, which includes your wallet address, to a facilitator to verify and settle it: PayAI&rsquo;s at facilitator.payai.network, Coinbase&rsquo;s at api.cdp.coinbase.com, or both. Which one receives it first depends on what you are paying for and on our configuration, and we do not count how often each is used. We run neither.</li>
+        <li><strong>Fly.io.</strong> Our own servers, at api.0200project.com, run on Fly.io. The home, about and status pages contact them when they load, the home page to show how many calls we have served, and the status page again when you press Re-check. The playground contacts them when you explain a transaction, including when you open a link that carries one, and when you pay. The pricing page contacts them when you pay with a wallet or come back from a card payment. Other pages do not.</li>
+        <li><strong>The Base blockchain.</strong> If you pay via x402, for calls or for a pass, the payment settles on Base and is public by the nature of blockchains: anyone can see that your wallet paid ours, how much, and when. Our own log also records the payment with your wallet address, as described under Data retention. If that linkage matters to you, use a wallet accordingly.</li>
+        <li><strong>Stripe.</strong> Card payments for passes and subscriptions are handled by Stripe on their own pages at buy.stripe.com and billing.stripe.com. We never see or store your card details; Stripe does. When Stripe sends you back to our pricing page, that page passes the checkout session&rsquo;s id to our server to confirm the purchase.</li>
       </ul>
 
       <h2>Data retention</h2>
-      <p>Our infrastructure provider keeps standard, short-lived operational logs, as effectively all hosting does. <strong>Beyond that we keep one thing, and this page previously said we kept nothing.</strong></p>
+      <p>Our infrastructure provider keeps standard, short-lived operational logs, as effectively all hosting does. For a paid call, our server&rsquo;s own line in those logs names the payment, which identifies the paying wallet, and for a paid decode through our REST API, the transaction it paid for. <strong>Beyond that we keep one thing, and this page previously said we kept nothing.</strong></p>
       <p>The service writes an <strong>append-only event log</strong>, a single file on a persistent disk, one line per event, rebuilt into memory when the service restarts. There is no database, but the file is a record of requests, so calling it &ldquo;not a request archive&rdquo; would be a distinction that serves us rather than you.</p>
       <p><strong>What each line can contain, and what it cannot.</strong></p>
-      <p>Every line records <strong>how a call went, not what was asked</strong>. No line contains the transaction you looked up, the answer we returned, or anything else you sent us. That boundary holds as we add operational fields; if it ever stops holding, this page changes before the code does.</p>
+      <p>Lines record <strong>how a call went, not what was asked</strong>, with one exception. On a paid decode, one line records the transaction you asked us to decode, beside the wallet that paid for it. Apart from that, no line contains the transaction you looked up, the answer we returned, or anything else you sent us. That boundary holds as we add operational fields; if it ever stops holding, this page changes before the code does.</p>
       <p>Within it, these are the kinds of line that can appear, and not every call produces one of each:</p>
       <ul>
         <li>A <strong>call</strong>: the time, whether it was charged, free or on a pass, whether it succeeded, whether a risk check was unavailable, which interface it arrived through, and a coarse client identifier.</li>
         <li>An <strong>outcome</strong>: the time, the interface, whether the decode succeeded, and a short code for why it did not, a malformed hash, an upstream failure, a transaction we could not find. This one records why your request failed, which is more than the operational fields above it. It does not record what you asked about.</li>
-        <li>A <strong>settled payment</strong>: the time, the amount, <strong>the payment&rsquo;s</strong> transaction hash, and <strong>the paying wallet address</strong>.</li>
+        <li>A <strong>settled payment</strong>: the time, the amount, <strong>the payment&rsquo;s</strong> transaction hash, <strong>the paying wallet address</strong>, and, for a paid decode, <strong>the hash of the transaction you paid to have decoded</strong>.</li>
         <li>A <strong>failed payment</strong>: the time, which stage failed, the reason, and <strong>the paying wallet address</strong>.</li>
       </ul>
       <p>It holds no names, no email addresses and no account records, because there are no accounts. It does hold wallet addresses for payments, and it is <strong>not currently bounded by any retention period</strong>: entries are not deleted on a schedule. If that changes, this page changes with it.</p>
       <p class="small">Corrected 2026-09-04. The previous wording said &ldquo;no database, no request archive, no user records&rdquo;. The first was true on a technicality and the other two were not true at all.</p>
       <p class="small">Updated 2026-09-04. The service now records why a call failed; the <em>outcome</em> line and the boundary sentence above were added with it.</p>
+      <p class="small">Corrected 2026-10-29. Since 2026-09-06 a settled payment for a decode has recorded which transaction it paid for; this page did not say so until now.</p>
 
       <h2>Changes</h2>
       <p>If this policy changes, the new version is posted on this page with an updated date at the top.</p>
 
       <h2>Contact</h2>
-      <p>Questions about privacy: <a href="mailto:contact@0200project.com">contact@0200project.com</a>. For anything sensitive, file a <a href="https://github.com/0200project/base-tx-explain/security/advisories/new">private security advisory on GitHub</a> instead.</p>
+      <p>Questions about privacy, and anything sensitive, including security reports: <a href="mailto:contact@0200project.com">contact@0200project.com</a>.</p>
     </div>
 
   </div>
@@ -143,7 +148,6 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="/playground/">Playground</a></li>
-          <li><a href="https://github.com/0200project">GitHub</a></li>
           <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
           <li><a href="/llms.txt">llms.txt</a></li>
           <li><a href="/status/">Status</a></li>
@@ -167,8 +171,7 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 0200project <span class="faint">&middot;</span> <span class="mono">base-transaction-decoder v0.2.0 &middot; Base mainnet</span></span>
-      <a class="footer-status" href="/status/"><span id="ft-status">Checking status&hellip;</span></a>
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
     </div>
   </div>
 </footer>
