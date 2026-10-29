@@ -292,56 +292,45 @@
         setState(rows.decoder, 'dot-live', 'Operational');
         var lt = d.lifetime || {};
         if (typeof lt.calls === 'number') {
-          /* MONEY ON A PUBLIC PAGE MUST NOT FLATTER.
-               This line used to read "(N free / N paid)" with the paid figure taken
-               from lt.paid_calls -- which counts calls that ARRIVED CARRYING a
-               payment, not payments that settled. It overstated paid activity:
-               wrong, in public, about money, in our favour.
+          /* MONEY ON A PUBLIC PAGE MUST NOT FLATTER, AND THIS COMMENT USED TO BE
+               THE LEAK IT WARNED ABOUT.
 
-               The free/total split was misleading on its own too: a free-out-of-
-               total figure invites the reader to assume the remainder were paid.
+               THE ORIGINAL DEFECT. This line once showed a paid figure taken from
+               lt.paid_calls, which counts calls that ARRIVED CARRYING a payment,
+               not payments that settled. It overstated paid activity: wrong, in
+               public, about money, in our favour. A free-out-of-total split is
+               misleading on its own too, because it invites the reader to assume
+               the remainder were paid.
 
-               TWO CLAIMS THAT USED TO SIT HERE WERE WRONG, corrected 2026-09-06
-               against a live /healthz read of 1,415 / 786 free / 98 wall hits:
+               WHAT THIS COMMENT ITSELF DISCLOSED, found 2026-10-28. Explaining
+               the fix, it published a full historical /healthz read, a later
+               paid_calls figure, an internal-traffic percentage, and -- worst --
+               the exact identity by which the usage buckets sum to `calls`.
+               /healthz publishes all but two of those terms, so the identity
+               CLOSED: a reader could solve the published page plus the public
+               health endpoint for the two figures we deliberately withhold.
+               Verified by doing it. The withheld pair was recoverable to the
+               exact number.
 
-                 "They were mostly paywall responses." Wall hits are 98 of the 629
-                 non-free calls -- 15.6%, not most of them.
+               So the rationale was the disclosure. Nothing here now carries a
+               commercial figure, a percentage, or the decomposition -- and that
+               is a standing rule for this file, not a claim about this revision.
+               The bound is all a reader gets: THE REMAINDER IS NOT PAID TRAFFIC,
+               AND MOST OF IT IS OURS. paid_calls and pass_calls are withheld.
 
-                 "So every component is now named." It names two of six.
-
-               THE DECOMPOSITION, answered 2026-09-05 by whoever owns the ledger
-               semantics, after this comment first recorded it as an open
-               question. usage.ts:290-325 is an if/else-if chain, so the six
-               buckets are mutually exclusive and exhaustive BY CONSTRUCTION:
-
-                 internal_calls  pass_calls  degraded_calls
-                 paid_calls      wall_hits   free            == calls, exactly
-
-               This line names `free` and `wall_hits`. The rest is not a residue
-               and not a mystery -- it is three named buckets the page omits, and
-               at a 2026-09-05 read INTERNAL_CALLS WAS 84% OF IT. OUR OWN TRAFFIC.
-               In the same read `paid_calls` was 12. So a reader who subtracts and
-               concludes the remainder was paid is wrong by a factor of about 46.
-
-               DO NOT ADD `unmarked_calls` TO THESE. It is not a bucket. It is an
-               overlay counted at :289 over rows that then fall through into one
-               of the six, so adding it double-counts -- and nothing in the
-               payload says so. That is exactly what made the arithmetic here
-               look unreconcilable when it never was.
+               DO NOT ADD `unmarked_calls` TO ANY SUM HERE. It is not a bucket. It
+               is an overlay counted at :289 over rows that then fall through into
+               a real bucket, so adding it double-counts -- and nothing in the
+               payload says so. That is what made the arithmetic here look
+               unreconcilable when it never was.
 
                THE REMAINING PROBLEM IS THE TOTAL, NOT THE MISSING CLAUSES.
                `calls` is what invites the subtraction: a total published beside a
                partial decomposition is a trap, because CORRECT arithmetic on
-               HONEST numbers yields a wrong third number. Naming the rest is not
-               freely available -- `internal_calls` is already public here, but
-               `paid_calls` and `pass_calls` are deliberately withheld, which is
-               the same boundary that produced the "0 payments settled" bug above.
-               Publishing the full partition, or publishing no total, are the two
-               leak-free options. BOTH ARE DISCLOSURE DECISIONS, NOT ENGINEERING
-               ONES, and they are the founder's -- open on his page, not here.
-
-               Figures deliberately not quoted here: this file is public, and
-               commercial state belongs on the token-gated stats surface. */
+               HONEST numbers yields a wrong third number. Publishing the full
+               partition, or publishing no total, are the two leak-free options.
+               BOTH ARE DISCLOSURE DECISIONS, NOT ENGINEERING ONES, and they are
+               the founder's -- open on his page, not here. */
           /* OMIT AN ABSENT COMPONENT, NEVER ZERO IT. This block used to do
              `typeof lt.free === 'number' ? lt.free : 0` for both, which is the
              same construction that published "0 payments settled" -- it just
