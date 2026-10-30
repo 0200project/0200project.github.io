@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add('js')</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How crypto works, XO2</title>
+<meta name="description" content="A plain-language guide to crypto for people who have never owned any: blockchains, wallets, recovery phrases, networks, fees, swaps and the scams to watch for.">
+<meta name="theme-color" content="#050505">
+<meta property="og:title" content="How crypto works, XO2">
+<meta property="og:description" content="Crypto, explained from zero.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0200project">
+<meta property="og:image" content="https://0200project.com/assets/og.png">
+<meta property="og:url" content="https://0200project.com/wallet/learn/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://0200project.com/wallet/learn/">
+<link rel="icon" href="/assets/favicon.png" type="image/png" sizes="180x180">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="/assets/gsap.min.js?v=3.12.5" defer></script>
+<script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
+<script src="/assets/lenis.min.js?v=1.1.18" defer></script>
+<script src="/assets/motion.js?v=aa4f5d10" defer></script>
+<link rel="stylesheet" href="/assets/style.css?v=b1693440">
+<style>
+  /* XO2's look: black and white, grey hairlines; the only blue is the "$" */
+  .lr { --ink: #f5f5f7; --dim: #a1a1a6; --line: #1d1d1f; }
+  .lr-video[hidden] { display: none; }
+  .lr-top { max-width: 64rem; margin: 0 auto; padding: clamp(5rem, 14vh, 9rem) var(--gutter, 1.25rem) 0; }
+  .lr-hero { text-align: center; padding-bottom: clamp(1rem, 3vh, 2rem); }
+  .lr-hero h1 { font-size: clamp(3rem, 8.5vw, 6.25rem); letter-spacing: -.05em; }
+  .lr-kicker { font-size: 1rem; font-weight: 600; color: var(--ink); }
+  .lr-kicker b { font-weight: 300; color: #4e9eff; }
+  .lr h1 { margin: .5rem 0 0; font-size: clamp(2.75rem, 7vw, 5rem); font-weight: 600; line-height: 1; letter-spacing: -.045em; color: var(--ink); }
+  .lr-lead { margin: 1.25rem 0 0; font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.5; color: var(--dim); }
+  .lr-video { position: relative; margin: clamp(2.5rem, 5vw, 3.5rem) 0 0; aspect-ratio: 16 / 9; border: 1px solid #2a2a2e; border-radius: 1.25rem; background: #0a0a0b; display: grid; place-items: center; text-align: center; color: #6e6e73; font-size: .9375rem; }
+  .lr-video span { display: block; margin-top: .75rem; }
+  .lr-video i { width: 3.5rem; height: 3.5rem; border-radius: 50%; border: 1px solid #3a3a3c; display: grid; place-items: center; margin: 0 auto; }
+  .lr-video i::after { content: ""; border-left: .8rem solid #6e6e73; border-top: .5rem solid transparent; border-bottom: .5rem solid transparent; margin-left: .2rem; }
+  .lr-toc { margin: 2.5rem 0 0; padding: 0; list-style: none; columns: 2 14rem; column-gap: 2rem; font-size: .9375rem; }
+  .lr-toc li { padding: .45rem 0; border-bottom: 1px solid var(--line); break-inside: avoid; }
+  .lr-toc a { color: var(--dim); text-decoration: none; } .lr-toc a:hover { color: var(--ink); }
+  .lr-body { max-width: 46rem; margin: 0 auto; padding: 0 var(--gutter, 1.25rem) clamp(6rem, 14vh, 9rem); }
+  .lr-body section { padding-top: clamp(3.5rem, 8vh, 5rem); scroll-margin-top: 5rem; }
+  .lr-body h2 { margin: 0; font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -.035em; color: var(--ink); }
+  .lr-body p, .lr-body li { font-size: 1.0625rem; line-height: 1.65; color: var(--dim); }
+  .lr-body p { margin: 1rem 0 0; }
+  .lr-body strong { color: var(--ink); font-weight: 500; }
+  .lr-body ul { margin: 1rem 0 0; padding-left: 1.2rem; }
+  .lr-body li + li { margin-top: .5rem; }
+  .lr-note { margin-top: 1.25rem; padding: 1rem 1.25rem; border: 1px solid #2a2a2e; border-radius: .875rem; color: var(--ink); font-size: 1rem; line-height: 1.55; }
+  .lr-gl { margin: 1rem 0 0; display: grid; gap: 0; }
+  .lr-gl div { padding: .9rem 0; border-bottom: 1px solid var(--line); }
+  .lr-gl dt { font-weight: 600; color: var(--ink); }
+  .lr-gl dd { margin: .3rem 0 0; color: var(--dim); line-height: 1.55; }
+  .lr-cards { display: grid; gap: .75rem; margin: clamp(3rem, 7vh, 4.5rem) 0 0; grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr)); }
+  .lr-card { display: grid; align-content: start; gap: .3rem; padding: 1.1rem 1.2rem 1.25rem; border: 1px solid #1f1f22; border-radius: 1.1rem; background: #0a0a0b; text-decoration: none; transition: border-color .35s, transform .35s cubic-bezier(.16,1,.3,1); }
+  @media (hover: hover) and (pointer: fine) { .lr-card:hover { border-color: #3a3a40; transform: translateY(-2px); } }
+  .lr-n { font-size: .75rem; color: #6e6e73; font-variant-numeric: tabular-nums; }
+  .lr-card b { font-size: 1.0625rem; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+  .lr-card em { font-style: normal; font-size: .875rem; line-height: 1.4; color: #8e8e93; }
+  .lr-short { font-size: clamp(1.25rem, 2vw, 1.5rem) !important; line-height: 1.35 !important; color: var(--ink) !important; font-weight: 500; letter-spacing: -.015em; margin-top: .9rem !important; }
+  .lr-body section + section { border-top: 1px solid var(--line); margin-top: clamp(3.5rem, 8vh, 5rem); }
+  .lr-checks { list-style: none; padding: 0 !important; display: grid; gap: .75rem; margin-top: 1.5rem !important; }
+  @media (min-width: 40em) { .lr-checks { grid-template-columns: 1fr 1fr; } }
+  .lr-checks li { position: relative; margin: 0 !important; padding: 1.1rem 1.2rem 1.15rem 3.1rem; border: 1px solid #1f1f22; border-radius: 1rem; background: #0a0a0b; font-size: .9375rem !important; line-height: 1.5 !important; }
+  .lr-checks li::before { content: ""; position: absolute; left: 1.15rem; top: 1.2rem; width: 1.15rem; height: 1.15rem; border-radius: 50%; border: 1.5px solid #f5f5f7; }
+  .lr-checks li::after { content: ""; position: absolute; left: 1.53rem; top: 1.43rem; width: .3rem; height: .55rem; border: solid #f5f5f7; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+  .lr-checks b { display: block; margin-bottom: .2rem; color: var(--ink); font-weight: 600; }
+</style>
+</head></head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="/" aria-label="0200project home">
+      <img class="brand-mark" src="/assets/logo-mark.png" width="20" height="20" alt="" aria-hidden="true">
+      0200project
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu" aria-controls="site-menu">
+      <svg class="burger" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path class="b1" d="M2 4h12"/><path class="b2" d="M2 8h12"/><path class="b3" d="M2 12h12"/></svg>
+    </button>
+    <nav aria-label="Main" style="display:contents"><ul class="nav-links" id="site-menu">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/playground/">Playground</a></li>
+      <li><a href="/docs/">Docs</a></li>
+      <li><a href="/pricing/">Pricing</a></li>
+      <li><a href="/wallet/">XO2</a></li>
+      <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<main id="main" class="lr">
+  <div class="lr-top">
+    <div class="lr-hero"><p class="lr-kicker">XO2</p>
+    <h1>Crypto,<br>simply explained.</h1>
+    <p class="lr-lead">Start here. No experience needed.</p></div>
+    <!-- VIDEO SLOT: a ~1-minute "how it works" video goes here. Replace this frame with the player when it exists. -->
+    <div class="lr-video" hidden><div><i></i><span>A one-minute video is coming soon.</span></div></div>
+    <nav class="lr-cards" aria-label="Topics"><a class="lr-card" href="#blockchain"><span class="lr-n">01</span><b>What a blockchain is</b><em>A shared record no one can quietly change.</em></a><a class="lr-card" href="#coins"><span class="lr-n">02</span><b>Coins and tokens</b><em>BTC, ETH, SOL, and what USDC is.</em></a><a class="lr-card" href="#wallet"><span class="lr-n">03</span><b>What a wallet holds</b><em>Keys, not coins.</em></a><a class="lr-card" href="#phrase"><span class="lr-n">04</span><b>Your recovery phrase</b><em>12 words that are your money.</em></a><a class="lr-card" href="#networks"><span class="lr-n">05</span><b>Addresses and networks</b><em>Where to send, and on which road.</em></a><a class="lr-card" href="#fees"><span class="lr-n">06</span><b>Fees</b><em>What you pay to move crypto.</em></a><a class="lr-card" href="#swaps"><span class="lr-n">07</span><b>Swaps</b><em>Trading one coin for another.</em></a><a class="lr-card" href="#prices"><span class="lr-n">08</span><b>Why prices move</b><em>And why big swings are normal.</em></a><a class="lr-card" href="#custody"><span class="lr-n">09</span><b>Who holds your keys</b><em>You, or a company.</em></a><a class="lr-card" href="#scams"><span class="lr-n">10</span><b>Scams to know</b><em>The four tricks that catch most people.</em></a><a class="lr-card" href="#secure"><span class="lr-n">11</span><b>How to stay secure</b><em>Eight habits that keep you safe.</em></a><a class="lr-card" href="#glossary"><span class="lr-n">12</span><b>Glossary</b><em>Every word on this page, in one line.</em></a></nav>
+  </div>
+  <div class="lr-body">
+    <section id="blockchain"><h2>What a blockchain is</h2>
+      <p class="lr-short">A public record of who owns what, kept by thousands of computers at once.</p>
+      <p>A blockchain is a shared record of who owns what. Thousands of computers around the world keep a copy, and they check each new entry against the rules before adding it. Because everyone has the same copy, no single company can quietly change it.</p>
+      <p>When you send crypto, you aren&rsquo;t moving a file from one place to another. You&rsquo;re adding a new line to that shared record: this amount now belongs to that address. Once the line is added, it stays there for good, and anyone can look it up.</p></section>
+    <section id="coins"><h2>Coins and tokens</h2>
+      <p class="lr-short">Coins run their own network. Tokens ride on someone else&rsquo;s.</p>
+      <p>A <strong>coin</strong> belongs to its own blockchain. Bitcoin (BTC) lives on the Bitcoin network, Ether (ETH) on Ethereum, SOL on Solana. Coins are also what you pay fees with on their network.</p>
+      <p>A <strong>token</strong> is built on top of someone else&rsquo;s blockchain. USDC, for example, is a token that runs on Ethereum, Base, Solana and others. Many different tokens can live on one network.</p>
+      <p>A <strong>stablecoin</strong> is a token designed to stay at one dollar. USDC and USDT are the best known. Each is backed by the company that issues it, so it&rsquo;s only as steady as that company.</p></section>
+    <section id="wallet"><h2>What a wallet holds</h2>
+      <p class="lr-short">Your crypto lives on the blockchain. Your wallet holds the key to it.</p>
+      <p>This is the part most people get backwards: <strong>your coins are never inside your wallet</strong>. They&rsquo;re on the blockchain. A wallet holds <strong>keys</strong>, the secret that lets you move what the blockchain says is yours.</p>
+      <p>Think of the blockchain as a wall of glass lockers anyone can see into. Your address is your locker&rsquo;s number. Your key is the only thing that opens it. Lose the app and keep the key, and you still have your crypto. Keep the app and lose the key, and you don&rsquo;t.</p></section>
+    <section id="phrase"><h2>Your recovery phrase</h2>
+      <p class="lr-short">12 or 24 words. Whoever has them has your money.</p>
+      <p>When you create a wallet, you get a list of 12 or 24 ordinary words. That list is your key written in a form people can copy down. Type those words into any compatible wallet app, and your crypto is back.</p>
+      <ul><li><strong>Whoever has the words has the money.</strong> There&rsquo;s no password reset and no bank to call.</li>
+      <li><strong>Lose them and it&rsquo;s gone for good.</strong> No one can recover them for you, not even the wallet&rsquo;s makers.</li>
+      <li>Write them on paper and keep it somewhere safe. Never type them into a website, a chat or an email, and never photograph them.</li></ul>
+      <p class="lr-note">No real support team will ever ask for your words. Anyone who does is trying to steal from you.</p></section>
+    <section id="networks"><h2>Addresses and networks</h2>
+      <p class="lr-short">Right address, right network. Get either wrong and the money can be lost.</p>
+      <p>An <strong>address</strong> is where crypto gets sent, a long string like 0x1234&hellip;abcd. It&rsquo;s safe to share, like an account number.</p>
+      <p>The catch is that the same token can exist on several <strong>networks</strong>. USDC on Ethereum and USDC on Solana are different things that happen to share a name. If you send on one network to an address that only works on another, the money can end up somewhere you can&rsquo;t reach.</p>
+      <p class="lr-note">Before you send, check two things: the address, and that you and the person receiving are on the same network.</p></section>
+    <section id="fees"><h2>Fees</h2>
+      <p class="lr-short">Every move costs a small fee, paid in the network&rsquo;s own coin.</p>
+      <p>Every transaction pays a small fee to the computers that add it to the blockchain. On Ethereum it&rsquo;s often called <strong>gas</strong>. The fee goes up when the network is busy and down when it&rsquo;s quiet, and it&rsquo;s paid in that network&rsquo;s own coin, so you need a little ETH to move tokens on Ethereum.</p>
+      <p>A failed transaction can still cost a fee, because the network did the work of checking it.</p></section>
+    <section id="swaps"><h2>Swaps</h2>
+      <p class="lr-short">Trade one crypto for another, right from your wallet.</p>
+      <p>A <strong>swap</strong> trades one crypto for another, say ETH for USDC, without a traditional exchange in the middle. The price can move a little between the moment you see it and the moment the trade goes through. That gap is called <strong>slippage</strong>, and most apps let you set a limit on it.</p></section>
+    <section id="prices"><h2>Why prices move</h2>
+      <p class="lr-short">Prices are whatever people agree on right now, and they swing.</p>
+      <p>Most crypto has no fixed value. Its price is whatever buyers and sellers agree on at that moment, so it moves with news, interest rates, big holders buying or selling, and plain mood. Large swings in a single day are normal.</p>
+      <p>Stablecoins are the exception by design, and even they can wobble if people stop trusting the company behind them. Nothing on this page is financial advice.</p></section>
+    <section id="custody"><h2>Who holds your keys</h2>
+      <p class="lr-short">If a company holds your keys, it holds your crypto.</p>
+      <p>There are two ways to hold crypto, and the difference matters more than any feature.</p>
+      <ul><li><strong>Someone else holds the keys.</strong> On most exchanges, the company keeps the keys and you have an account with them. It feels like a bank: you can reset a password. But if the company freezes withdrawals or fails, your crypto is stuck with it. This is called <strong>custody</strong>.</li>
+      <li><strong>You hold the keys.</strong> Your recovery phrase is yours alone, and no company can freeze it. You also carry all the responsibility. If you lose the words, no one can help. This is called <strong>self-custody</strong>.</li></ul>
+      <p>Neither is wrong. Know which one you&rsquo;re using.</p></section>
+    <section id="scams"><h2>Scams to know</h2>
+      <p class="lr-short">If someone contacts you first about your wallet, assume it&rsquo;s a scam.</p>
+      <ul><li><strong>Fake support.</strong> Someone reaches out first, by DM, email or a comment, offering to fix a problem. Real support never asks for your recovery words or for you to &ldquo;verify&rdquo; your wallet on a website.</li>
+      <li><strong>Address poisoning.</strong> A scammer sends you a tiny amount from an address that looks almost like one you&rsquo;ve used, hoping you&rsquo;ll copy it from your history next time. Check the whole address, not just the first and last few characters.</li>
+      <li><strong>&ldquo;Double your coins.&rdquo;</strong> Anyone promising to send back more than you send is stealing. Giveaways run by celebrities or companies are fake.</li>
+      <li><strong>Approvals you didn&rsquo;t read.</strong> Some sites ask you to approve access to your tokens. One signature can let them move everything. If you can&rsquo;t tell what you&rsquo;re signing, don&rsquo;t sign it.</li></ul></section>
+    <section id="secure"><h2>How to stay secure</h2>
+      <p class="lr-short">Eight habits. Do these and you avoid almost every common way people lose crypto.</p>
+      <ul class="lr-checks">
+        <li><b>Write your 12 words on paper.</b>Keep it somewhere safe and private. No screenshots, no notes app, no cloud.</li>
+        <li><b>Never share your words.</b>Not with support, not with a friend, not with any website.</li>
+        <li><b>Check the whole address.</b>Compare every character before you send, not just the first and last few.</li>
+        <li><b>Send a small test first.</b>Moving a lot? Send a little, confirm it arrived, then send the rest.</li>
+        <li><b>Match the network.</b>Make sure you and the receiver are on the same one.</li>
+        <li><b>Don&rsquo;t sign what you can&rsquo;t read.</b>If an app can&rsquo;t tell you in plain words what a request does, say no.</li>
+        <li><b>Lock your phone.</b>Use a passcode and Face ID, and keep your phone updated.</li>
+        <li><b>Ignore anyone who messages you first.</b>Real help doesn&rsquo;t arrive uninvited in your DMs.</li>
+      </ul></section>
+    <section id="glossary"><h2>Glossary</h2>
+      <dl class="lr-gl">
+        <div><dt>Address</dt><dd>Where crypto is sent. Safe to share.</dd></div>
+        <div><dt>Blockchain</dt><dd>A shared, public record of who owns what.</dd></div>
+        <div><dt>Coin</dt><dd>The native currency of a blockchain, like BTC or ETH.</dd></div>
+        <div><dt>Gas</dt><dd>The fee for a transaction on Ethereum and networks like it.</dd></div>
+        <div><dt>Key</dt><dd>The secret that lets you move your crypto.</dd></div>
+        <div><dt>Network</dt><dd>The blockchain a transaction happens on.</dd></div>
+        <div><dt>Recovery phrase</dt><dd>12 or 24 words that are your key. Also called a seed phrase.</dd></div>
+        <div><dt>Slippage</dt><dd>How much a price can change during a swap.</dd></div>
+        <div><dt>Stablecoin</dt><dd>A token meant to stay at a fixed value, usually one dollar.</dd></div>
+        <div><dt>Swap</dt><dd>Trading one crypto for another.</dd></div>
+        <div><dt>Token</dt><dd>A crypto asset built on another blockchain, like USDC.</dd></div>
+        <div><dt>Wallet</dt><dd>An app that holds your keys, not your coins.</dd></div>
+      </dl></section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="0200project home">
+          <img class="brand-mark" src="/assets/logo-mark.png" width="20" height="20" alt="" aria-hidden="true">
+          0200project
+        </a>
+      </div>
+      <nav aria-label="Product">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="/tools/">Tools</a></li>
+          <li><a href="/wallet/">XO2</a></li>
+          <li><a href="/docs/">Documentation</a></li>
+          <li><a href="/docs/#request-format">API reference</a></li>
+          <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/services/">Services</a></li>
+          <li><a href="/changelog/">Changelog</a></li>
+          <li><a href="/faq/">FAQ</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Developers">
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="/playground/">Playground</a></li>
+          <li><a href="https://registry.modelcontextprotocol.io/v0/servers?search=base-transaction-decoder">MCP Registry</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+          <li><a href="/status/">Status</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/security/">Security</a></li>
+          <li><a href="mailto:contact@0200project.com">Contact</a></li>
+          <li><a href="mailto:contact@0200project.com">Support</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Legal">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 0200project <span class="faint">&middot;</span> base-transaction-decoder v0.2.0 &middot; Base mainnet</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

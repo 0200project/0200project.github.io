@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>XO2 wallet, 0200project</title>
+<title>XO2, 0200project</title>
 <meta name="description" content="XO2 is a crypto wallet 0200project is building, planned for Base, Ethereum, Arbitrum, Solana, Bitcoin and XRP. Join the waitlist.">
 <meta name="theme-color" content="#050505">
-<meta property="og:title" content="XO2 wallet, 0200project">
+<meta property="og:title" content="XO2, 0200project">
 <meta property="og:description" content="A crypto wallet we're building. Join the waitlist.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0200project">
@@ -29,7 +29,7 @@
      page is the chain logos, in their own brand colours (the founder's coin-logo brief). */
   .xw { --ink: #f5f5f7; --dim: #86868b; --line: #1d1d1f; --blue: #4e9eff; }
   .xw section { padding-inline: var(--gutter, 1.25rem); }
-  .xw-hero { isolation: isolate; position: relative; min-height: 100svh; display: grid; justify-items: center; align-content: start; padding-top: clamp(6rem, 12vh, 9rem); text-align: center; overflow: clip; }
+  .xw-hero { isolation: isolate; position: relative; min-height: calc(100svh - var(--nav-h) - 3.25rem); display: grid; justify-items: center; align-content: center; padding-block: 2rem 4rem; text-align: center; overflow: clip; }
   .xw-eyebrow { font-size: clamp(1.125rem, 1.6vw, 1.5rem); font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
   .xw-title { margin: .35rem 0 0; font-size: clamp(3.5rem, 10vw, 8.5rem); font-weight: 600; line-height: .95; letter-spacing: -.055em; color: var(--ink); }
   .xw-mark { font-size: clamp(6.5rem, 19vw, 15rem); letter-spacing: -.07em; line-height: .9; padding-inline: .06em .1em; background: linear-gradient(180deg, #fff 30%, #8e8e93 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -41,18 +41,88 @@
   .xw-h { background: linear-gradient(180deg, #fff 35%, #a1a1a6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
   /* the charts draw on: a black sheet over each chart slides away when the phone arrives,
      so at rest the screen is exactly the app's own capture */
-  .wipe { position: absolute; z-index: 1; background: #000; transform-origin: 100% 50%; transition: transform 1.8s cubic-bezier(.65, 0, .35, 1) .35s; }
-  .in .wipe { transform: scaleX(0); }
+  .wipe { position: absolute; z-index: 1; background: #000; transform-origin: 100% 50%; transition: transform 2.4s cubic-bezier(.65, 0, .35, 1) .25s; }
   html:not(.js) .wipe { display: none; }
   /* Apple's product bar: the name on the left, the one action on the right, glass behind */
-  .xw-local { position: sticky; top: var(--nav-h); z-index: 40; height: 3.25rem; background: rgba(0,0,0,.7); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
+  body .nav { position: relative; }
+  .xw-local { position: sticky; top: 0; z-index: 40; height: 3.25rem; background: rgba(5,5,5,.78); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); }
   .xw-local-in { display: flex; align-items: center; justify-content: space-between; height: 100%; }
   .xw-local-in span { font-size: 1.3125rem; font-weight: 600; letter-spacing: -.02em; color: var(--ink); }
   .xw-local .btn { height: 2rem; padding-inline: .75rem; }
+  /* Why XO2, laid out as the 0200 mark: four rounded squares in a 2x2, the top-right one lit blue */
+  .xw-why { max-width: 64rem; margin: 0 auto; padding-block: clamp(6rem, 16vh, 11rem) 0; text-align: center; }
+  .xw-grid { display: grid; gap: clamp(.875rem, 2vw, 1.5rem); margin-top: clamp(2.5rem, 5vw, 4rem); text-align: left; }
+  @media (min-width: 40em) { .xw-grid { grid-template-columns: 1fr 1fr; } .xw-tile { aspect-ratio: 1; } }
+  .xw-tile { display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.75rem, 3.6vw, 3rem); border-radius: clamp(1.75rem, 4.2vw, 3.5rem); background: #070708; border: 1.5px solid #2a2a2e; }
+  .xw-tile h3 { margin: 0; font-size: clamp(1.75rem, 3.1vw, 2.75rem); font-weight: 600; line-height: 1.04; letter-spacing: -.04em; color: var(--ink); text-wrap: balance; }
+  .xw-tile p { margin: 1rem 0 0; max-width: 24rem; font-size: clamp(1rem, 1.25vw, 1.125rem); line-height: 1.45; color: var(--dim); }
+  .xw-tile.lit { border-color: rgba(78,158,255,.9); background: radial-gradient(90% 80% at 70% 20%, rgba(78,158,255,.14), transparent 70%), #070708;
+    box-shadow: 0 0 0 1px rgba(78,158,255,.25), 0 0 60px -10px rgba(78,158,255,.45), inset 0 0 40px -18px rgba(78,158,255,.6); }
+  /* the website demo of Home: built in HTML so its numbers and chart can move. The layout follows
+     the app's own Home capture; the balances are examples. */
+  .demo { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 0 5.6%; font-size: 1em; color: #fff; }
+  .d-sbar { display: flex; justify-content: space-between; align-items: center; padding: 5.6% 5% 0 6%; font-size: .98em; font-weight: 600; }
+  .d-ico { display: flex; align-items: flex-end; gap: .12em; }
+  .d-ico i { display: block; width: .2em; background: #fff; border-radius: 1px; } .d-ico i:nth-child(1){height:.3em} .d-ico i:nth-child(2){height:.45em} .d-ico i:nth-child(3){height:.6em} .d-ico i:nth-child(4){height:.75em}
+  .d-ico b { width: 1.35em; height: .62em; margin-left: .35em; border: 1.5px solid #fff; border-radius: .22em; background: linear-gradient(90deg,#fff 85%,transparent 0) content-box; padding: 1px; }
+  .d-head { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 9%; }
+  .d-brand { font-size: .82em; letter-spacing: .3em; color: #8e8e93; }
+  .d-wal { margin-top: .35em; font-size: .78em; color: #fff; } .d-wal span { color: #8e8e93; }
+  .d-scan { width: 1.25em; height: 1.25em; margin-top: .5em; fill: none; stroke: #fff; stroke-width: 1.6; }
+  .d-bal { margin-top: 11%; font-size: 2.85em; font-weight: 600; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .d-bal b { font-weight: 300; color: var(--blue); margin-right: .04em; }
+  .d-chg { margin-top: .55em; font-size: .72em; color: #a1a1a6; font-variant-numeric: tabular-nums; } .d-chg em { font-style: normal; font-size: .82em; letter-spacing: .18em; margin-left: .4em; color: #6e6e73; }
+  .d-chart { position: relative; height: 19%; margin-top: 5%; }
+  .d-chart svg { position: absolute; inset: 0 13% 0 0; width: 87%; height: 100%; overflow: visible; }
+  .d-line { fill: none; stroke: #fff; stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+  .d-base { stroke: #3a3a3c; stroke-width: 1; stroke-dasharray: 2 3; vector-effect: non-scaling-stroke; }
+  .d-ax { position: absolute; right: 0; top: 2%; bottom: 8%; display: flex; flex-direction: column; justify-content: space-between; font-size: .56em; color: #8e8e93; }
+  .d-rng { display: flex; justify-content: space-between; margin-top: 6%; font-size: .66em; color: #a1a1a6; }
+  .d-rng span { padding: .4em .95em; border-radius: 99px; } .d-rng .on { background: #1c1c1e; color: #fff; }
+  .d-acts { display: flex; justify-content: space-between; margin-top: 8%; font-size: .66em; color: #a1a1a6; }
+  .d-acts span { display: grid; justify-items: center; gap: .55em; }
+  .d-acts svg { width: 4.3em; height: 4.3em; padding: 1.25em; border: 1px solid #48484a; border-radius: 50%; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; box-sizing: border-box; }
+  .d-acts .w svg { background: #fff; border-color: #fff; stroke: #000; }
+  .d-row { display: flex; align-items: center; gap: .65em; padding: .68em 0; border-bottom: 1px solid #1c1c1e; font-size: .8em; }
+  .d-row:first-of-type { margin-top: 6%; }
+  .dc { width: 2.4em; height: 2.4em; flex: none; }
+  .d-nm { flex: 1; min-width: 0; } .d-nm small, .d-val small { display: block; margin-top: .2em; font-size: .8em; color: #8e8e93; }
+  .d-sp { width: 3.6em; height: 1.8em; fill: none; } .d-sp path { stroke: #fff; stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+  .d-val { text-align: right; font-variant-numeric: tabular-nums; }
+  .d-chev { width: .45em; height: .45em; margin-left: .2em; border: solid #6e6e73; border-width: 1.5px 1.5px 0 0; transform: rotate(45deg); }
+  .d-tab { display: flex; justify-content: space-around; margin-top: auto; padding: 4% 0 9%; border-top: 1px solid #1c1c1e; }
+  .d-tab svg { width: 1.35em; height: 1.35em; fill: none; stroke: #8e8e93; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; } .d-tab svg:first-child { stroke: #fff; }
+  /* the move: the chart and the sparklines draw upward when the phone comes into view */
+  /* revealed with a clip, left to right; a dash offset glitched with the non-scaling stroke */
+  .d-chart svg, .d-sp { clip-path: inset(-10% 0 -10% 0); }
+  html.js .phone:not(.drawn) .d-chart svg, html.js .phone:not(.drawn) .d-sp { clip-path: inset(-10% 100% -10% 0); }
+  .d-chart svg { transition: clip-path 1.3s cubic-bezier(.4,0,.2,1); }
+  .d-sp { transition: clip-path 1s cubic-bezier(.4,0,.2,1) .35s; }
+  @media (prefers-reduced-motion: reduce) { .d-chart svg, .d-sp { transition: none; clip-path: none !important; } }
+  .xw-sub.xw-line { font-size: clamp(1.375rem, 2.4vw, 2rem); line-height: 1.2; color: var(--dim); font-weight: 500; letter-spacing: -.02em; }
+  .xw-line em { font-style: normal; color: var(--blue); }
+  .xw-when { margin-top: 1.25rem; font-size: clamp(1rem, 1.3vw, 1.1875rem); color: rgba(255,255,255,.32); font-weight: 500; letter-spacing: .01em; }
   .xw-sub { margin: 1.25rem auto 0; max-width: 34rem; font-size: clamp(1.125rem, 1.6vw, 1.5rem); line-height: 1.35; color: var(--dim); }
   .xw-ctas { display: flex; gap: .75rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
-  .xw-stage { perspective: 1600px; margin-top: clamp(3rem, 7vh, 5rem); }
-  .xw-stage .phone { transform: rotateX(var(--rx, 24deg)) scale(var(--sc, .86)) translateY(var(--ty, 0)); transform-origin: 50% 0; transition: transform .1s linear; }
+  /* the pinned reveal, Apple's scroll lock: the section is tall, its inner frame sticks, and
+     scrolling through it brings the phone up from below, tilting upright; the chart draws at the end */
+  .xw-pin { position: relative; height: 420vh; }
+  .xw-pin-in { position: sticky; top: 3.25rem; height: calc(100svh - 3.25rem); display: grid; align-items: center; justify-items: center; overflow: hidden; max-width: 72rem; margin: 0 auto; padding-inline: var(--gutter, 1.25rem); }
+  @media (min-width: 52em) { .xw-pin-in { grid-template-columns: 1fr auto 2rem; column-gap: clamp(2rem, 6vw, 6rem); } }
+  .xw-caps { position: relative; width: 100%; min-height: 15rem; }
+  .xw-cap { position: absolute; inset: auto 0; top: 50%; transform: translateY(calc(-50% + 24px)); opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1); }
+  .xw-cap.on { opacity: 1; transform: translateY(-50%); }
+  @media (max-width: 51.99em) { .xw-pin-in { grid-template-rows: auto 1fr; padding-top: 2rem; } .xw-caps { min-height: 9rem; text-align: center; } .xw-cap .xw-p { margin-inline: auto; } .xw-dots { display: none; } }
+  .xw-stage { perspective: 1600px; }
+  .reel { position: absolute; inset: 0; transform: translateY(calc(var(--i, 0) * -100%)); transition: transform 1s cubic-bezier(.65,0,.35,1); }
+  .slide { position: relative; height: 100%; overflow: hidden; }
+  .slide.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .slide > .sbar, .slide > .app { position: relative; }
+  .on > .wipe { transform: scaleX(0); }
+  .xw-dots { display: grid; justify-items: center; gap: .55rem; padding: .7rem .5rem; border-radius: 99px; background: rgba(255,255,255,.06); }
+  .xw-dots i { width: .375rem; height: .375rem; border-radius: 99px; background: #5a5a5f; transition: height .5s cubic-bezier(.16,1,.3,1), background .4s; }
+  .xw-dots i.on { height: 1.25rem; background: #fff; }
+  .xw-stage .phone { --w: clamp(14rem, min(22vw, 34vh), 19rem); transform: translateY(var(--ty, 0)) rotateX(var(--rx, 0deg)) scale(var(--sc, 1)); transform-origin: 50% 0; }
   /* the hero glow: the one blue, very low, under the phone */
   .xw-hero::after { content: ""; position: absolute; left: 50%; bottom: -10%; width: 70rem; height: 40rem; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(78,158,255,.16), transparent 70%); pointer-events: none; z-index: -1; }
 
@@ -160,7 +230,7 @@
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
-      <li><a href="/wallet/" aria-current="page">XO2 wallet</a></li>
+      <li><a href="/wallet/" aria-current="page">XO2</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -172,28 +242,39 @@
   <section class="xw-hero">
     <div class="xw-glow" aria-hidden="true"></div>
     <h1 class="xw-title xw-mark">XO2</h1>
-    <p class="xw-sub">All your crypto. One wallet.</p>
+    <p class="xw-sub xw-line">Know <em>exactly</em> what you&rsquo;re signing,<br>before you sign it.</p>
+    <p class="xw-when">Coming Q1 2027</p>
     <div class="xw-ctas"><a class="btn btn-primary" href="#join">Join the waitlist</a></div>
-    <div class="xw-stage" id="xw-stage"><div class="phone"><div class="bezel"><div class="screen shot"><div class="wipe" style="left:5%;top:31%;width:76%;height:14.5%"></div><img src="/wallet/home.png" width="750" height="1631" alt="The XO2 home screen: a demo balance, a one-week chart, Send, Receive, Swap and Buy, and the coins held" fetchpriority="high" decoding="async"><div class="island"></div></div></div></div>
   </section>
 
-  <section>
-    <div class="xw-feat">
-      <div class="xw-copy rv"><h2 class="xw-h">100 coins.<br>One search.</h2>
-        <p class="xw-p">The <strong>top 100</strong>, live.</p>
-        </div>
-      <div class="rv"><div class="phone"><div class="bezel"><div class="screen shot"><div class="wipe" style="left:53%;top:27%;width:19%;height:63%"></div><img src="/wallet/discover.png" width="750" height="1631" alt="The XO2 Discover screen: a search across 100 coins with prices and a week of movement" loading="lazy" decoding="async"><div class="island"></div></div></div></div>
+  <section class="xw-pin" id="xw-pin">
+    <div class="xw-pin-in">
+      <div class="xw-caps">
+        <div class="xw-cap on"><h2 class="xw-h">All your crypto.<br>One wallet.</h2><p class="xw-p">Every coin you hold, one balance at the top.</p></div>
+        <div class="xw-cap"><h2 class="xw-h">100 coins.<br>One search.</h2><p class="xw-p">The top 100, live.</p></div>
+        <div class="xw-cap"><h2 class="xw-h">Plain words.<br>Before you sign.</h2><p class="xw-p">See what a transaction will do <strong>before</strong> you approve it.</p><span class="xw-tag">Design preview.</span></div>
+      </div>
+      <div class="xw-stage" id="xw-stage"><div class="phone" id="xw-ph"><div class="bezel"><div class="screen"><div class="reel" id="xw-reel">
+        <div class="slide on"><div class="demo">
+<div class="d-sbar"><span>09:41</span><span class="d-ico"><i></i><i></i><i></i><i></i><b></b></span></div>
+<div class="d-head"><div><div class="d-brand">XO2</div><div class="d-wal">Wallet 1 <span>&#8964;</span></div></div><svg class="d-scan" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h4M16 5h4v4M20 15v4h-4M8 19H4v-4"/></svg></div>
+<div class="d-bal"><b>$</b><span data-to="13309.59" data-from="12285.41">13,309.59</span></div>
+<div class="d-chg">+$1,024.18 (+8.34%) <em>PAST MONTH</em></div>
+<div class="d-chart"><svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="96" x2="262" y2="96" class="d-base"/><path pathLength="1" class="d-line" d="M0.0 86.5 L6.4 90.2 L12.8 88.1 L19.1 85.1 L25.5 78.6 L31.9 72.9 L38.3 73.1 L44.7 73.1 L51.1 74.3 L57.4 74.2 L63.8 68.8 L70.2 64.8 L76.6 62.1 L83.0 61.1 L89.4 64.8 L95.7 66.5 L102.1 65.6 L108.5 63.7 L114.9 58.5 L121.3 55.5 L127.7 55.2 L134.0 54.7 L140.4 55.6 L146.8 53.9 L153.2 49.3 L159.6 45.8 L166.0 42.3 L172.3 41.2 L178.7 42.6 L185.1 42.5 L191.5 41.8 L197.9 39.7 L204.3 36.3 L210.6 34.7 L217.0 33.9 L223.4 33.5 L229.8 33.5 L236.2 31.6 L242.6 28.8 L248.9 26.2 L255.3 23.6 L261.7 22.4 L268.1 21.6 L274.5 20.4 L280.9 18.9 L287.2 17.0 L293.6 15.3 L300.0 14.0"/></svg><div class="d-ax"><span>13.4K</span><span>13.0K</span><span>12.6K</span><span>12.2K</span></div></div>
+<div class="d-rng"><span>1D</span><span>1W</span><span class="on">1M</span><span>3M</span><span>1Y</span><span>ALL</span></div>
+<div class="d-acts"><span class="w"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>Send</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Receive</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h13l-3-3M19 15H6l3 3"/></svg>Swap</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Buy</span></div>
+<div class="d-row"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.7" fill="#F7931A"/><text x="12" y="16.6" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#fff" font-style="italic">&#8383;</text></svg><span class="d-nm">Bitcoin<small>0.1042 BTC</small></span><svg class="d-sp" viewBox="0 0 60 30" aria-hidden="true"><path pathLength="1" d="M0.0 26.3 L4.0 22.5 L8.0 16.3 L12.0 18.5 L16.0 18.7 L20.0 14.1 L24.0 16.9 L28.0 20.4 L32.0 14.8 L36.0 12.0 L40.0 14.3 L44.0 10.0 L48.0 6.2 L52.0 11.1 L56.0 12.0 L60.0 7.2"/></svg><span class="d-val">$8,147.29<small>+9.1%</small></span><i class="d-chev"></i></div><div class="d-row"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.7" fill="#627EEA"/><path d="M12 4.5 7.6 12 12 14.6 16.4 12z M7.6 13.1 12 19.5l4.4-6.4L12 15.7z" fill="#fff"/></svg><span class="d-nm">Ethereum<small>1.25 ETH</small></span><svg class="d-sp" viewBox="0 0 60 30" aria-hidden="true"><path pathLength="1" d="M0.0 23.2 L4.0 17.0 L8.0 17.5 L12.0 22.4 L16.0 19.3 L20.0 16.7 L24.0 19.8 L28.0 16.3 L32.0 9.9 L36.0 12.4 L40.0 14.1 L44.0 9.8 L48.0 11.5 L52.0 14.8 L56.0 8.9 L60.0 5.0"/></svg><span class="d-val">$2,800.71<small>+7.4%</small></span><i class="d-chev"></i></div><div class="d-row"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11.7" fill="#141416" stroke="#2c2c2e" stroke-width=".6"/><path d="M8 7.2h9.5l-1.6 1.9H6.4zM6.4 11.05h9.5l1.6 1.9H8zM8 14.9h9.5l-1.6 1.9H6.4z" fill="url(#solg)"/></svg><span class="d-nm">Solana<small>12.35 SOL</small></span><svg class="d-sp" viewBox="0 0 60 30" aria-hidden="true"><path pathLength="1" d="M0.0 21.9 L4.0 19.1 L8.0 23.6 L12.0 22.9 L16.0 15.9 L20.0 16.0 L24.0 17.3 L28.0 12.1 L32.0 12.4 L36.0 17.6 L40.0 14.6 L44.0 10.5 L48.0 12.9 L52.0 10.2 L56.0 4.0 L60.0 6.7"/></svg><span class="d-val">$2,361.59<small>+6.2%</small></span><i class="d-chev"></i></div>
+<div class="d-tab"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM16 16l4 4"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h13l-3-3M19 15H6l3 3"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
+</div></div>
+        <div class="slide shot"><div class="wipe" style="left:53%;top:27%;width:19%;height:63%"></div><img src="/wallet/discover.png" width="750" height="1631" alt="The XO2 Discover screen: a search across 100 coins with prices and a week of movement" loading="lazy" decoding="async"></div>
+        <div class="slide"><div class="sbar"><span>9:41</span><i>&#9679;&#9679;&#9679;</i></div><div class="app"><div class="a-top a-mid" style="justify-content:center"><span>Review</span></div><div class="a-mid"><div class="a-amt">0.25 <small>ETH</small></div><div style="color:var(--dim);font-size:.8em">&#8776; $613.00</div></div><div style="margin-top:1.4em"><div class="a-kv"><span>To</span><span>0x1234&#8230;abcd <small style="color:var(--dim)">example</small></span></div><div class="a-kv"><span>Network</span><span>Ethereum</span></div><div class="a-kv"><span>Network fee</span><span>$1.23</span></div></div><div class="a-does"><b>What this does</b>Sends 0.25 ETH from this wallet to 0x1234&#8230;abcd. Nothing else: no approvals, no contract.</div><div class="a-btn">Confirm &amp; Send</div></div></div>
+      </div><div class="island"></div></div></div></div></div>
+      <div class="xw-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
     </div>
   </section>
 
-  <section>
-    <div class="xw-feat flip">
-      <div class="xw-copy rv"><h2 class="xw-h">Know before<br>you send.</h2>
-        <p class="xw-p">Every send, <strong>in plain English</strong>, before you confirm.</p>
-        <span class="xw-tag">Design preview. Not built yet.</span></div>
-      <div class="rv"><div class="phone" role="img" aria-label="XO2 send review with a plain-English summary, design preview"><div class="bezel"><div class="screen"><div class="island"></div><div class="sbar"><span>9:41</span><i>&#9679;&#9679;&#9679;</i></div><div class="app"><div class="a-top a-mid" style="justify-content:center"><span>Review</span></div><div class="a-mid"><div class="a-amt">0.25 <small>ETH</small></div><div style="color:var(--dim);font-size:.8em">&#8776; $613.00</div></div><div style="margin-top:1.4em"><div class="a-kv"><span>To</span><span>0x1234&#8230;abcd <small style="color:var(--dim)">example</small></span></div><div class="a-kv"><span>Network</span><span>Ethereum</span></div><div class="a-kv"><span>Network fee</span><span>$1.23</span></div></div><div class="a-does"><b>What this does</b>Sends 0.25 ETH from this wallet to 0x1234&#8230;abcd. Nothing else: no approvals, no contract.</div><div class="a-btn">Confirm &amp; Send</div></div></div></div></div></div>
-    </div>
-  </section>
+
+
 
   <section class="xw-chains">
     <h2 class="xw-h rv">Six chains, planned.</h2>
@@ -217,7 +298,7 @@
       <label class="xw-consent"><input type="checkbox" id="xw-consent" form="xw-form" name="sms_consent"> Text me once when XO2 launches. Msg &amp; data rates may apply. Reply STOP to opt out.</label>
     </div>
     <p class="xw-status" id="xw-status" role="status" aria-live="polite"></p>
-    <p class="xw-fine">We use your email only to tell you about XO2. <a href="/privacy/#waitlist">How we handle it</a>. Screens are from the current build, with demo balances; the send review is a design preview.</p>
+    <p class="xw-fine">We use your email only to tell you about XO2. <a href="/privacy/#waitlist">How we handle it</a>. Home is an animated demo of the app; Discover is from the current build; the send review is a design preview. Balances are examples.</p>
   </section>
 </main>
 
@@ -234,7 +315,7 @@
         <h4>Product</h4>
         <ul>
           <li><a href="/tools/">Tools</a></li>
-          <li><a href="/wallet/">XO2 wallet</a></li>
+          <li><a href="/wallet/">XO2</a></li>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
@@ -285,16 +366,40 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -12% 0px' });
     rv.forEach(function (el) { io.observe(el); });
   } else { rv.forEach(function (el) { el.classList.add('in'); }); }
-  var stage = document.getElementById('xw-stage');
-  if (stage) setTimeout(function () { stage.classList.add('in'); }, 500);
-  var ph = document.querySelector('#xw-stage .phone');
-  if (!ph || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var tick = false;
-  function upd() { tick = false; var r = ph.getBoundingClientRect(), vh = innerHeight;
-    var p = Math.min(1, Math.max(0, (vh - r.top) / (vh * .75)));
-    ph.style.setProperty('--rx', (24 * (1 - p)).toFixed(2) + 'deg'); ph.style.setProperty('--sc', (.86 + .14 * p).toFixed(3)); }
+  var phones = document.querySelectorAll('.phone:not(#xw-stage .phone)');
+  function countUp(p) {
+    var el = p.querySelector('[data-to]');
+    if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var a = +el.dataset.from, b = +el.dataset.to, t0 = performance.now(), D = 1300;
+    (function step(t) { var k = Math.min(1, (t - t0) / D); k = k < 0 ? 0 : k < .5 ? 4*k*k*k : 1 - Math.pow(-2*k + 2, 3) / 2;
+      el.textContent = (a + (b - a) * k).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (k < 1) requestAnimationFrame(step); })(t0);
+  }
+  if ('IntersectionObserver' in window) {
+    var po = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('drawn'); po.unobserve(e.target); } }); }, { threshold: .45 });
+    phones.forEach(function (p) { po.observe(p); });
+  } else { phones.forEach(function (p) { p.classList.add('drawn'); }); }
+  var pin = document.getElementById('xw-pin'), ph = document.getElementById('xw-ph'), reel = document.getElementById('xw-reel');
+  if (!pin || !ph) return;
+  var caps = pin.querySelectorAll('.xw-cap'), dots = pin.querySelectorAll('.xw-dots i'), slides = reel.querySelectorAll('.slide');
+  var bal = ph.querySelector('[data-to]');
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (bal && !still) bal.textContent = (+bal.dataset.from).toLocaleString('en-US', { minimumFractionDigits: 2 });
+  var tick = false, drawn = false, cur = -1;
+  function go(i) { if (i === cur) return; cur = i;
+    reel.style.setProperty('--i', i);
+    [caps, dots, slides].forEach(function (list) { list.forEach(function (el, k) { el.classList.toggle('on', k === i); }); }); }
+  function upd() { tick = false;
+    var r = pin.getBoundingClientRect(), span = r.height - innerHeight;
+    var p = Math.min(1, Math.max(0, -r.top / (span || 1)));
+    var e = still ? 1 : 1 - Math.pow(1 - Math.min(1, p / .14), 3);
+    ph.style.setProperty('--ty', ((1 - e) * 28).toFixed(2) + 'vh');
+    ph.style.setProperty('--rx', (22 * (1 - e)).toFixed(2) + 'deg');
+    ph.style.setProperty('--sc', (.9 + .1 * e).toFixed(3));
+    if (!drawn && e > .5) { drawn = true; ph.classList.add('drawn'); if (!still) countUp(ph); }
+    go(p < .42 ? 0 : p < .72 ? 1 : 2); }
   addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
-  upd();
+  addEventListener('resize', upd); upd();
 })();
 </script>
 <script>
