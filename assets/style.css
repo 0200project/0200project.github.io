@@ -165,7 +165,7 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
   gap: 0.5rem;
   height: 2.5rem;
   padding-inline: 1.25rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   font-family: var(--sans);
   font-size: 0.875rem;
@@ -458,11 +458,12 @@ h1, h2, h3, h4 { color: var(--fg-strong); font-weight: 600; }
 }
 .codeblock .panel-head { border-radius: 0; padding: 0.75rem 0.875rem 0 1.25rem; }
 
-/* A small pill with a hairline; it inverts to white under a pointer. */
+/* A small button with a hairline, the same shape as every other button; it
+   inverts to white under a pointer. */
 .copy-btn {
   background: none;
   border: 1px solid var(--hair);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   padding: 0.1875rem 0.75rem;
   font-family: var(--sans);
   font-size: 0.75rem;
@@ -1154,8 +1155,9 @@ tbody tr:nth-child(odd) td { background: #0a0a0b; }
    text field: an input with no edge does not read as somewhere to type. Fields
    and filter chips keep one quiet line; dividers stay gone. */
 :root { --field-border: #2e2e32; --field-border-hover: #5a5a63; --field-bg: #0a0a0a; --card-border: #1f1f22; --card-border-hover: #3a3a40; }
-/* Nav buttons are small rectangles, as on Vercel; hero buttons stay pills. */
-.nav .btn-sm { height: 2rem; border-radius: .375rem; padding-inline: .75rem; }
+/* Every button is the same small rectangle, the nav's shape (founder, 2026-10-29:
+   "make them the same i'd do more on the blocky side"). */
+.nav .btn-sm { height: 2rem; padding-inline: .75rem; }
 
 /* ============================================================
    Page kit, 2026-10-28: the homepage's vibe on every interior page.

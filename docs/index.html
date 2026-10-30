@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=aa4f5d10" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=08399f67">
+<link rel="stylesheet" href="/assets/style.css?v=b1693440">
 <style>
   /* Docs on the page kit, 2026-10-28. A reference, so it reads like the other reading
      pages: the same dark space above the title, text at the kit's measure, and cards only
@@ -181,7 +181,7 @@
   .qs-tab {
     background: none;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     padding: 0.5rem 0.75rem;
     font-family: var(--sans);
     font-size: 0.8125rem;
@@ -222,7 +222,7 @@
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/" aria-current="page">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
-      <li><a href="/xo2/">$XO2</a></li>
+      <li><a href="/wallet/">XO2 wallet</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -576,6 +576,7 @@ await client.close();</code></pre>
             <tr><td><code class="inline">known_drainer</code></td><td>An involved address appears on the ScamSniffer or MyEtherWallet public blocklists.</td></tr>
             <tr><td><code class="inline">impersonated_token</code></td><td>A token reports the symbol of a token on our known-token list but is not the address that list records for it; its address is shown instead. <strong>This check is bounded by that list: 116 tokens (our own 19, verified 2026-08-19, plus the Base entries of tokens.uniswap.org, read 2026-09-09).</strong> A token whose symbol is not on the list is not checked, and the absence of this flag is not a statement that a token is genuine.</td></tr>
             <tr><td><code class="inline">nonstandard_token_symbol</code></td><td>A token&rsquo;s self-reported symbol failed a standard-ticker check; its contract address is shown in place of the name.</td></tr>
+            <tr><td><code class="inline">account_delegated</code></td><td>An EIP-7702 authorization in this transaction hands control of the AUTHORIZING account &mdash; the account that signed the authorization, which is often not the account that submitted the transaction &mdash; to a contract: until it is revoked, that contract&rsquo;s code runs as the account and can move anything the account holds without a further signature. The delegate&rsquo;s full address is given, and an authorization carrying chain id 0 is valid on every chain that honours EIP-7702, not only Base. The submitting account is named separately when it differs, because a signature submitted by somebody else is what a sponsored transaction looks like. This flag reports the transaction that SETS a delegation; it does not tell you whether an account was already delegated before it.</td></tr>
             <tr><td><code class="inline">transaction_reverted</code></td><td>The transaction reverted onchain.</td></tr>
           </tbody>
         </table>
@@ -741,7 +742,7 @@ await client.close();</code></pre>
         <h4>Product</h4>
         <ul>
           <li><a href="/tools/">Tools</a></li>
-          <li><a href="/xo2/">XO2</a></li>
+          <li><a href="/wallet/">XO2 wallet</a></li>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>

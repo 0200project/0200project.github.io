@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=aa4f5d10" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=08399f67">
+<link rel="stylesheet" href="/assets/style.css?v=b1693440">
 <style>
   /* ---- The playground: the title on the container's left edge, the field under it, and the
      decoder's response as the product shot: one large dark card across the container, as
@@ -33,7 +33,7 @@
   /* the title stays on one line where it fits, as the homepage's section headings do */
   .pg-h1 { max-width: 22ch; }
 
-  /* the field and its button, one pill; the samples under it */
+  /* the field and its button, one block; the samples under it */
   .pg-wrap { max-width: 48rem; margin-top: clamp(2rem, calc(3 * var(--vw)), 2.75rem); }
   .pg-row {
     display: flex;
@@ -42,7 +42,7 @@
     padding: 0.375rem;
     background: var(--card-bg);
     border: 1px solid var(--hair);
-    border-radius: 999px;
+    border-radius: calc(var(--radius-sm) + 0.375rem);
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
   }
   @media (hover: hover) and (pointer: fine) {
@@ -60,7 +60,7 @@
     color: var(--fg-strong);
     background: transparent;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     outline: none;
   }
   .pg-field::placeholder { color: var(--fg-faint); }
@@ -77,7 +77,7 @@
     background: transparent;
     color: var(--fg-muted);
     border: 1px solid var(--hair);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     white-space: nowrap;
     transition: color 0.4s ease, border-color 0.4s ease;
@@ -196,7 +196,7 @@
       <li><a href="/playground/" aria-current="page">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
-      <li><a href="/xo2/">$XO2</a></li>
+      <li><a href="/wallet/">XO2 wallet</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -224,7 +224,7 @@
       <div class="panel pg-out" id="pg-out">
         <div class="panel-head"><span>response</span><span id="pg-meta" aria-live="polite">explain_transaction</span></div>
         <div id="pg-body" role="region" aria-label="Tool output">
-          <div class="pg-state"><p class="pg-hint">You get back a plain-English summary, the action type, the assets moved, the counterparties, gas in USD, and any risk flags with the checks behind them. No flag does not mean safe.<br>Pick a sample above to see one, saved on 20 August 2026.</p></div>
+          <div class="pg-state"><p class="pg-hint">Pick a sample above to see a full response, saved on 20 August 2026. No flag does not mean safe.</p></div>
         </div>
       </div>
       <div class="x-acts">
@@ -249,7 +249,7 @@
         <h4>Product</h4>
         <ul>
           <li><a href="/tools/">Tools</a></li>
-          <li><a href="/xo2/">XO2</a></li>
+          <li><a href="/wallet/">XO2 wallet</a></li>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>

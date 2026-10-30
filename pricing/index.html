@@ -23,43 +23,49 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=aa4f5d10" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=08399f67">
+<link rel="stylesheet" href="/assets/style.css?v=b1693440">
 <style>
   /* The opening sentence sets in two lines rather than three, so on a desktop screen the
      three plans end inside the first view instead of a sliver below it. Same size, colour
      and weight as every page's opening sentence. */
   .x-top .x-p { max-width: 41rem; }
 
-  /* Pricing on the page kit. The three plans are three cards at one weight. From 52em up
-     their headings, their lines and their first buttons share rows across the cards
-     (subgrid), so the plans read side by side; only the Pass card has a fourth row, its
-     second way to pay, at exactly the size and weight it had before (Field notes, below the
-     plans, has the same fourth row). Nothing here makes one plan, price or rail louder than
-     another. */
-  @media (min-width: 52em) {
-    .pr-plans { row-gap: 0; }
-    .pr-plans > div { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
-    .pr-plans > div > * { min-width: 0; }
-    .pr-plans > div > .btn { justify-self: start; align-self: start; }
+  /* Pricing on the page kit: three plans side by side at one weight, Field notes under them
+     across the row. A plan reads top to bottom as its name, its price, one line on what it buys,
+     and its button with one quiet line under it; the buttons line up across the cards. Nothing
+     here makes one plan, price or rail louder than another. */
+  .pr-plans > div { display: flex; flex-direction: column; }
+  .x-cols .pr-price { margin-top: 1.25rem; font-size: clamp(2.75rem, calc(4.2 * var(--vw)), 3.75rem); font-weight: 400; line-height: 1; letter-spacing: -.05em; color: var(--fg-strong); font-variant-numeric: tabular-nums; }
+  .pr-price span { margin-left: .375rem; font-size: 1rem; letter-spacing: -.01em; color: var(--fg-muted); }
+  .pr-price span.pr-per { margin-left: .125rem; }
+  .x-cols .pr-what { margin-top: 1rem; }
+  .pr-act { margin-top: auto; padding-top: 2rem; }
+  .x-cols .pr-act .btn { margin-top: 0; }
+  .x-cols p.pr-sub { margin-top: .875rem; font-size: .875rem; color: var(--fg-faint); }
+  .pr-sub a, .pr-link { color: var(--fg-muted); text-decoration: underline; text-decoration-color: #3a3a40; text-underline-offset: 3px; }
+  /* a 44px tap area on a one-line link, without moving the line */
+  .pr-sub a, .pr-link { display: inline-block; padding-block: .75rem; margin-block: -.75rem; }
+  .pr-link { background: none; border: 0; padding-inline: 0; font: inherit; cursor: pointer; }
+  .pr-link:disabled { cursor: default; text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .pr-sub a:hover, .pr-link:not(:disabled):hover { color: var(--fg-strong); text-decoration-color: var(--fg-muted); }
   }
-  /* Below that, the three plans stack in one column rather than two and a stray third. */
+  /* the USDC flow opens under its link, at the card's small size */
+  #pass-wallet-panel:not(:empty) { margin-top: 1.25rem; }
+  #pass-wallet-panel p { margin: 0; font-size: .875rem; line-height: 1.55; color: var(--fg-muted); }
+  #pass-wallet-panel p + p { margin-top: .5rem; }
+  #pass-wallet-panel .btn { margin-top: .75rem; }
+  /* Field notes: the same card across the whole row, its name and price on the left */
+  @media (min-width: 52em) {
+    .pr-plans > #field-notes { grid-column: 1 / -1; margin-top: var(--card-gap); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: var(--card-pad); }
+    #field-notes .pr-body { display: flex; flex-direction: column; }
+    #field-notes .pr-what { margin-top: 0; max-width: 34rem; }
+    #field-notes .pr-act { padding-top: 1.5rem; }
+  }
+  /* Below 52em the plans stack in one column rather than two and a stray third. */
   @media (max-width: 52em) {
     .x-cols.pr-plans { grid-template-columns: minmax(0, 1fr); }
   }
-  /* Field notes, a fourth card in the same grid, at the same weight: from 52em up it takes the
-     whole row under the three plans (alone in a third of it, it read as a stray), one card gap
-     below them, its lines held to a reading measure. On a phone it is simply the next card. */
-  @media (min-width: 52em) {
-    .pr-plans > #field-notes { grid-column: 1 / -1; margin-top: var(--card-gap); }
-    #field-notes > p, #field-notes .pr-buy-wallet p { max-width: 40rem; }
-  }
-
-  /* The Pass card's second way to pay: smaller and quieter than the card button above it,
-     as it always was. Field notes uses the same block for its own second way to pay. */
-  .pr-buy-wallet { margin-top: 1.25rem; }
-  .pr-buy-wallet p { color: var(--fg-muted); font-size: 0.875rem; }
-  .pr-buy-wallet p + p { margin-top: 0.5rem; }
-  .pr-buy-wallet .btn { margin-top: 0.625rem; }
 
   /* A proof-of-purchase URL wraps rather than scrolls, so all of it is in sight. Literal,
      so mono. */
@@ -140,7 +146,7 @@
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/" aria-current="page">Pricing</a></li>
-      <li><a href="/xo2/">$XO2</a></li>
+      <li><a href="/wallet/">XO2 wallet</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -151,7 +157,7 @@
   <section class="x-top">
     <div class="container"><div class="x-wrap">
       <h1 class="x-h1">Free to start. Pay when you need more.</h1>
-      <p class="x-p">50 free calls every 24 hours per IPv4 address or IPv6 /64, no account. Agents can also pay $0.02 per call in USDC on Base via x402.</p>
+      <p class="x-p">Agents can also pay per call: $0.02 in USDC on Base, over x402.</p>
 
       <div id="pr-success" class="panel">
         <div class="panel-head"><span>checkout</span><span id="pr-success-meta"></span></div>
@@ -159,37 +165,48 @@
       </div>
 
       <div class="x-cols pr-plans">
-        <div>
+        <div id="free">
           <h3>Free</h3>
-          <p>$0. 50 calls every 24 hours per IPv4 address or IPv6 /64, shared by everyone behind it.</p>
-          <a class="btn btn-ghost btn-sm" href="/playground/">Try it</a>
+          <p class="pr-price">$0</p>
+          <p class="pr-what">50 calls every 24 hours, counted per IPv4 address or IPv6 /64.</p>
+          <div class="pr-act">
+            <a class="btn btn-ghost" href="/playground/">Try it free</a>
+            <p class="pr-sub">No account, no card.</p>
+          </div>
         </div>
         <div id="pass">
           <h3>Pass</h3>
-          <p>$9 once. 10,000 calls over 30 days. A bearer token, nothing renews.</p>
-          <a class="btn btn-primary btn-sm" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Pay with card, $9</a>
-          <div class="pr-buy-wallet" id="pass-wallet">
-            <p>Or pay $9 in USDC from a Base wallet. If your wallet shows a warning, stop and use card.</p>
-            <button class="btn btn-ghost btn-sm" type="button" id="pass-buy-btn">Pay with USDC, $9</button>
+          <p class="pr-price">$9<span>one time</span></p>
+          <p class="pr-what">10,000 calls over 30 days. Nothing renews.</p>
+          <div class="pr-act" id="pass-wallet">
+            <a class="btn btn-primary" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Buy with card</a>
+            <p class="pr-sub"><button class="pr-link" type="button" id="pass-buy-btn">Or pay in USDC on Base</button></p>
             <div id="pass-wallet-panel"></div>
           </div>
         </div>
         <div id="developer">
           <h3>Developer</h3>
-          <p>$9 a month. The same 10,000 calls, renewing. Cancel anytime in Stripe&rsquo;s portal.</p>
-          <a class="btn btn-primary btn-sm" href="https://buy.stripe.com/5kQ4gzfQMbDn2cHd9w3wQ01" rel="noopener">Pay with card, $9/month</a>
+          <p class="pr-price">$9<span class="pr-per">/month</span></p>
+          <p class="pr-what">10,000 calls every month, renewing.</p>
+          <div class="pr-act">
+            <a class="btn btn-primary" href="https://buy.stripe.com/5kQ4gzfQMbDn2cHd9w3wQ01" rel="noopener">Subscribe</a>
+            <p class="pr-sub">Cancel anytime. <a href="https://billing.stripe.com/p/login/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">Manage</a></p>
+          </div>
         </div>
         <div id="field-notes">
-          <h3>Field notes</h3>
-          <p>$500 flat, and the document already exists. You get the x402 settlement failures we observed as one merchant up to 6 September 2026, with the evidence, the dead ends, and where we could not see.</p>
-          <a class="btn btn-primary btn-sm" href="mailto:contact@0200project.com?subject=Field%20notes">Email to buy, $500</a>
-          <div class="pr-buy-wallet">
-            <p>An x402 client can pay $500 in USDC on Base by POSTing to api.0200project.com/field-notes, and the document is the response. Otherwise email us; if a wallet shows a warning, stop and email us instead.</p>
-            <a class="btn btn-ghost btn-sm" href="/services/">Read the offer</a>
+          <div class="pr-head">
+            <h3>Field notes</h3>
+            <p class="pr-price">$500<span>one time</span></p>
+          </div>
+          <div class="pr-body">
+            <p class="pr-what">You get the x402 settlement failures we observed as one merchant, up to 6 September 2026, with the evidence.</p>
+            <div class="pr-act">
+              <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Field%20notes">Email to buy</a>
+              <p class="pr-sub"><a href="/services/">What is in it, and how agents pay</a></p>
+            </div>
           </div>
         </div>
       </div>
-      <p class="x-fine">Already subscribed? <a href="https://billing.stripe.com/p/login/eVq8wP0VS22N2cHglI3wQ00" rel="noopener" style="display:inline-block;padding-block:.75rem;margin-block:-.75rem">Manage or cancel</a>.</p>
     </div></div>
   </section>
 
@@ -198,9 +215,9 @@
       <h2 class="x-h">Reviews for finance teams.</h2>
       <p class="x-p">A written review of your own Base activity, with the evidence attached. It is evidence, not an opinion you can hand to a regulator.</p>
       <dl class="x-terms">
-        <div><dt>Price</dt><dd>$5,000 per engagement, scope agreed in writing first</dd></div>
+        <div><dt>Price</dt><dd>$5,000, scope agreed in writing first</dd></div>
         <div><dt>Delivery</dt><dd>3 to 5 days</dd></div>
-        <div><dt>Payment</dt><dd>After delivery: no deposit, no card on file, nothing recurs. USDC on Base is the default because the on-chain transfer is the receipt, and that transfer is public. Card can usually be arranged by email, and if your wallet shows a warning, stop and use card.</dd></div>
+        <div><dt>Payment</dt><dd>You pay once, after delivery. No deposit, and nothing renews. Pay in USDC on Base, or email us and we can usually arrange card. A USDC payment is public on the blockchain.</dd></div>
       </dl>
       <div class="x-acts">
         <a class="btn btn-primary" href="mailto:contact@0200project.com?subject=Review%20request&amp;body=Transaction%20hashes%3A%0ADates%3A%0AWhat%20it%20is%20for%3A">Request a review</a>
@@ -223,7 +240,7 @@
         <h4>Product</h4>
         <ul>
           <li><a href="/tools/">Tools</a></li>
-          <li><a href="/xo2/">XO2</a></li>
+          <li><a href="/wallet/">XO2 wallet</a></li>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
@@ -350,30 +367,26 @@
 
   var panel = document.getElementById('pass-wallet-panel');
   var buyBtn = document.getElementById('pass-buy-btn');
-  var priceDisplay = null;
-
-  function payAmountDisplay(challenge) {
-    var a = (challenge.accepts && challenge.accepts[0]) || {};
-    var amt = (a.maxAmountRequired != null) ? a.maxAmountRequired : a.amount;
-    if (amt == null || !window.x402Pay) return null;
-    var n = Number(amt) / 1e6;
-    return '$' + (n === Math.round(n * 100) / 100 ? n.toFixed(2) : String(n));
-  }
-
-  function shortAddr(a) {
-    return (a && a.length > 10) ? a.slice(0, 6) + '…' + a.slice(-4) : a;
-  }
 
   function renderPanel(html) { panel.innerHTML = html; }
 
+  // Amounts arrive as bare decimals ("9"), so the unit is written here, on both
+  // figures; a price with no unit reads as a glitch.
+  function shortfallHtml(held, required) {
+    return '<p>This wallet has ' + esc(held) + ' USDC on Base. The pass costs ' + esc(required) + ' USDC.</p>' +
+      '<p>Add USDC on Base and check again, or pay by card above.</p>' +
+      '<button class="btn btn-ghost btn-sm" type="button" id="pass-retry-btn">Check again</button>';
+  }
+
   function renderInsufficient(info) {
-    renderPanel('<p>This wallet (' + esc(shortAddr(info.account)) + ') holds ' + esc(info.heldDisplay) + ' USDC on Base; the pass needs ' + esc(info.requiredDisplay) + '.</p>');
+    renderPanel(shortfallHtml(info.heldDisplay, info.requiredDisplay));
+    document.getElementById('pass-retry-btn').addEventListener('click', function () { startBuy(); });
   }
 
   function renderConfirm(challenge, info) {
     renderPanel(
-      '<p>Wallet ' + esc(shortAddr(info.account)) + ' holds ' + esc(info.heldDisplay) + ' USDC on Base, enough to pay ' + esc(info.requiredDisplay) + '.</p>' +
-      '<button class="btn btn-primary btn-sm" type="button" id="pass-sign-btn">Sign &amp; pay ' + esc(info.requiredDisplay) + ' USDC</button>'
+      '<p>If your wallet shows a warning when you sign, stop and buy with card instead.</p>' +
+      '<button class="btn btn-primary btn-sm" type="button" id="pass-sign-btn">Sign and pay ' + esc(info.requiredDisplay) + ' USDC</button>'
     );
     document.getElementById('pass-sign-btn').addEventListener('click', function () {
       runPurchase(challenge);
@@ -390,13 +403,12 @@
 
   function renderError(challenge, err) {
     var code = err && err.code;
-    var msg;
     if (code === 'INSUFFICIENT_FUNDS' && err.detail && window.x402Pay) {
-      msg = 'This wallet holds ' + window.x402Pay.formatUnits(err.detail.held, 6) + ' USDC on Base; the pass needs ' + window.x402Pay.formatUnits(err.detail.required, 6) + '.';
+      renderPanel(shortfallHtml(window.x402Pay.formatUnits(err.detail.held, 6), window.x402Pay.formatUnits(err.detail.required, 6)));
     } else {
-      msg = (err && err.message) || 'The payment could not be completed.';
+      var msg = (err && err.message) || 'The payment could not be completed.';
+      renderPanel('<p>' + esc(msg) + '</p><button class="btn btn-ghost btn-sm" type="button" id="pass-retry-btn">Try again</button>');
     }
-    renderPanel('<p>' + esc(msg) + '</p><button class="btn btn-ghost btn-sm" type="button" id="pass-retry-btn">Try again</button>');
     document.getElementById('pass-retry-btn').addEventListener('click', function () { startBuy(); });
   }
 
@@ -473,12 +485,11 @@
 
   function startBuy() {
     if (!window.x402Pay || !window.x402Pay.available()) {
-      renderPanel('<p>No browser wallet found. On a phone, open this page in your wallet app&rsquo;s browser; on a computer, use a wallet extension (MetaMask, Coinbase Wallet, or similar). Or pay by card, or use an x402-capable agent with the <code class="inline">buy_pass</code> tool.</p>');
+      renderPanel('<p>No wallet found in this browser. Open this page in your wallet app, or buy with card.</p>');
       return;
     }
     buyBtn.disabled = true;
-    buyBtn.textContent = 'Checking…';
-    renderPanel('<p>Reading the current price…</p>');
+    renderPanel('<p>Checking your wallet…</p>');
     callBuyPass(null).then(function (res) {
       var challenge = res.payload;
       if (!isX402(challenge)) {
@@ -486,13 +497,9 @@
         // no free tier, so anything other than a challenge is unexpected.
         renderPanel('<p>Unexpected response from the server. Try again in a moment.</p>');
         buyBtn.disabled = false;
-        buyBtn.textContent = 'Buy the pass, $9';
         return;
       }
-      priceDisplay = payAmountDisplay(challenge);
       buyBtn.disabled = false;
-      buyBtn.textContent = 'Buy the pass' + (priceDisplay ? ', ' + priceDisplay : ', $9');
-      renderPanel('<p>Checking your wallet…</p>');
       window.x402Pay.inspect(challenge).then(function (info) {
         if (info.canPay) renderConfirm(challenge, info);
         else renderInsufficient(info);
@@ -500,9 +507,8 @@
         renderError(challenge, err);
       });
     }).catch(function () {
-      renderPanel('<p>Could not reach the server to read the price. Try again in a moment.</p>');
+      renderPanel('<p>Could not reach the server. Try again in a moment.</p>');
       buyBtn.disabled = false;
-      buyBtn.textContent = 'Buy the pass, $9';
     });
   }
 

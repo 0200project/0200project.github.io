@@ -23,7 +23,7 @@
 <script src="/assets/ScrollTrigger.min.js?v=3.12.5" defer></script>
 <script src="/assets/lenis.min.js?v=1.1.18" defer></script>
 <script src="/assets/motion.js?v=aa4f5d10" defer></script>
-<link rel="stylesheet" href="/assets/style.css?v=08399f67">
+<link rel="stylesheet" href="/assets/style.css?v=b1693440">
 <style>
   /* Corrections and update notes are scope notes: never smaller than the kit's fine print. */
   .prose .small { font-size: 0.9375rem; line-height: 1.6; }
@@ -47,7 +47,7 @@
       <li><a href="/playground/">Playground</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/pricing/">Pricing</a></li>
-      <li><a href="/xo2/">$XO2</a></li>
+      <li><a href="/wallet/">XO2 wallet</a></li>
       <li class="nav-cta"><a class="btn btn-primary btn-sm" href="/playground/">Try it free</a></li>
     </ul></nav>
   </div>
@@ -74,12 +74,15 @@
 
       <h2>What we don't do</h2>
       <ul>
-        <li>No accounts and no signup, so we never ask for a name, email, or password.</li>
+        <li>No accounts, so we never ask for a name or a password. We ask for an email address only if you choose to join the XO2 wallet waitlist.</li>
         <li>No cookies on this website.</li>
         <li>No analytics or tracking pixels.</li>
         <li>No sale or sharing of data with anyone.</li>
         <li>No profiling. We do not build histories of who asked about which transactions.</li>
       </ul>
+
+      <h2 id="waitlist">The XO2 wallet waitlist</h2>
+      <p>If you join the waitlist, our server stores the email address you enter and the date you joined, in a file kept apart from the event log described under Data retention. If you also give a phone number and tick the box to get a launch text, it stores the number and the exact words you agreed to; without the tick, the number is not kept. We use these only to tell you about the XO2 wallet, and we don&rsquo;t share them. We keep them until XO2 launches.</p>
 
       <h2>Third parties</h2>
       <p>These are the external systems that receive data from your visit, your request or your payment. We found them by recording every request each of our pages makes in a browser and by reading the code of our pages and our server, checked 2026-10-29.</p>
@@ -90,8 +93,9 @@
         <li><strong>Base RPC providers.</strong> To decode a transaction, our server asks a Base RPC provider for it: mainnet.base.org first, then base-rpc.publicnode.com and base.llamarpc.com if the one before fails. The provider receives the transaction hash you sent us and the addresses of the tokens and contracts in that transaction. It sees our server, not your IP address.</li>
         <li><strong>Contract and history lookups.</strong> For the risk checks, our server sends addresses taken from that transaction, never the hash you sent and never your IP address. Contract addresses go to Sourcify (sourcify.dev), to check whether their code is published and to name events we do not recognise. A function identifier we do not recognise goes to Sourcify&rsquo;s signature database (api.4byte.sourcify.dev). The transaction&rsquo;s sender and block number go to Blockscout (api.blockscout.com), to check whether the sender has dealt with the other party before. When Sourcify or Blockscout does not answer, the same lookups go to Etherscan (api.etherscan.io). As of 2026-10-29, Etherscan refuses these lookups for Base and the history check gets no answer from either service, so it reports itself unavailable, but both services still receive the lookups.</li>
         <li><strong>The x402 facilitators.</strong> When you pay via x402, our server sends your signed payment authorization, which includes your wallet address, to a facilitator to verify and settle it: PayAI&rsquo;s at facilitator.payai.network, Coinbase&rsquo;s at api.cdp.coinbase.com, or both. Which one receives it first depends on what you are paying for and on our configuration, and we do not count how often each is used. We run neither.</li>
-        <li><strong>Fly.io.</strong> Our own servers, at api.0200project.com, run on Fly.io. The home, about and status pages contact them when they load, the home page to show how many calls we have served, and the status page again when you press Re-check. The playground contacts them when you explain a transaction, including when you open a link that carries one, and when you pay. The pricing page contacts them when you pay with a wallet or come back from a card payment. Other pages do not.</li>
+        <li><strong>Fly.io.</strong> Our own servers, at api.0200project.com, run on Fly.io. The home, about and status pages contact them when they load, the home page to show how many calls we have served, and the status page again when you press Re-check. The playground contacts them when you explain a transaction, including when you open a link that carries one, and when you pay. The pricing page contacts them when you pay with a wallet or come back from a card payment. The XO2 wallet page contacts them when you join the waitlist. Other pages do not.</li>
         <li><strong>The Base blockchain.</strong> If you pay via x402, for calls or for a pass, the payment settles on Base and is public by the nature of blockchains: anyone can see that your wallet paid ours, how much, and when. Our own log also records the payment with your wallet address, as described under Data retention. If that linkage matters to you, use a wallet accordingly.</li>
+        <li><strong>Proton Mail.</strong> Our mailbox, contact@0200project.com, is hosted by Proton Mail, so any email you send us, including a request to leave the waitlist, is received and stored by Proton.</li>
         <li><strong>Stripe.</strong> Card payments for passes and subscriptions are handled by Stripe on their own pages at buy.stripe.com and billing.stripe.com. We never see or store your card details; Stripe does. When Stripe sends you back to our pricing page, that page passes the checkout session&rsquo;s id to our server to confirm the purchase.</li>
       </ul>
 
@@ -135,7 +139,7 @@
         <h4>Product</h4>
         <ul>
           <li><a href="/tools/">Tools</a></li>
-          <li><a href="/xo2/">XO2</a></li>
+          <li><a href="/wallet/">XO2 wallet</a></li>
           <li><a href="/docs/">Documentation</a></li>
           <li><a href="/docs/#request-format">API reference</a></li>
           <li><a href="/pricing/">Pricing</a></li>
