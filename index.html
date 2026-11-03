@@ -5,8 +5,8 @@
 <script>document.documentElement.classList.add('js');setTimeout(function(){document.documentElement.classList.add('hx-drawn')},3000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="base:app_id" content="6a9ddd446784a20d24d7b615" />
-<title>0200project, Machine-native tools for AI agents</title>
-<meta name="description" content="base-transaction-decoder explains any Base transaction, and tells your agent which fields an attacker controls and when a safety check did not run. Per call via x402.">
+<title>0200project, crypto in plain English</title>
+<meta name="description" content="0200 turns crypto transactions into plain English, for crypto teams, for everyday people and for AI agents. Works on Base today.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="0200project">
 <meta property="og:description" content="Machine-native infrastructure for autonomous AI agents: deterministic APIs, MCP-native, pay per call via x402.">
@@ -53,6 +53,10 @@
   body { background: #000; }
   .nw { white-space: nowrap; }
   .vh { position: absolute !important; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .b-xo2 { font-size: clamp(4.5rem, 9vw, 7.5rem); font-weight: 600; letter-spacing: -.07em; line-height: 1; background: linear-gradient(180deg, #fff 30%, #8e8e93 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .fine { padding: 0 0 clamp(3rem, 6vw, 5rem); }
+  .fine p { max-width: 46rem; margin-inline: auto; font-size: .8125rem; line-height: 1.6; color: var(--fg-faint); text-align: center; }
+  .fine a { color: var(--fg-muted); text-decoration: underline; text-underline-offset: 3px; }
   .v-sec { padding-block: clamp(4.5rem, 10vw, 8.5rem); }
   .v-h { margin: 0; font-size: clamp(2.125rem, 4vw, 3.5rem); font-weight: 400; line-height: 1.02; letter-spacing: -.05em; color: #fff; text-wrap: balance; }
 
@@ -142,41 +146,26 @@
     .hx-svg .lines path:not([data-q="ln"]) { stroke-linecap: round; }
   }
 
-  /* ---- The decoder: the headline left; on the right the English above the JSON. The blue
-     frame rests round one of them at a time: the English, until you scroll down to the JSON,
-     when it glides down to it in one short move, and back up the same way. It never follows the
-     scrollbar, so wherever the page stops it sits round a whole card. ---- */
-  .dx { --dg: clamp(1rem, calc(1.6 * var(--vw, 1vw)), 1.5rem); display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); grid-template-rows: auto auto auto;
-    column-gap: clamp(2rem, calc(5 * var(--vw, 1vw)), 5.5rem); row-gap: var(--dg); }
-  .dx-head { grid-area: 1 / 1; padding-top: clamp(1.5rem, 3vw, 2.5rem); }
-  .dx-copy { grid-area: 2 / 1; padding-top: clamp(1.5rem, 3vw, 2.5rem); }
-  .dx-copy p { max-width: 30rem; font-size: 1.0625rem; line-height: 1.55; color: var(--fg-muted); }
-  .dx-copy p + p { margin-top: .75rem; }
-  .dx-acts { display: flex; flex-wrap: wrap; gap: .625rem; margin-top: 1.75rem; }
-  .dx-fig { position: relative; margin: 0; grid-area: 1 / 2 / 4 / 3; display: grid; grid-template-rows: subgrid; }
-  .dx-cell { position: relative; z-index: 1; border-radius: 1.75rem; border: 1.5px solid rgba(255,255,255,.1); padding: clamp(1.5rem, 3vw, 2.5rem); }
-  .dx-sum { min-height: clamp(14rem, 22vw, 18rem); display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
+  /* ---- The decoder: the headline and one line centred, the English and the JSON side by side
+     under them. The English card carries the one blue, still. ---- */
+  .dx { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(1rem, 2vw, 1.5rem); text-align: center; }
+  .dx-head { grid-column: 1 / 3; }
+  .dx-fig { position: relative; margin: clamp(2.5rem, 5vw, 4rem) 0 0; grid-column: 1 / 3; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: inherit; row-gap: 1rem; text-align: left; }
+  .dx-cell { position: relative; border-radius: 1.75rem; border: 1.5px solid rgba(255,255,255,.1); padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .dx-sum { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
   .dx-call { font: 400 .8125rem/1.5 var(--mono); color: var(--fg-faint); overflow-wrap: anywhere; }
-  .dx-out { min-height: 2.5em; font-size: clamp(1.375rem, 2.5vw, 2.25rem); line-height: 1.2; letter-spacing: -.035em; color: #fff; max-width: 26ch; }
+  .dx-out { font-size: clamp(1.375rem, 2.5vw, 2.25rem); line-height: 1.2; letter-spacing: -.035em; color: #fff; max-width: 26ch; }
   .dx-note { margin: 1rem 0 0; font-size: .875rem; line-height: 1.45; color: var(--fg-muted); }
-  .dx-out .glitch { color: var(--accent-strong); font-family: var(--mono); letter-spacing: 0; }
   .dx-json pre { margin: 0; font: 400 .875rem/1.75 var(--mono); color: var(--fg-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
   .dx-json .k { color: var(--fg-faint); }
   .dx-json .v { color: var(--fg-strong); }
-  .dx-cap { padding-inline: clamp(1.5rem, 3vw, 2.5rem); font-size: .8125rem; color: var(--fg-faint); }
+  .dx-cap { grid-column: 1 / 3; text-align: center; font-size: .8125rem; color: var(--fg-faint); }
   .dx-cap a { color: var(--fg-muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.3); }
   .dx-cap a:hover { color: #fff; }
-  .dx-sum.is-blue, .dx-frame { border-color: rgba(78,158,255,.6); background: radial-gradient(120% 100% at 100% 0%, rgba(78,158,255,.13), rgba(78,158,255,0) 62%), #000; }
-  .dx-frame { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; height: 0; border: 1.5px solid rgba(78,158,255,.6); border-radius: 1.75rem; pointer-events: none; display: none; }
-  .fx-live .dx-frame { display: block; }
-  .fx-glide .dx-frame { transition: transform .7s cubic-bezier(.65,0,.35,1), width .7s cubic-bezier(.65,0,.35,1), height .7s cubic-bezier(.65,0,.35,1); }
-  .fx-live .dx-sum.is-blue { border-color: rgba(255,255,255,.1); background: none; }
-  .fx-live .dx-cell { background: none; }
+  .dx-sum.is-blue { border-color: rgba(78,158,255,.6); background: radial-gradient(120% 100% at 100% 0%, rgba(78,158,255,.13), rgba(78,158,255,0) 62%), #000; }
   @media (max-width: 63.99em) {
-    .dx { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 2.5rem; }
-    .dx-head, .dx-copy, .dx-fig { grid-area: auto; padding-top: 0; }
-    .dx-head { order: 1; } .dx-fig { order: 2; display: flex; flex-direction: column; gap: 1rem; } .dx-copy { order: 3; }
-    .dx-cap { padding-inline: 0; }
+    .dx, .dx-fig { grid-template-columns: minmax(0, 1fr); }
+    .dx-head, .dx-fig, .dx-cap { grid-column: 1; }
     .dx-json pre { font-size: .75rem; }
     .dx-cell { padding: 1.25rem; }
   }
@@ -387,10 +376,10 @@
     <canvas id="field" class="hx-cv hx-back" aria-hidden="true"></canvas>
     <div class="container hx">
       <div class="hx-copy">
-        <h1 class="display" data-words>Tools for autonomous AI&nbsp;agents.</h1>
+        <h1 class="display" data-words>Crypto, decoded.</h1>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/playground/">Try it free</a>
-          <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls on Base, 30 days, $9</a>
+          <a class="btn btn-ghost" href="mailto:contact@0200project.com">Talk to us</a>
         </div>
       </div>
       <div class="hx-mark" aria-hidden="true">
@@ -421,19 +410,10 @@
   <section class="v-sec" id="agents">
     <div class="container dx">
       <header class="dx-head">
-        <h2 class="v-h">A decoder for AI agents.</h2>
+        <h2 class="v-h">One hash. One sentence.</h2>
       </header>
-      <div class="dx-copy">
-        <p>Send a transaction hash. Get back what happened, in plain English and strict JSON.</p>
-        <p>50 free calls every 24 hours <span class="nw">per IPv4 address or IPv6 /64</span>, no account.</p>
-        <div class="dx-acts">
-          <a class="btn btn-primary" href="/playground/">Try it free</a>
-          <a class="btn btn-ghost" href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls on Base, 30 days, $9</a>
-        </div>
-      </div>
       <figure class="dx-fig" id="decode">
-        <span class="dx-frame" aria-hidden="true"></span>
-        <div class="dx-cell dx-sum is-blue">
+                <div class="dx-cell dx-sum is-blue">
           <div class="dx-call">explain_transaction(&quot;0x12299f675eed…7bf97faa&quot;)</div>
           <p class="dx-out" id="decode-out" aria-live="off">0x5980...3d88 swapped 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager.</p>
           <p class="dx-note">Absence of a risk flag here does not mean none exists.</p>
@@ -462,7 +442,7 @@
   <section class="ways" id="ways" aria-labelledby="h-ways">
     <div class="gal-hold">
       <div class="ways-head">
-        <h2 class="v-h" id="h-ways">What you can use today</h2>
+        <h2 class="v-h" id="h-ways">Ways in.</h2>
         <div class="gal-ctl" id="gal-ctl">
           <div class="gal-dots" role="group" aria-labelledby="h-ways"></div>
         </div>
@@ -472,8 +452,8 @@
           <li class="g-item">
             <a class="g-card" href="/playground/">
               <div class="g-cap">
-                <h3>Decoder</h3>
-                <p>Paste a Base transaction hash and get back what happened, in plain English and strict JSON.</p>
+                <h3>Try it</h3>
+                <p>Paste. Read.</p>
               </div>
               <div class="g-stage is-decode" aria-hidden="true">
                 <div class="b-decode"><span class="h">0x12299f675eed…7bf97faa</span><span class="e">0x5980...3d88 <em>swapped</em> 0.016 ETH for 37.5023 USDC via Uniswap V4 PoolManager.</span></div>
@@ -515,8 +495,8 @@
           <li class="g-item">
             <a class="g-card is-blue" href="/docs/" data-home>
               <div class="g-cap">
-                <h3>MCP</h3>
-                <p>Agents call it as a tool, over MCP.</p>
+                <h3>For AI agents</h3>
+                <p>One call.</p>
               </div>
               <div class="g-stage" aria-hidden="true">
                 <div class="b-chat"><span><b>@agent</b> What happened in this transaction?</span><span>Calling <code>explain_transaction</code></span><span>Plain English and JSON, back in one call.</span></div>
@@ -526,8 +506,8 @@
           <li class="g-item">
             <a class="g-card" href="/pricing/">
               <div class="g-cap">
-                <h3>Free tier</h3>
-                <p>50 free calls every 24 hours <span class="nw">per IPv4 address or IPv6 /64</span>, no account.</p>
+                <h3>Free to start</h3>
+                <p>50 a day, free.</p>
               </div>
               <div class="g-stage" aria-hidden="true">
                 <div class="b-fifty">50</div>
@@ -537,16 +517,33 @@
           <li class="g-item">
             <a class="g-card" href="/services/#reviews">
               <div class="g-cap">
-                <h3>Reviews for finance teams</h3>
-                <p>Send the transaction hashes and dates; we confirm the price and scope in writing. You pay after delivery: no deposit, no card on file, nothing recurs. Evidence for your team, not a signed attestation.</p>
+                <h3>For crypto teams</h3>
+                <p>Written up. Paid on delivery.</p>
               </div>
               <div class="g-stage" aria-hidden="true">
                 <span class="b-stack"><i style="--n:2"></i><i style="--n:1"></i><i style="--n:0"></i></span>
               </div>
             </a>
           </li>
+          <li class="g-item">
+            <a class="g-card" href="/wallet/">
+              <div class="g-cap">
+                <h3>For everyone</h3>
+                <p>XO2. Q1 2027.</p>
+              </div>
+              <div class="g-stage" aria-hidden="true">
+                <div class="b-xo2">XO2</div>
+              </div>
+            </a>
+          </li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  <section class="fine" aria-label="Fine print">
+    <div class="container">
+      <p>Works on Base today. 50 free calls every 24 hours <span class="nw">per IPv4 address or IPv6 /64</span>, no account. More: <a href="https://buy.stripe.com/eVq8wP0VS22N2cHglI3wQ00" rel="noopener">10,000 calls on Base, 30 days, $9</a>. Absence of a risk flag here does not mean none exists. Team write-ups are evidence for your team, not a signed attestation: we confirm price and scope in writing, you pay after delivery, no deposit, no card on file, nothing recurs. The decoder and the write-ups only read public blockchain data and never touch your money.</p>
     </div>
   </section>
 
@@ -646,72 +643,6 @@
 
   const h1 = document.querySelector('[data-words]');
   if (h1 && !reduce && hasGsap) { h1.setAttribute('aria-label', h1.textContent); h1.innerHTML = h1.textContent.split(/(\s+)/).map(w => /\s/.test(w) ? w : '<span class="w">' + w + '</span>').join(''); }
-
-  /* =====================================================================
-     DECODER. The real summary is in the page at rest; in view (once) or on hover it resolves
-     out of hex, left to right. The blue square zooms in around the English, then passes down
-     to the JSON as the section scrolls.
-     ===================================================================== */
-  function glitchInto(el, finalHTML, dur, cls) {
-    const finalText = el.textContent;
-    const t0 = performance.now();
-    const step = t => {
-      const k = Math.min(1, (t - t0) / dur), n = Math.floor(k * finalText.length);
-      if (k < 1) {
-        el.textContent = finalText.slice(0, n);
-        const g = document.createElement('span'); g.className = cls;
-        g.textContent = finalText.slice(n, n + 14).replace(/\S/g, () => HASH[(Math.random() * 64) | 0]);
-        el.append(g); el._raf = requestAnimationFrame(step);
-      } else { el.innerHTML = finalHTML; el._raf = 0; }
-    };
-    cancelAnimationFrame(el._raf || 0);
-    el._raf = requestAnimationFrame(step);
-  }
-  const out = document.getElementById('decode-out');
-  if (out && !reduce && 'IntersectionObserver' in window) {
-    const html = out.innerHTML;
-    const run = () => { if (!out._raf) glitchInto(out, html, 1500, 'glitch'); };
-    new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { run(); o.disconnect(); } }, { threshold: 0.6 }).observe(out);
-    document.getElementById('decode').addEventListener('mouseenter', run);
-  }
-  // The frame rests round one card: the English, or the JSON once its top has risen past the
-  // middle of the screen. Crossing that line starts one timed glide (.fx-glide in the style);
-  // crossing back reverses it. Nothing is tied to the scroll position itself, so the frame is
-  // never caught between the two. It is placed before it is shown, so the first paint has it
-  // round the English (or the JSON, on a page that opens scrolled past the line), already still.
-  function mountFrame() {
-    const fig = document.getElementById('decode'); if (!fig) return;
-    const fr = fig.querySelector('.dx-frame'), c1 = fig.querySelector('.dx-sum'), c2 = fig.querySelector('.dx-json');
-    if (!fr || !c1 || !c2) return;
-    let onJson = false, raf = 0, lastY = window.scrollY;
-    const place = () => {
-      const r = (onJson ? c2 : c1).getBoundingClientRect(), o = fig.getBoundingClientRect();
-      fr.style.transform = `translate(${(r.left - o.left - fig.clientLeft).toFixed(2)}px, ${(r.top - o.top - fig.clientTop).toFixed(2)}px)`;
-      fr.style.width = r.width.toFixed(2) + 'px'; fr.style.height = r.height.toFixed(2) + 'px';
-    };
-    // down past the middle to move to the JSON; back below 62% to return, so a page resting on
-    // the line does not flicker between them
-    const want = () => { const t = c2.getBoundingClientRect().top, vh = window.innerHeight; return onJson ? t < vh * .62 : t < vh * .5; };
-    // a resize or a late font changes the cards' sizes: follow them at once, without a glide
-    const snap = () => { fig.classList.remove('fx-glide'); onJson = want(); place(); void fr.offsetWidth; fig.classList.add('fx-glide'); };
-    // a jump of most of a screen in one frame is the page being put somewhere (a reload that
-    // restores the scroll, a link to an anchor), not someone scrolling: the frame is simply there
-    const check = () => {
-      raf = 0;
-      const y = window.scrollY, jump = Math.abs(y - lastY) > window.innerHeight * .9;
-      lastY = y;
-      const n = want();
-      if (n === onJson) return;
-      if (jump) snap(); else { onJson = n; place(); }
-    };
-    onJson = want();
-    place();
-    fig.classList.add('fx-live');
-    void fr.offsetWidth;
-    fig.classList.add('fx-glide');
-    window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(check); }, { passive: true });
-    if ('ResizeObserver' in window) new ResizeObserver(snap).observe(fig);
-  }
 
   /* =====================================================================
      WHAT YOU CAN USE TODAY. Four cards. On a screen 64em wide and 40em tall, with motion and the
@@ -1043,7 +974,6 @@
       // sooner, drifting down a touch, away from the mark rather than into it.
       gsap.to('.hx-cv, .hx-mark', { opacity: 0, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.hx-copy', { y: 28, opacity: 0, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: '70% top', scrub: true } });
-      mountFrame();
       document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
     }
   }

@@ -129,6 +129,33 @@
   .pg-out .tok-punc { color: #6a6a70; }
   .pg-out .tok-flag { color: var(--accent-strong); }
 
+  /* the answer, for a person: the sentence first, then what moved and who it touched, then the
+     flags and the checks as chips; the JSON folds away under "For developers" */
+  .pg-res { padding: 1.5rem var(--pg-pad) var(--pg-pad); display: grid; gap: clamp(1.75rem, calc(2.5 * var(--vw)), 2.5rem); }
+  .pg-say { font-size: clamp(1.5rem, calc(2.2 * var(--vw) + .5rem), 2.375rem); line-height: 1.18; letter-spacing: -0.035em; color: var(--fg-strong); max-width: 30ch; text-wrap: balance; overflow-wrap: anywhere; }
+  .pg-say.is-reverted { color: var(--fg); }
+  .pg-sec h3 { margin: 0 0 .75rem; font-size: .8125rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--fg-faint); }
+  .pg-moves { display: grid; gap: .5rem; }
+  .pg-move { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; padding: .875rem 1rem; border: 1px solid var(--hair); border-radius: 1rem; }
+  .pg-amt { font-size: 1.125rem; color: var(--fg-strong); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .pg-path { font-size: .9375rem; color: var(--fg-muted); overflow-wrap: anywhere; }
+  .pg-who { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .pg-tag { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.25rem; padding: .375rem .875rem; border: 1px solid var(--hair); border-radius: 99px; font-size: .9375rem; color: var(--fg); overflow-wrap: anywhere; }
+  .pg-tag .pg-addr { font-family: var(--mono); font-size: .8125rem; color: var(--fg-faint); }
+  .pg-tag.is-flag { border-color: rgba(78, 158, 255, .7); color: var(--fg-strong); }
+  .pg-tag.is-off { color: var(--fg-faint); }
+  .pg-fine { margin-top: .75rem; font-size: .875rem; line-height: 1.5; color: var(--fg-muted); max-width: 44rem; }
+  .pg-meta2 { font-size: .875rem; color: var(--fg-faint); }
+  .pg-meta2 a { color: var(--fg-muted); text-decoration: underline; text-underline-offset: 3px; }
+  .pg-dev { border-top: 1px solid var(--hair); }
+  .pg-dev > summary { cursor: pointer; padding: 1.25rem var(--pg-pad); font-size: .9375rem; color: var(--fg-muted); list-style: none; }
+  .pg-dev > summary::-webkit-details-marker { display: none; }
+  .pg-dev > summary::after { content: " +"; color: var(--fg-faint); }
+  .pg-dev[open] > summary::after { content: " \2212"; }
+  .pg-dev > summary:hover { color: var(--fg-strong); }
+  .pg-dev > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .pg-dev .pg-json { padding-top: 0; }
+
   .pg-note { margin: -0.5rem var(--pg-pad) 0; padding-bottom: var(--pg-pad); font-size: 0.8125rem; color: var(--fg-faint); max-width: 44rem; }
   .pg-note a { color: var(--fg-muted); }
   .pg-note a:hover { color: var(--fg-strong); }
@@ -158,7 +185,7 @@
 
   /* a result arrives once, softly; the empty stage does not move */
   @media (prefers-reduced-motion: no-preference) {
-    #pg-body > :is(.pg-json, .pg-pay, .pg-miss, .pg-err-note) { animation: pg-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    #pg-body > :is(.pg-json, .pg-res, .pg-pay, .pg-miss, .pg-err-note) { animation: pg-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
     @keyframes pg-in { from { opacity: 0.001; transform: translateY(6px); } }
   }
   /* the loader is the page's only loop: it rests while the response is out of sight */
@@ -606,6 +633,53 @@
     body.innerHTML = '<pre class="pg-json"><code>' + renderVal(obj, 0, false, null) + '</code></pre>';
   }
 
+  function shortA(a) { return a && a.length > 12 ? a.slice(0, 6) + '\u2026' + a.slice(-4) : String(a || ''); }
+
+  /* The result for a person. Every string from the payload is escaped: summary, token and label
+     are written by the transaction's author (see provenance.untrusted_fields). */
+  var CHECK_NAMES = { contract_verification: 'Contract verification', first_interaction: 'First interaction', drainer_blacklist: 'Drainer list' };
+  var CHECK_STATES = { ok: 'ran', unavailable: 'could not run', not_applicable: 'not needed' };
+  function showResult(obj) {
+    var sum = String(obj.summary || '');
+    var cut = sum.search(/ (Not all risk checks|Absence of a risk flag)/);
+    var say = cut > 0 ? sum.slice(0, cut) : sum;
+    var names = {};
+    (obj.counterparties || []).forEach(function (c) { if (c && c.address && c.label) names[c.address.toLowerCase()] = c.label; });
+    var who = function (a) { var n = a && names[String(a).toLowerCase()]; return n ? esc(n) : '<span class="pg-addr">' + esc(shortA(a)) + '</span>'; };
+    var html = '<div class="pg-res"><p class="pg-say' + (obj.status === 'reverted' ? ' is-reverted' : '') + '">' + esc(say) + '</p>';
+    var moves = obj.assets_moved || [];
+    if (moves.length) {
+      html += '<div class="pg-sec"><h3>What moved</h3><div class="pg-moves">' + moves.map(function (m) {
+        return '<div class="pg-move"><span class="pg-amt">' + esc(m.amount) + ' ' + esc(m.token) + '</span>' +
+          '<span class="pg-path">from ' + who(m.from) + ' to ' + who(m.to) + '</span></div>';
+      }).join('') + '</div></div>';
+    }
+    var cps = obj.counterparties || [];
+    if (cps.length) {
+      html += '<div class="pg-sec"><h3>Who it touched</h3><div class="pg-who">' + cps.map(function (c) {
+        return '<span class="pg-tag">' + (c.label ? esc(c.label) + ' ' : '') + '<span class="pg-addr">' + esc(shortA(c.address)) + '</span></span>';
+      }).join('') + '</div></div>';
+    }
+    var flags = obj.risk_flags || [];
+    html += '<div class="pg-sec"><h3>Flags</h3><div class="pg-who">' + (flags.length ? flags.map(function (f) {
+      var name = String(f.flag || '').replace(/_/g, ' ');
+      return '<span class="pg-tag is-flag" title="' + esc(f.detail || '').replace(/"/g, '&quot;') + '">' + esc(name.charAt(0).toUpperCase() + name.slice(1)) + '</span>';
+    }).join('') : '<span class="pg-tag is-off">No risk flags raised</span>') + '</div>';
+    var ch = obj.checks || {};
+    var chips2 = Object.keys(CHECK_NAMES).filter(function (k) { return ch[k]; }).map(function (k) {
+      return '<span class="pg-tag' + (ch[k] === 'ok' ? '' : ' is-off') + '">' + CHECK_NAMES[k] + ': ' + esc(CHECK_STATES[ch[k]] || ch[k]) + '</span>';
+    });
+    if (chips2.length) html += '<div class="pg-who" style="margin-top:.5rem">' + chips2.join('') + '</div>';
+    html += '<p class="pg-fine">No flag does not mean safe. A check that ran tells you it ran, not that nothing is wrong.</p></div>';
+    var bits = [];
+    if (typeof obj.gas_paid_usd === 'number') bits.push('Gas paid: $' + obj.gas_paid_usd.toFixed(4));
+    if (obj.timestamp) bits.push(esc(String(obj.timestamp).slice(0, 10)));
+    if (/^https:\/\/basescan\.org\//.test(obj.basescan_url || '')) bits.push('<a href="' + esc(obj.basescan_url).replace(/"/g, '&quot;') + '" rel="noopener">View on Basescan</a>');
+    if (bits.length) html += '<p class="pg-meta2">' + bits.join(' &middot; ') + '</p>';
+    html += '</div><details class="pg-dev"><summary>For developers: the JSON your agent gets</summary><pre class="pg-json"><code>' + renderVal(obj, 0, false, null) + '</code></pre></details>';
+    body.innerHTML = html;
+  }
+
   function showLoader() {
     body.innerHTML =
       '<div class="pg-state">' +
@@ -1013,7 +1087,7 @@
       }
       if (payload) {
         meta.textContent = 'explain_transaction · ' + (payload.action_type || 'result') + ' · live';
-        showJSON(payload);
+        showResult(payload);
         return;
       }
       meta.textContent = 'error · unreadable_response';
@@ -1058,7 +1132,7 @@
     input.value = hash;
     setActiveChip(hash);
     meta.textContent = 'explain_transaction · ' + sample.action_type + ' · stored sample';
-    showJSON(sample);
+    showResult(sample);
   }
 
   /* The Explain button and Enter always call the live endpoint —
@@ -1096,6 +1170,9 @@
       replay(chip.getAttribute('data-hash'));
     });
   });
+
+  /* the page opens on the first sample, so the first look is an answer, not an empty box */
+  if (chips[0]) replay(chips[0].getAttribute('data-hash'));
 
   /* Copy button inside the dynamically rendered curl block. Uses the shared
      clipboard helper from site.js (with execCommand fallback) when present. */
