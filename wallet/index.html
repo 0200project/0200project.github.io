@@ -112,8 +112,8 @@
   .xw-caps { position: relative; width: 100%; min-height: 15rem; }
   .xw-cap { position: absolute; inset: auto 0; top: 50%; transform: translateY(calc(-50% + 24px)); opacity: 0; transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1); }
   .xw-cap.on { opacity: 1; transform: translateY(-50%); }
-  @media (max-width: 51.99em) { .xw-pin-in { grid-template-rows: auto 1fr; padding-top: 2rem; } .xw-caps { min-height: 9rem; text-align: center; } .xw-cap .xw-p { margin-inline: auto; } .xw-dots { display: none; } }
   .xw-stage { perspective: 1600px; }
+  @media (min-width: 52em) { .xw-stage .phone { --w: clamp(14rem, min(22vw, 34vh), 19rem); } }
   .reel { position: absolute; inset: 0; transform: translateY(calc(var(--i, 0) * -100%)); will-change: transform; }
   .slide { position: relative; height: 100%; overflow: hidden; }
   .slide.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
@@ -122,7 +122,27 @@
   .xw-dots { display: grid; justify-items: center; gap: .55rem; padding: .7rem .5rem; border-radius: 99px; background: rgba(255,255,255,.06); }
   .xw-dots i { width: .375rem; height: .375rem; border-radius: 99px; background: #5a5a5f; transition: height .5s cubic-bezier(.16,1,.3,1), background .4s; }
   .xw-dots i.on { height: 1.25rem; background: #fff; }
-  .xw-stage .phone { --w: clamp(14rem, min(22vw, 34vh), 19rem); transform: translateY(var(--ty, 0)) scale(var(--sc, 1)); transform-origin: 50% 0; }
+  .xw-stage .phone { transform: translateY(var(--ty, 0)) scale(var(--sc, 1)); transform-origin: 50% 0; }
+  /* phone widths: the captions stack in one grid cell, so their row is as tall as the longest and
+     nothing can run under the phone; the phone is sized from the height that row leaves; and the
+     screens fade one into the next instead of sliding, so two are never in the frame at once */
+  @media (max-width: 51.99em) {
+    .xw-pin-in { grid-template-rows: auto minmax(0, 1fr); row-gap: 1rem; padding-block: 1rem; }
+    .xw-caps { display: grid; min-height: 0; text-align: center; }
+    .xw-cap { grid-area: 1 / 1; position: static; transform: none; }
+    .xw-cap.on { transform: none; }
+    .xw-cap .xw-h { font-size: clamp(1.625rem, 7.4vw, 2.125rem); line-height: 1.05; }
+    .xw-cap .xw-p { margin: .5rem auto 0; font-size: .9375rem; line-height: 1.35; text-wrap: balance; }
+    .xw-cap .xw-tag { margin-top: .25rem; font-size: .75rem; }
+    .xw-dots { display: none; }
+    .xw-stage { justify-self: stretch; align-self: stretch; min-height: 0; display: grid; place-items: center; container-type: size; }
+    .xw-stage .phone { --w: min(68vw, 19rem, calc(100cqh * .46)); transform-origin: 50% 50%; }
+    .reel { transform: none; }
+    .slide { position: absolute; inset: 0; opacity: var(--o, 0); }
+  }
+  @supports not (container-type: size) {
+    @media (max-width: 51.99em) { .xw-stage .phone { --w: min(58vw, calc((100svh - 19rem) * .46)); } }
+  }
 
   /* ---- the phone: a titanium band, a black bezel, glass, a Dynamic Island ---- */
   .phone { --w: clamp(15.5rem, 24vw, 19.5rem); position: relative; width: var(--w); aspect-ratio: 9 / 19.5; border-radius: calc(var(--w) * .18); padding: calc(var(--w) * .022);
@@ -440,6 +460,8 @@
     var f = Math.min(5, Math.max(0, p * 5)), k = Math.min(4, Math.floor(f)), t = f - k;
     var pos = k % 2 ? (k - 1) / 2 + t * t * (3 - 2 * t) : k / 2;
     reel.style.setProperty('--i', pos.toFixed(4));
+    // phone widths fade instead of sliding: one out, then the next in, never both at once
+    slides.forEach(function (el, n) { el.style.setProperty('--o', Math.max(0, 1 - 2 * Math.abs(pos - n)).toFixed(3)); });
     go(Math.round(pos)); }
   addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(upd); } }, { passive: true });
   addEventListener('resize', upd); upd();
