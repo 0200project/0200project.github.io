@@ -562,14 +562,14 @@ await client.close();</code></pre>
       </ul>
 
       <h3><code>risk_flags</code> values</h3>
-      <p>A flag always means evidence was found, a failed lookup never produces a flag, which is why <a href="#checks"><code class="inline">checks</code></a> below tells you whether the lookup happened. Sources: Sourcify and Basescan verification status, the ScamSniffer and MyEtherWallet public blocklists (consumed read-only at runtime; each feed&rsquo;s own last-change date, and whether it has gone stale, are published on <code class="inline">/healthz</code> &mdash; we report when we fetched and when the source last changed, never that a blocklist is complete), and approval semantics.</p>
+      <p>A flag always means evidence was found, a failed lookup never produces a flag, which is why <a href="#checks"><code class="inline">checks</code></a> below tells you whether the lookup happened. Sources: Sourcify, and Basescan only if Sourcify could not answer, for verification status, the ScamSniffer and MyEtherWallet public blocklists (consumed read-only at runtime; each feed&rsquo;s own last-change date, and whether it has gone stale, are published on <code class="inline">/healthz</code> &mdash; we report when we fetched and when the source last changed, never that a blocklist is complete), and approval semantics.</p>
       <div class="table-wrap">
         <table>
           <thead>
             <tr><th>Flag</th><th>Meaning</th></tr>
           </thead>
           <tbody>
-            <tr><td><code class="inline">unverified_contract</code></td><td>A contract involved has no verified source on Sourcify or Basescan.</td></tr>
+            <tr><td><code class="inline">unverified_contract</code></td><td>A contract involved has no verified source code on the registry we checked (Sourcify, or Basescan only if Sourcify could not answer).</td></tr>
             <tr><td><code class="inline">first_time_counterparty</code></td><td>The sender is interacting with this counterparty for the first time.</td></tr>
             <tr><td><code class="inline">approval_for_all</code></td><td>The transaction granted an operator approval over an entire collection.</td></tr>
             <tr><td><code class="inline">unlimited_approval</code></td><td>The transaction granted an effectively unlimited token approval.</td></tr>
@@ -598,7 +598,7 @@ await client.close();</code></pre>
           </tbody>
         </table>
       </div>
-      <p>The keys are <code class="inline">contract_verification</code> (Sourcify, then Basescan), <code class="inline">first_interaction</code> (Blockscout, then Basescan) and <code class="inline">drainer_blacklist</code>, plus a <code class="inline">note</code> naming anything that did not fully run — <code class="inline">null</code> when everything did.</p>
+      <p>The keys are <code class="inline">contract_verification</code> (Sourcify, and Basescan only if Sourcify could not answer), <code class="inline">first_interaction</code> (Blockscout, and Basescan only if Blockscout could not answer) and <code class="inline">drainer_blacklist</code>, plus a <code class="inline">note</code> naming anything that did not fully run — <code class="inline">null</code> when everything did.</p>
       <p><code class="inline">unchecked_addresses</code> names addresses that warranted a lookup but did not receive one, because the transaction involved more of them than the per-transaction cap. Which addresses get the scarce lookups is influenced by the order events appear in, and that order is chosen by whoever wrote the transaction, so the address described in <code class="inline">risk_flags</code> is not necessarily the one that went unexamined.</p>
       <p>An empty <code class="inline">risk_flags</code> alongside any status other than <code class="inline">ok</code> means <em>not checked</em>, not <em>clean</em>. Two cases fall short of <code class="inline">ok</code> even when every lookup succeeds. A transaction touching more unfamiliar addresses than the per-transaction lookup cap reports <code class="inline">partial</code>. A sender whose history is longer than the one page the lookup reads reports <code class="inline">inconclusive</code> for <code class="inline">first_interaction</code>, because first-time interaction cannot be honestly asserted for them, that is a limit of the method, not a failure, which is why it is not reported as <code class="inline">unavailable</code>, and why retrying it will return the same answer.</p>
       <p>Absence of a flag is never a safety guarantee. These are observations about a transaction that has already been mined, not a verdict on it, and not advice about whether to act.</p>
